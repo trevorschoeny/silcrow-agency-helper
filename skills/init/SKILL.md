@@ -51,9 +51,11 @@ Ask these five questions, in order. Use `AskUserQuestion` for closed-choice answ
 2. **One-sentence description** (free text) — Used in README and §0001.
 3. **User's directory name** (free text, default: `user`) — The directory under `agents/` that represents the human user. Common choices: first name, initials, or keep as `user`. Will be lowercased and kebab-cased for the directory; a display-cased form is used in prose. (If the user gives a name, the skill derives the display form by title-casing the first letter.)
 4. **Rename the generic roles?** (closed-choice) — Options: "Keep defaults (Lead, Implementer)" or "Rename to domain-specific titles". If renamed, ask separately for the new names for Lead and Implementer. Keep `registrar` as-is — the title is part of the pattern.
-5. **Destination path** (already collected in Phase 1; confirm and proceed).
+5. **Destination path** — already collected in Phase 1; carry forward without re-asking.
 
-After collecting, summarize all answers back to the user in one message. Proceed on nod (or absence of objection).
+After collecting all answers, briefly echo them back in one message **and then immediately proceed to Phase 3**. Do **not** ask for confirmation — the user already invoked the skill; requesting an extra "shall I run it?" adds friction without adding safety (the script is idempotent up to the pre-flight conflict check, which handles the one real failure mode). The echo is an acknowledgment, not a gate. If the user typed something clearly wrong and catches it mid-echo, they'll say so; otherwise run the script.
+
+Exception: if an answer is genuinely ambiguous or incomplete (user skipped a question, gave a value that can't be parsed, provided a destination that doesn't exist and can't be created), ask the clarifying question. A well-formed set of answers should never produce a "shall I run it?" prompt.
 
 ### Deriving the nine values
 
