@@ -109,6 +109,6 @@ In each case, the change is a new ADR superseding this one. Do not edit this rec
 - `../../docs/foundations/01-stratified-cognition.md` — full intellectual history.
 - `../../docs/foundations/02-subsidiarity.md` — why the tiered structure lets subsidiarity work.
 - `../../docs/foundations/06-registrar-pattern.md` — why the Registrar sits outside the hierarchy.
-- `../../agents/README.md` — the roster this ADR directly defines.
+- `../../agents/` — the directories of the starter roster this ADR directly defines. Subsequent roster changes flow through `§0010`.
 - Jaques, E. (1996). *Requisite Organization* (2nd ed.). Cason Hall.
 - Jaques, E. (1990). "In Praise of Hierarchy." *HBR*, Jan–Feb.

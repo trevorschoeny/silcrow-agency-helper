@@ -41,8 +41,9 @@ If the project decides to introduce a particular subfolder scheme, **that decisi
 | §0007 | [{lead_role} writes briefs, not specs](accepted/§0007-briefs-not-specs.md) | accepted | {date} |
 | §0008 | [Registrar authority is procedural, not substantive](accepted/§0008-registrar-procedural-authority.md) | accepted | {date} |
 | §0009 | [Anti-patterns are first-class records](accepted/§0009-anti-patterns-as-first-class-records.md) | accepted | {date} |
+| §0010 | [Roster change protocol](accepted/§0010-roster-change-protocol.md) | accepted | {date} |
 
-**About the founding nine.** §0001 records the decision to adopt this scaffold. §0002–§0009 are **constitutional decisions inherited from the scaffold** via §0001 — they capture the load-bearing choices that define how this project runs. Each names its alternatives and cites its foundations so it can be evaluated or superseded on its own merits, like any other ADR.
+**About the founding ten.** §0001 records the decision to adopt this scaffold. §0002–§0010 are **constitutional decisions inherited from the scaffold** via §0001 — they capture the load-bearing choices that define how this project runs. Each names its alternatives and cites its foundations so it can be evaluated or superseded on its own merits, like any other ADR.
 
 ## Superseded decisions
 

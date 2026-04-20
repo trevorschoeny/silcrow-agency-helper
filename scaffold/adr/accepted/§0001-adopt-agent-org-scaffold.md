@@ -5,7 +5,7 @@
 - **Authors:** {user_role} (approving authority); skill-generated draft
 - **Supersedes:** —
 - **Superseded by:** —
-- **Influences:** §0002, §0003, §0004, §0005, §0006, §0007, §0008, §0009 (founding constitutional decisions inherited through this ADR); all future ADRs in this project (structural).
+- **Influences:** §0002, §0003, §0004, §0005, §0006, §0007, §0008, §0009, §0010 (founding constitutional decisions inherited through this ADR); all future ADRs in this project (structural).
 - **Influenced by:** — (this is §0001)
 
 ## Y-statement
@@ -120,5 +120,5 @@ In each case, write a superseding ADR referencing this one. Do not edit this rec
 - `docs/philosophy.md` — the full rationale for every element of this scaffold.
 - `docs/decision-process.md` — the lifecycle of ADRs, including this one.
 - `docs/foundations/` — per-thread intellectual history for the six foundational disciplines.
-- `agents/README.md` — the roster this ADR implicitly defines.
+- `agents/` — the directories of the starter roster this ADR implicitly defines.
 - Source: initialized via the `agent-org-scaffold` skill ({date}).

@@ -116,7 +116,6 @@ touch \
 subst "$SRC/README.md" "$DST/README.md"
 
 # Agents (with role-directory remapping)
-subst "$SRC/agents/README.md"                "$DST/agents/README.md"
 subst "$SRC/agents/user/instructions.md"     "$DST/agents/$USER_DIR/instructions.md"
 subst "$SRC/agents/lead/instructions.md"     "$DST/agents/$LEAD_DIR/instructions.md"
 subst "$SRC/agents/implementer/instructions.md" "$DST/agents/$IMPL_DIR/instructions.md"

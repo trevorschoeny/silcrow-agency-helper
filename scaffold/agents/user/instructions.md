@@ -34,5 +34,6 @@ None. You are the top.
 - `docs/philosophy.md` — the intellectual foundation for why this structure works.
 - `docs/decision-process.md` — how ADRs flow through the system.
 - `docs/message-protocol.md` — how messages move between agents.
-- `agents/README.md` — current roster and reporting lines.
+- `agents/` directories — current roster. Each agent's own `instructions.md` declares its reporting lines.
+- `adr/accepted/§0010-roster-change-protocol.md` — the protocol for adding, renaming, or retiring agents (roster changes are your tier-0 concern).
 - `adr/accepted/§0001-adopt-agent-org-scaffold.md` — the seed decision you implicitly approved by initializing this project.

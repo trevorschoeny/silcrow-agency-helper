@@ -88,4 +88,4 @@ When the scaffold grows past its minimum size, the question is always *whether t
 
 - `../philosophy.md` — the short synthesis with the other five foundations.
 - `02-subsidiarity.md` — the operational principle that prevents upward delegation across strata.
-- `../../agents/README.md` — the roster this theory directly shapes.
+- `../../agents/` — the roster this theory directly shapes.

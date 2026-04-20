@@ -187,7 +187,7 @@ In this scaffold, supervision is lighter-touch but follows the same shape:
 
 - If the {implementer_role} has been working on an approved plan for longer than the plan estimated, and the {lead_role} hasn't heard back, the {lead_role} sends a status-check message.
 - If the {implementer_role} is stuck, the responsibility to surface that is theirs — they send a progress message saying what's blocking and what they need.
-- If an agent is reliably non-responsive, that is a roster concern. {user_role} and the {lead_role} address it through the ADR process (roster changes are ADRs — see `../agents/README.md`).
+- If an agent is reliably non-responsive, that is a roster concern. {user_role} and the {lead_role} address it through the ADR process (roster changes are ADRs — see `../adr/accepted/§0010-roster-change-protocol.md`).
 
 **"Let it crash."** Armstrong's principle for Erlang was that processes should fail fast rather than try to muddle through a bad state. In our context: if you're stuck or the plan is wrong, say so quickly and clearly — don't silently improvise. The supervision above assumes fast, honest signaling.
 
@@ -211,4 +211,4 @@ If the archive ever gets large enough to cause navigation pain, the Registrar ca
 - `foundations/03-actor-model.md` — the full intellectual basis for this protocol.
 - `decision-process.md` — proposals and acknowledgments are both message kinds in that flow.
 - `registrar-playbook.md` — how the Registrar processes incoming messages.
-- `../agents/README.md` — the roster that defines who has an inbox.
+- `../agents/` — the roster is the set of agent directories; each has its own `inbox/` and `instructions.md`.

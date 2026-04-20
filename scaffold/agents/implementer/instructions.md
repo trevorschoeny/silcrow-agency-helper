@@ -47,4 +47,4 @@ Escalate to the {lead_role} when:
 - `docs/message-protocol.md` — plan-and-reply is a message cycle; follow the conventions.
 - `adr/accepted/` — the current body of decisions you execute under.
 - `adr/anti-patterns/` — what to avoid.
-- `agents/README.md` — current roster.
+- `agents/` directories — current roster (each directory is an agent).

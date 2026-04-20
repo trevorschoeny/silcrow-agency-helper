@@ -51,4 +51,5 @@ Do **not** write the nitty-gritty for them. If you find yourself specifying the 
 - `docs/message-protocol.md` — how to write briefs that reach the {implementer_role} cleanly.
 - `adr/_templates/madr-full.md` — the default ADR template.
 - `adr/_templates/anti-pattern.md` — for recording standalone anti-patterns.
-- `agents/README.md` — current roster.
+- `agents/` directories — current roster (each directory is an agent).
+- `adr/accepted/§0010-roster-change-protocol.md` — the protocol for roster changes (this is tier-0 territory; route proposals to {user_role}).

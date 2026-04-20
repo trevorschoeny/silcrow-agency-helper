@@ -44,7 +44,7 @@ Run the validation checklist:
 - [ ] Uses one of the templates in `../adr/_templates/` (full, minimal, or anti-pattern).
 - [ ] All required sections for the chosen template are present.
 - [ ] Status field is set to `proposed`.
-- [ ] Author field names an agent in the current roster (`agents/README.md`).
+- [ ] Author field names an agent in the current roster (the set of directories under `agents/`, excluding `_retired/`).
 
 **Citation integrity**
 - [ ] Every §-number in `Supersedes`, `Influenced by`, or `References` resolves to an existing file in `../adr/accepted/`, `../adr/superseded/`, or `../adr/rejected/`.
@@ -283,4 +283,4 @@ You do not have a special exemption from the message protocol. The record you st
 - `philosophy.md` — the rationale for every rule above.
 - `foundations/06-registrar-pattern.md` — the full intellectual basis.
 - `../adr/_templates/` — the templates you validate against.
-- `../agents/README.md` — the current roster.
+- `../agents/` — the current roster (one directory per agent). Roster changes governed by `../adr/accepted/§0010-roster-change-protocol.md`.

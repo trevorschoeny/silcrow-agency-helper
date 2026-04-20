@@ -29,8 +29,8 @@ A new reader — human or agent — should read these in order:
 2. **`docs/philosophy.md`** — the intellectual foundation for every part of the structure.
 3. **`docs/decision-process.md`** — how decisions (ADRs) are proposed, accepted, superseded.
 4. **`docs/message-protocol.md`** — how agents communicate.
-5. **`agents/README.md`** — the roster and reporting lines.
-6. **`agents/<your-role>/instructions.md`** — if you are occupying a role, your specific duties.
+5. **`agents/<your-role>/instructions.md`** — if you are occupying a role, your specific duties.
+6. **`adr/accepted/§0006-starter-roster-and-tier-model.md`** and **`§0010-roster-change-protocol.md`** — the tier model and how the roster changes over time.
 
 For deeper dives on any of the six disciplines, `docs/foundations/` has per-thread treatments.
 
@@ -42,11 +42,13 @@ For deeper dives on any of the six disciplines, `docs/foundations/` has per-thre
 {project_name}/
 ├── README.md                      ← you are here
 ├── agents/
-│   ├── README.md                  ← roster and reporting lines
 │   ├── {user_dir}/                ← tier 0: strategic direction
 │   ├── {lead_dir}/                ← tier 1: architecture, briefs, reviews
 │   ├── {implementer_dir}/         ← tier 2: planning and execution
 │   └── registrar/                 ← outside hierarchy: record integrity
+│
+│   (roster is the set of agent directories above, plus any added via §0010;
+│    see §0006 for the tier model and §0010 for the change protocol)
 │
 ├── adr/                           ← architecture decision records
 │   ├── README.md                  ← index of all decisions
@@ -103,15 +105,9 @@ Each cites its foundation doc (`docs/foundations/0N-*.md`) for the full reasonin
 
 ## Adding agents, renaming roles, restructuring
 
-These are significant decisions. They flow through the ADR process:
+These are significant decisions, each governed by its own ADR. The full protocol — including the five-step procedure, the Registrar's directory-level actions, and the rule that retired agents preserve their inbox archives — is itself an ADR: **`adr/accepted/§0010-roster-change-protocol.md`**. Read it when you need to change the roster.
 
-1. The {lead_role} or {user_role} drafts an ADR.
-2. The ADR is submitted to `proposed/`.
-3. The Registrar validates form.
-4. {user_role} approves or rejects.
-5. On acceptance, the Registrar updates `agents/README.md` and, if needed, the directory structure.
-
-Never delete an agent directory. Retired agents move to `agents/_retired/` and their archived inboxes are preserved.
+The roster at any point in time is the set of directories under `agents/` (plus `agents/_retired/` for historical agents). There is no separate catalog to maintain.
 
 ---
 
