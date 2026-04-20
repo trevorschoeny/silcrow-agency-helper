@@ -42,8 +42,9 @@ If the project decides to introduce a particular subfolder scheme, **that decisi
 | §0008 | [Registrar authority is procedural, not substantive](accepted/§0008-registrar-procedural-authority.md) | accepted | {date} |
 | §0009 | [Anti-patterns are first-class records](accepted/§0009-anti-patterns-as-first-class-records.md) | accepted | {date} |
 | §0010 | [Roster change protocol](accepted/§0010-roster-change-protocol.md) | accepted | {date} |
+| §0011 | [Project scope](accepted/§0011-project-scope.md) — *seed, expected to be superseded early* | accepted | {date} |
 
-**About the founding ten.** §0001 records the decision to adopt this scaffold. §0002–§0010 are **constitutional decisions inherited from the scaffold** via §0001 — they capture the load-bearing choices that define how this project runs. Each names its alternatives and cites its foundations so it can be evaluated or superseded on its own merits, like any other ADR.
+**About the founding eleven.** §0001 records the decision to adopt this scaffold. §0002–§0011 are **constitutional decisions inherited from the scaffold** via §0001 — they capture the load-bearing choices that define how this project runs. Each names its alternatives and cites its foundations so it can be evaluated or superseded on its own merits, like any other ADR. §0011 is explicitly a seed — the scaffold invites the user and Lead to supersede it with a richer scope statement as an early collaborative task.
 
 ## Superseded decisions
 

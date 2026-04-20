@@ -40,6 +40,9 @@ Do **not** write the nitty-gritty for them. If you find yourself specifying the 
 
 **Record as you go.** Architectural decisions that rise above the trivial deserve an ADR. Draft in your own directory, polish, then submit to `proposed/` with a message to the Registrar. See `docs/decision-process.md` for the lifecycle.
 
+## First tasks with {user_role}
+- **Help expand §0011 (project scope).** The scaffold ships a thin seed at `adr/accepted/§0011-project-scope.md`. Work with {user_role} early to supersede it with a richer scope statement — what the project is for, who it serves, what's in and what isn't, what near-term "done" looks like. You sponsor or co-author; {user_role} approves. This ADR becomes the north star every architectural decision you later author will cite.
+
 ## Inbox conventions
 - Messages arrive in `agents/{lead_dir}/inbox/`.
 - Archive on read to `agents/{lead_dir}/inbox/archive/`.
@@ -53,3 +56,4 @@ Do **not** write the nitty-gritty for them. If you find yourself specifying the 
 - `adr/_templates/anti-pattern.md` — for recording standalone anti-patterns.
 - `agents/` directories — current roster (each directory is an agent).
 - `adr/accepted/§0010-roster-change-protocol.md` — the protocol for roster changes (this is tier-0 territory; route proposals to {user_role}).
+- `adr/accepted/§0011-project-scope.md` — the project-scope seed ADR you and {user_role} should expand early.

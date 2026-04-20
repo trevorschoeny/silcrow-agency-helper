@@ -126,6 +126,8 @@ Founding record (nine ADRs — §0001 + eight inherited constitutional decisions
   adr/accepted/§0007-briefs-not-specs.md
   adr/accepted/§0008-registrar-procedural-authority.md
   adr/accepted/§0009-anti-patterns-as-first-class-records.md
+  adr/accepted/§0010-roster-change-protocol.md
+  adr/accepted/§0011-project-scope.md  (seed — expected to be superseded early)
 
 Read these, in order, before starting work:
   1. README.md                          — project orientation
@@ -133,6 +135,9 @@ Read these, in order, before starting work:
   3. docs/decision-process.md           — ADR lifecycle, §-numbering, supersession
   4. docs/message-protocol.md           — how agents communicate
   5. agents/<your-role>/instructions.md — your role's duties
+
+First collaborative task for <user-role> and <lead-role>:
+  Expand §0011 into a real project-scope statement via supersession.
 
 This skill will not be invoked again. All further work happens through the
 scaffold's own process: messages between agent inboxes, proposals into

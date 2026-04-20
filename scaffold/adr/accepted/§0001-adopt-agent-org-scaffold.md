@@ -5,7 +5,7 @@
 - **Authors:** {user_role} (approving authority); skill-generated draft
 - **Supersedes:** —
 - **Superseded by:** —
-- **Influences:** §0002, §0003, §0004, §0005, §0006, §0007, §0008, §0009, §0010 (founding constitutional decisions inherited through this ADR); all future ADRs in this project (structural).
+- **Influences:** §0002, §0003, §0004, §0005, §0006, §0007, §0008, §0009, §0010, §0011 (founding constitutional decisions inherited through this ADR); all future ADRs in this project (structural).
 - **Influenced by:** — (this is §0001)
 
 ## Y-statement

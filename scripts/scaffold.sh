@@ -132,6 +132,7 @@ done
 for f in "$SRC/adr/accepted"/*.md; do
     subst "$f" "$DST/adr/accepted/$(basename "$f")"
 done
+# (The above glob picks up §0001–§0011 and any future seeded ADRs automatically.)
 
 # Docs
 for f in "$SRC/docs"/*.md; do

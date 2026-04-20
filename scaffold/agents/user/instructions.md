@@ -22,8 +22,11 @@ None. You are the top.
 ## Working pattern
 - **Write briefs, not specs.** When you give the {lead_role} work, communicate what you need and why. Let the {lead_role} decide how it's shaped.
 - **Approve or reject — cleanly.** When a proposal reaches you, respond with a decision. "I need to think about it" is a valid response, but leave a note so the proposal doesn't rot in your inbox.
-- **Roster changes go through ADRs.** Adding or retiring an agent is a significant decision. Record it as a superseding ADR to §0001 (or to whichever ADR last governed the roster). The Registrar will help you file it correctly.
+- **Roster changes go through ADRs.** Adding or retiring an agent is a significant decision. Follow §0010 (roster change protocol). The Registrar will help you file it correctly.
 - **Don't skip tiers.** If you have feedback for the {implementer_role}, route it through the {lead_role}. Skipping tiers undermines the stratification the scaffold relies on.
+
+## First tasks
+- **Expand §0011 (project scope).** The scaffold seeded `adr/accepted/§0011-project-scope.md` with a minimal scope statement. One of your earliest collaborative tasks with the {lead_role} is to supersede it with a richer version: what the project is for, who it serves, what's in scope, what's out, what "done" looks like. This ADR becomes the north star every downstream decision cites.
 
 ## Inbox conventions
 - Messages arrive in `agents/{user_dir}/inbox/`.
@@ -37,3 +40,4 @@ None. You are the top.
 - `agents/` directories — current roster. Each agent's own `instructions.md` declares its reporting lines.
 - `adr/accepted/§0010-roster-change-protocol.md` — the protocol for adding, renaming, or retiring agents (roster changes are your tier-0 concern).
 - `adr/accepted/§0001-adopt-agent-org-scaffold.md` — the seed decision you implicitly approved by initializing this project.
+- `adr/accepted/§0011-project-scope.md` — the project-scope seed ADR; expand it early via supersession.
