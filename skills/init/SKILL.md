@@ -4,12 +4,11 @@ description: Scaffold a hierarchical agent organization with ADR decision tracki
 user-invocable: true
 allowed-tools:
   - Read
-  - Write
   - Glob
   - Grep
-  - Bash(mkdir:*)
-  - Bash(test:*)
   - Bash(ls:*)
+  - Bash(test:*)
+  - Bash(${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh:*)
   - AskUserQuestion
 ---
 
@@ -23,11 +22,16 @@ Run this skill **once**, at project initialization. After scaffolding completes,
 
 If the user asks to "re-run" the skill against an existing project, stop and explain the one-shot design. The skill performs no diff logic, no migrations, no upgrades.
 
-## Template source
+## How this skill works
 
-The source-of-truth templates live at **`${CLAUDE_PLUGIN_ROOT}/scaffold/`** — the plugin's installed root. Read templates from there. Do not hardcode their contents.
+All file copy and token substitution is performed by a bundled bash script (`${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh`). Your job as the skill is to:
 
-If `${CLAUDE_PLUGIN_ROOT}/scaffold/` cannot be read, stop and report that the plugin is not installed correctly.
+1. Gather the scoping values from the user.
+2. Confirm them.
+3. Invoke the script with those values as arguments.
+4. Relay the result.
+
+The script handles conflict detection, directory creation, file copy, and sed-based token substitution across the full template tree (37 files, ~3,200 lines of markdown). It completes in under a second. Do not attempt to do these operations file-by-file via Read+Write — you will be slower by several orders of magnitude and you risk introducing accidental content changes.
 
 ---
 
@@ -35,20 +39,7 @@ If `${CLAUDE_PLUGIN_ROOT}/scaffold/` cannot be read, stop and report that the pl
 
 Ask the user for the **destination path** where the scaffold should be created. Default: the current working directory.
 
-Then check for conflicts at the destination. If **any** of these already exist, stop:
-
-- `agents/`
-- `adr/`
-- `docs/philosophy.md`
-- `docs/decision-process.md`
-- any file matching `§*.md`
-- `proposed/`
-
-If a conflict exists, tell the user:
-
-> This destination already contains an agent scaffold or conflicting files. To reinitialize from scratch, remove the existing `agents/`, `adr/`, `proposed/`, and scaffold docs first. This skill will not overwrite existing records.
-
-Do not attempt to merge, migrate, or reconcile.
+You don't need to perform a conflict check yourself — the script does it and will exit non-zero with a clear message if conflicts exist. But if you want a faster negative signal to the user, a single `ls "$DST"` or `test -d "$DST/agents"` before collecting all the answers is reasonable. Optional.
 
 ---
 
@@ -58,110 +49,71 @@ Ask these five questions, in order. Use `AskUserQuestion` for closed-choice answ
 
 1. **Project name** (free text) — Used in README, roster, §0001.
 2. **One-sentence description** (free text) — Used in README and §0001.
-3. **User's directory name** (free text, default: `user`) — The directory under `agents/` that represents the human user. Common choices: first name, initials, or keep as `user`. Will be lowercased and kebab-cased for the directory; a display-cased form is used in prose.
+3. **User's directory name** (free text, default: `user`) — The directory under `agents/` that represents the human user. Common choices: first name, initials, or keep as `user`. Will be lowercased and kebab-cased for the directory; a display-cased form is used in prose. (If the user gives a name, the skill derives the display form by title-casing the first letter.)
 4. **Rename the generic roles?** (closed-choice) — Options: "Keep defaults (Lead, Implementer)" or "Rename to domain-specific titles". If renamed, ask separately for the new names for Lead and Implementer. Keep `registrar` as-is — the title is part of the pattern.
 5. **Destination path** (already collected in Phase 1; confirm and proceed).
 
 After collecting, summarize all answers back to the user in one message. Proceed on nod (or absence of objection).
 
----
+### Deriving the nine values
 
-## Phase 3 — Create directories
-
-At the destination, create this tree:
-
-```
-{destination}/
-├── agents/
-│   ├── {user_dir}/inbox/archive/
-│   ├── {lead_dir}/inbox/archive/
-│   ├── {implementer_dir}/inbox/archive/
-│   └── registrar/inbox/archive/
-├── adr/
-│   ├── _templates/
-│   ├── accepted/
-│   ├── superseded/
-│   ├── rejected/
-│   └── anti-patterns/
-├── proposed/
-└── docs/
-    └── foundations/
-```
-
-Use `mkdir -p`. Preserve empty directories by copying `.gitkeep` files from the scaffold where present.
-
----
-
-## Phase 4 — Copy templates with token substitution
-
-**Every file** under `${CLAUDE_PLUGIN_ROOT}/scaffold/` is copied to the destination. Every file is passed through the same token-substitution rule below — there is **no separate "verbatim" category**. Files that contain no matching tokens pass through unchanged; files that do contain tokens have them substituted. Template placeholders like `{short decision title}` survive untouched because they don't exactly match any substitution token.
-
-### Interpolation tokens
-
-Only these exact tokens are substituted. No other `{...}` pattern is touched.
-
-| Token | Value |
+| Value | How to compute |
 |---|---|
-| `{project_name}` | Phase 2 Q1 |
-| `{project_description}` | Phase 2 Q2 |
-| `{user_dir}` | Phase 2 Q3, lowercased/kebab-cased |
-| `{user_role}` | Display form of `{user_dir}` (title case; e.g. `User`, `Alice`) |
-| `{lead_dir}` | From Phase 2 Q4 — default `lead` |
-| `{lead_role}` | Display form of `{lead_dir}` (e.g. `Lead`, `Architect`) |
-| `{implementer_dir}` | From Phase 2 Q4 — default `implementer` |
-| `{implementer_role}` | Display form of `{implementer_dir}` |
-| `{date}` | Today's date, `YYYY-MM-DD` |
+| `<destination>` | Phase 1 / Q5, absolute path preferred |
+| `<project_name>` | Q1 verbatim |
+| `<project_description>` | Q2 verbatim |
+| `<user_dir>` | Q3, lowercased, kebab-cased (spaces → hyphens) |
+| `<user_role>` | Display form of Q3 (title case; e.g. `user`→`User`, `alice`→`Alice`). If Q3 is `user`, pass `User`. |
+| `<lead_dir>` | `lead` unless renamed in Q4 |
+| `<lead_role>` | `Lead` unless renamed in Q4 (then title-cased) |
+| `<implementer_dir>` | `implementer` unless renamed in Q4 |
+| `<implementer_role>` | `Implementer` unless renamed in Q4 (then title-cased) |
 
-### Path remapping
-
-Source and destination paths are identical under the scaffold tree, **except**:
-
-| Source path | Destination path |
-|---|---|
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/user/` | `{destination}/agents/{user_dir}/` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/lead/` | `{destination}/agents/{lead_dir}/` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/implementer/` | `{destination}/agents/{implementer_dir}/` |
-
-All other paths — `scaffold/README.md`, `scaffold/adr/...`, `scaffold/docs/...`, `scaffold/agents/registrar/...`, `.gitkeep` files — map identically from `scaffold/X` to `{destination}/X`.
-
-### Token-substitution rule (important)
-
-**Iterate the nine specific tokens from the table above and substitute each one globally within the target file.** Do not use a generic regex over `{anything}`. The MADR templates in `adr/_templates/*` contain placeholder patterns like `{short decision title in imperative form}` and `{agent(s)}` — those are slots for future authors to fill in, and substituting them would destroy the templates.
-
-Use `Read` + `Write` for every file — **never shell `cp`** — so substitutions and conflicts are explicit.
-
-### File set
-
-The complete set of files to copy (all under `${CLAUDE_PLUGIN_ROOT}/scaffold/`):
-
-- `README.md`
-- `agents/README.md`
-- `agents/{user,lead,implementer,registrar}/instructions.md` (4 files, with path remapping above)
-- `agents/{user,lead,implementer,registrar}/inbox/archive/.gitkeep` (4 `.gitkeep` files, with path remapping)
-- `adr/README.md`
-- `adr/_templates/{madr-full,madr-minimal,anti-pattern}.md` (3 files)
-- `adr/accepted/§000N-*.md` (9 seeded ADRs, §0001 through §0009)
-- `adr/anti-patterns/README.md`
-- `adr/{superseded,rejected}/.gitkeep` (2 `.gitkeep` files)
-- `proposed/.gitkeep`
-- `docs/{philosophy,decision-process,message-protocol,registrar-playbook}.md` (4 files)
-- `docs/foundations/0{1,2,3,4,5,6}-*.md` (6 files)
-
-Glob `${CLAUDE_PLUGIN_ROOT}/scaffold/` to enumerate dynamically if more files are added in future versions.
+The date is auto-computed by the script (`date -u +%Y-%m-%d`); you do not pass it.
 
 ---
 
-## Phase 5 — Report and exit
+## Phase 3 — Run the scaffold script
 
-Print a completion report shaped like this, filling in the tokens:
+Invoke the bundled script with the nine values as positional arguments **in this exact order**:
+
+```bash
+"${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh" \
+    "<destination>" \
+    "<project_name>" \
+    "<project_description>" \
+    "<user_dir>" \
+    "<user_role>" \
+    "<lead_dir>" \
+    "<lead_role>" \
+    "<implementer_dir>" \
+    "<implementer_role>"
+```
+
+Quote each argument so values with spaces (project name, description, renamed role titles) pass through cleanly.
+
+The script:
+- Exits **0** on success and prints `✓ Scaffolded <project_name> at <destination>`.
+- Exits **1** on any conflict (existing `agents/`, `adr/`, `proposed/`, `§*.md`, or scaffold docs at the destination). Error message explains what to remove.
+- Exits **2** on argument-count errors (you passed the wrong number of arguments).
+
+If the script returns non-zero, **do not attempt recovery.** Relay the error message to the user and stop.
+
+On success, proceed to Phase 4.
+
+---
+
+## Phase 4 — Report and exit
+
+Print a completion report. The script already printed `✓ Scaffolded ...`; you add the roster summary and next-reads so the user knows where to start:
 
 ```
-✓ {project_name} — agent organization scaffold initialized at {destination}
+✓ <project_name> — agent organization scaffold initialized at <destination>
 
 Starter roster (agents/):
-  {user_dir}/          — tier 0 (User): strategic direction, agent-roster changes
-  {lead_dir}/          — tier 1 ({lead_role}): briefs, architecture, plan review
-  {implementer_dir}/   — tier 2 ({implementer_role}): planning + execution under briefs
+  <user_dir>/          — tier 0 (<user_role>): strategic direction, agent-roster changes
+  <lead_dir>/          — tier 1 (<lead_role>): briefs, architecture, plan review
+  <implementer_dir>/   — tier 2 (<implementer_role>): planning + execution under briefs
   registrar/           — outside hierarchy: form-integrity of the record
 
 Founding record (nine ADRs — §0001 + eight inherited constitutional decisions):
@@ -191,8 +143,18 @@ proposed/, decisions into adr/accepted/ via the registrar.
 
 ## Rules
 
-- **Never overwrite existing files.** If a target exists, stop and report.
-- **Never modify files outside the destination directory.**
-- **Use Read + Write** for every file operation so substitutions and conflicts are visible.
-- **No diff/migrate logic.** If the destination isn't empty-enough for a clean init, refuse and explain.
-- If `${CLAUDE_PLUGIN_ROOT}/scaffold/` cannot be read, stop and report that the plugin is not installed correctly.
+- **Use the script.** Do not open individual template files and rewrite them file-by-file. The script is orders of magnitude faster and incapable of accidentally altering template content.
+- **Never overwrite existing files.** The script refuses on conflict; respect the refusal and relay the message to the user rather than trying to work around it.
+- **Never modify files outside the destination directory.** The script only writes under the destination path; you should only be handing it arguments.
+- If `${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh` is missing or not executable, stop and report that the plugin is not installed correctly.
+
+## What the script does internally (for reference, not for re-implementation)
+
+1. Validates its 9 positional arguments and computes today's date.
+2. Checks the destination for conflicts (existing `agents/`, `adr/`, `proposed/`, `docs/philosophy.md`, `docs/decision-process.md`, or `§*.md` files) and exits non-zero if any are present.
+3. Creates the destination tree with `mkdir -p`.
+4. Copies every `.gitkeep` file (empty placeholders).
+5. For every markdown file under `${CLAUDE_PLUGIN_ROOT}/scaffold/`, runs `sed` with nine `s|{token}|value|g` substitutions and writes the output to the destination. `user/`, `lead/`, and `implementer/` source directories are remapped to `<user_dir>/`, `<lead_dir>/`, `<implementer_dir>/` at write time. Template placeholders in `_templates/*.md` (like `{short decision title in imperative form}`) do not match any of the nine tokens and pass through unchanged.
+6. Prints a one-line success acknowledgment and exits 0.
+
+See `${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh` if you need to audit or modify this behavior.

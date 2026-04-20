@@ -1,6 +1,6 @@
 {
   "name": "agent-org-scaffold",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "One-shot scaffold for hierarchical multi-agent projects: ADR decision tracking, actor-model message passing, registrar-enforced record integrity. Ships with a founding record of nine seeded ADRs capturing the scaffold's constitutional decisions.",
   "author": {
     "name": "Trevor Schoeny"
