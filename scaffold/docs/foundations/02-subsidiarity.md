@@ -75,7 +75,7 @@ Subsidiarity is not just "push decisions down." It contains several distinct ope
 The scaffold's reporting structure is explicit: {user_role} → {lead_role} → {implementer_role}. Subsidiarity governs how decisions flow between these tiers:
 
 - **The {implementer_role} makes implementation decisions.** Unless the {lead_role} has positive reason to override (architectural concern, cross-cutting implication), implementation decisions stay at tier 2.
-- **The {lead_role} makes architectural decisions.** Unless the {user_role} has positive reason to override (strategic concern, scope-changing implication), architecture stays at tier 1.
+- **The {lead_role} makes architectural decisions.** Unless {user_role} has positive reason to override (strategic concern, scope-changing implication), architecture stays at tier 1.
 - **Escalation is corrective, not routine.** The {lead_role} intervenes in the {implementer_role}'s work when something architectural is at stake. They do not review every decision as a matter of course.
 - **The {lead_role} writes briefs, not specs.** This is subsidiarity in operational form: the {lead_role} communicates *what* and *why*, leaving *how* to the {implementer_role} because that is where the relevant judgment and context lives.
 

@@ -92,14 +92,13 @@ Use `mkdir -p`. Preserve empty directories by copying `.gitkeep` files from the 
 
 ---
 
-## Phase 4 — Interpolate and copy templates
+## Phase 4 — Copy templates with token substitution
 
-Two kinds of files live under `${CLAUDE_PLUGIN_ROOT}/scaffold/`:
-
-- **Interpolated files** — contain `{token}` placeholders to substitute before writing.
-- **Static files** — copy verbatim.
+**Every file** under `${CLAUDE_PLUGIN_ROOT}/scaffold/` is copied to the destination. Every file is passed through the same token-substitution rule below — there is **no separate "verbatim" category**. Files that contain no matching tokens pass through unchanged; files that do contain tokens have them substituted. Template placeholders like `{short decision title}` survive untouched because they don't exactly match any substitution token.
 
 ### Interpolation tokens
+
+Only these exact tokens are substituted. No other `{...}` pattern is touched.
 
 | Token | Value |
 |---|---|
@@ -113,49 +112,42 @@ Two kinds of files live under `${CLAUDE_PLUGIN_ROOT}/scaffold/`:
 | `{implementer_role}` | Display form of `{implementer_dir}` |
 | `{date}` | Today's date, `YYYY-MM-DD` |
 
-### Files that get interpolated
+### Path remapping
 
-Read each of these, substitute tokens, write to the target:
+Source and destination paths are identical under the scaffold tree, **except**:
 
-| Source | Target |
+| Source path | Destination path |
 |---|---|
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/README.md` | `{destination}/README.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/README.md` | `{destination}/agents/README.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/user/instructions.md` | `{destination}/agents/{user_dir}/instructions.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/lead/instructions.md` | `{destination}/agents/{lead_dir}/instructions.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/implementer/instructions.md` | `{destination}/agents/{implementer_dir}/instructions.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/registrar/instructions.md` | `{destination}/agents/registrar/instructions.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/README.md` | `{destination}/adr/README.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/accepted/§0001-adopt-agent-org-scaffold.md` | `{destination}/adr/accepted/§0001-adopt-agent-org-scaffold.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/accepted/§0002-use-madr-with-y-statement.md` | `{destination}/adr/accepted/§0002-use-madr-with-y-statement.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/accepted/§0003-use-section-numbering.md` | `{destination}/adr/accepted/§0003-use-section-numbering.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/accepted/§0004-immutability-and-supersession.md` | `{destination}/adr/accepted/§0004-immutability-and-supersession.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/accepted/§0005-communication-via-inboxes.md` | `{destination}/adr/accepted/§0005-communication-via-inboxes.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/accepted/§0006-starter-roster-and-tier-model.md` | `{destination}/adr/accepted/§0006-starter-roster-and-tier-model.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/accepted/§0007-briefs-not-specs.md` | `{destination}/adr/accepted/§0007-briefs-not-specs.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/accepted/§0008-registrar-procedural-authority.md` | `{destination}/adr/accepted/§0008-registrar-procedural-authority.md` |
-| `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/accepted/§0009-anti-patterns-as-first-class-records.md` | `{destination}/adr/accepted/§0009-anti-patterns-as-first-class-records.md` |
+| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/user/` | `{destination}/agents/{user_dir}/` |
+| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/lead/` | `{destination}/agents/{lead_dir}/` |
+| `${CLAUDE_PLUGIN_ROOT}/scaffold/agents/implementer/` | `{destination}/agents/{implementer_dir}/` |
 
-### Files to copy verbatim
-
-Everything else under `${CLAUDE_PLUGIN_ROOT}/scaffold/`:
-
-- `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/_templates/*`
-- `${CLAUDE_PLUGIN_ROOT}/scaffold/adr/anti-patterns/README.md`
-- `${CLAUDE_PLUGIN_ROOT}/scaffold/docs/philosophy.md`
-- `${CLAUDE_PLUGIN_ROOT}/scaffold/docs/decision-process.md`
-- `${CLAUDE_PLUGIN_ROOT}/scaffold/docs/message-protocol.md`
-- `${CLAUDE_PLUGIN_ROOT}/scaffold/docs/registrar-playbook.md`
-- `${CLAUDE_PLUGIN_ROOT}/scaffold/docs/foundations/*`
-- all `.gitkeep` files
-
-Use `Read` + `Write` for every file — **never shell `cp`** — so substitutions and conflicts are explicit.
+All other paths — `scaffold/README.md`, `scaffold/adr/...`, `scaffold/docs/...`, `scaffold/agents/registrar/...`, `.gitkeep` files — map identically from `scaffold/X` to `{destination}/X`.
 
 ### Token-substitution rule (important)
 
-**Only substitute the exact tokens listed in the "Interpolation tokens" table above.** Leave other `{...}` patterns intact. The MADR templates (`_templates/*`) and some other files contain `{placeholder}` patterns like `{short decision title in imperative form}` — those are slots for future human or agent authors to fill in, not tokens for this skill to substitute. Substituting them would destroy the templates.
+**Iterate the nine specific tokens from the table above and substitute each one globally within the target file.** Do not use a generic regex over `{anything}`. The MADR templates in `adr/_templates/*` contain placeholder patterns like `{short decision title in imperative form}` and `{agent(s)}` — those are slots for future authors to fill in, and substituting them would destroy the templates.
 
-A safe rule: iterate the 9 specific tokens from the table and substitute each one globally within the target file. Do not use a generic regex over `{anything}`.
+Use `Read` + `Write` for every file — **never shell `cp`** — so substitutions and conflicts are explicit.
+
+### File set
+
+The complete set of files to copy (all under `${CLAUDE_PLUGIN_ROOT}/scaffold/`):
+
+- `README.md`
+- `agents/README.md`
+- `agents/{user,lead,implementer,registrar}/instructions.md` (4 files, with path remapping above)
+- `agents/{user,lead,implementer,registrar}/inbox/archive/.gitkeep` (4 `.gitkeep` files, with path remapping)
+- `adr/README.md`
+- `adr/_templates/{madr-full,madr-minimal,anti-pattern}.md` (3 files)
+- `adr/accepted/§000N-*.md` (9 seeded ADRs, §0001 through §0009)
+- `adr/anti-patterns/README.md`
+- `adr/{superseded,rejected}/.gitkeep` (2 `.gitkeep` files)
+- `proposed/.gitkeep`
+- `docs/{philosophy,decision-process,message-protocol,registrar-playbook}.md` (4 files)
+- `docs/foundations/0{1,2,3,4,5,6}-*.md` (6 files)
+
+Glob `${CLAUDE_PLUGIN_ROOT}/scaffold/` to enumerate dynamically if more files are added in future versions.
 
 ---
 

@@ -24,7 +24,7 @@ Each tier represents a qualitatively different kind of cognitive work with a lon
 
 ## Reporting lines
 
-- The {lead_role} receives briefs from the {user_role} and escalates decisions that cross into strategic territory.
+- The {lead_role} receives briefs from {user_role} and escalates decisions that cross into strategic territory.
 - The {implementer_role} receives briefs from the {lead_role}, drafts plans, executes approved plans, and escalates when briefs' assumptions don't hold or when execution would cross architectural boundaries.
 - The Registrar receives proposals from any agent authorized to author them (currently, any agent in the roster), and reports procedurally on what they find.
 
@@ -37,7 +37,7 @@ The proper procedure:
 1. The {lead_role} or {user_role} drafts an ADR proposing the change (template: `adr/_templates/madr-full.md`).
 2. The ADR is submitted to `proposed/` with a message to the Registrar.
 3. The Registrar validates form and assigns a §-number.
-4. The {user_role} approves (or rejects) the ADR.
+4. {user_role} approves (or rejects) the ADR.
 5. On acceptance, the Registrar updates this file and moves any affected agent directories.
 
 Never delete an agent directory. If an agent is retired, archive their directory under `agents/_retired/` (the Registrar creates this directory on first use) and leave a pointer in this roster — agents' inbox archives are part of the historical record.

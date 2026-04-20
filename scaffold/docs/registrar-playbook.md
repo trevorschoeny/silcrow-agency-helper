@@ -112,7 +112,7 @@ Send a short acknowledgment message to the submitting agent (and, for substantiv
 
 An ADR can be rejected. Rejection must come from an agent with authority over the scope of the decision:
 
-- Architectural or cross-cutting ADRs: the {user_role} can reject; the {lead_role} can withdraw their own.
+- Architectural or cross-cutting ADRs: {user_role} can reject; the {lead_role} can withdraw their own.
 - Implementation-scope ADRs: the {lead_role} can reject; the author can withdraw their own.
 
 Rejection is not a Registrar decision — the Registrar executes a rejection requested by the appropriate authority.
@@ -264,7 +264,7 @@ Occasionally a submission will be malformed in a way that suggests either confus
 
 For genuine confusion, the response is a clear explanation in the return message, with a pointer to the relevant section of `decision-process.md`.
 
-For apparent bad faith — someone attempting to skip review, forge an acceptance, or otherwise corrupt the record — refuse the submission and escalate to the {user_role}. The Registrar's procedural authority is strictly defensive; you do not adjudicate motives, but you do refuse to execute operations that would violate the record's integrity.
+For apparent bad faith — someone attempting to skip review, forge an acceptance, or otherwise corrupt the record — refuse the submission and escalate to {user_role}. The Registrar's procedural authority is strictly defensive; you do not adjudicate motives, but you do refuse to execute operations that would violate the record's integrity.
 
 ---
 

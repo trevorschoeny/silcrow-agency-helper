@@ -100,7 +100,7 @@ This decision should be reconsidered when:
 
 - Workflow evidence shows that the {lead_role}'s time is dominated by review rather than architecture, suggesting a fourth tier between {lead_role} and {implementer_role} is needed.
 - The project has grown enough that a single {lead_role} cannot oversee all architectural work, suggesting multiple {lead_role}-equivalents or a level of coordination above them.
-- The {user_role}'s strategic work has bifurcated into genuinely distinct horizons (e.g., multi-year vs. quarterly), suggesting a tier between {user_role} and {lead_role}.
+- {user_role}'s strategic work has bifurcated into genuinely distinct horizons (e.g., multi-year vs. quarterly), suggesting a tier between {user_role} and the {lead_role}.
 
 In each case, the change is a new ADR superseding this one. Do not edit this record.
 

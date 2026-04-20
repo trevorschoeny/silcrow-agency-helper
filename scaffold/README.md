@@ -108,7 +108,7 @@ These are significant decisions. They flow through the ADR process:
 1. The {lead_role} or {user_role} drafts an ADR.
 2. The ADR is submitted to `proposed/`.
 3. The Registrar validates form.
-4. The {user_role} approves or rejects.
+4. {user_role} approves or rejects.
 5. On acceptance, the Registrar updates `agents/README.md` and, if needed, the directory structure.
 
 Never delete an agent directory. Retired agents move to `agents/_retired/` and their archived inboxes are preserved.

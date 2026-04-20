@@ -64,7 +64,7 @@ This gives us the minimum viable stratification. Each tier is exactly one stratu
 The scaffold's operational rules all flow from this:
 
 - **The {lead_role} writes briefs, not specs.** If the {lead_role} writes specs, they are doing {implementer_role} work — collapsing the stratification. The brief/plan exchange preserves the stratum gap.
-- **The {user_role} does not give direct feedback to the {implementer_role}.** Two-stratum skips are stratification violations.
+- **{user_role} does not give direct feedback to the {implementer_role}.** Two-stratum skips are stratification violations.
 - **New tiers are added between existing ones only when the work genuinely spans more than one stratum.** Adding tiers for status or political reasons is the most common anti-pattern and destroys the system.
 
 When the scaffold grows past its minimum size, the question is always *whether the work has stratified further*, not "do we need more layers?" If the {lead_role}'s work has bifurcated into (a) genuinely strategic architecture spanning years and (b) tactical coordination across multiple {implementer_role}s on monthly horizons, you have a Stratum III *and* a Stratum II role bundled in one, and splitting them is requisite. If it is just feeling heavy, more process won't help; the problem is elsewhere.
