@@ -101,3 +101,12 @@ Don't let a plan drift into feeling like an ADR. If you find a plan starting to 
 - `#ORG/adr/_templates/` — use `madr-full` or `madr-minimal` when you draft; `anti-pattern` for anti-patterns.
 - `#ORG/adr/README.md` — the index; §0007 (briefs-not-specs protects your agency), §0013 (your draft-with-approval authority), §0014 (promotion rule and canon/ops).
 - `#ORG/adr/anti-patterns/` — what to avoid.
+
+## Principles to reason from (load when needed)
+
+Read these when the procedures don't cover your situation or when you want to reason from first principles before making a call. Don't load preemptively.
+
+- `#ORG/docs/philosophy.md` — the seven foundations synthesized; the scaffold's constitutional text. Load at an edge case no ADR or procedure addresses.
+- `#ORG/docs/foundations/01-stratified-cognition.md` — why tier-2 work is execution (days-to-weeks horizon) and why protecting your agency matters. Load when a brief is pulling you toward work that doesn't fit the tier.
+- `#ORG/docs/foundations/03-actor-model.md` — private-state discipline, message passing, "let it crash" honest signaling. Load when thinking about the message protocol or when unsure how to surface a blocker.
+- `#ORG/docs/foundations/07-canonical-and-operational.md` — promotion rule. Load when you notice an operational choice that might deserve to become an ADR.

@@ -61,7 +61,15 @@ None. You are the principal.
 
 ## Key references
 
-- `#ORG/docs/philosophy.md` — the intellectual foundation for why this structure works.
 - `#ORG/docs/decision-process.md` — how ADRs flow through the system.
 - `#ORG/adr/README.md` — index of all decisions (starting points: §0011 scope seed, §0013 principal framing, §0010 roster changes).
 - `#ORG/agents/` — current roster. Unit-level agents live at `@<unit>/#ORG/agents/<role>/`.
+
+## Principles to reason from (load when needed)
+
+Read these when the procedures don't cover your situation or when you want to reason from first principles before making a call. Don't load preemptively.
+
+- `#ORG/docs/philosophy.md` — the seven foundations synthesized; the scaffold's constitutional text. Load at an edge case no ADR or procedure addresses.
+- `#ORG/docs/foundations/02-subsidiarity.md` — decisions at the lowest competent level. Load when deciding whether to make a call yourself vs. delegate it to a Lead.
+- `#ORG/docs/foundations/01-stratified-cognition.md` — cognitive horizons by tier. Load when thinking about what kind of work each tier should actually be doing.
+- `#ORG/docs/foundations/07-canonical-and-operational.md` — direction-of-constraint, promotion rule, reference rule. Load when deciding whether a choice deserves ADR treatment or stays operational.

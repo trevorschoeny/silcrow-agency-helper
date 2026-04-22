@@ -125,3 +125,13 @@ If either answer is "no," rewrite the ADR so the decision content lives inside i
 - `#ORG/docs/message-protocol.md` — writing briefs that reach the {implementer_role} cleanly.
 - `#ORG/adr/_templates/` — `madr-full`, `madr-minimal`, `anti-pattern`, `establish-unit`.
 - `#ORG/adr/README.md` — the index; §0012 (your direct-commit authority), §0013 (tier model + Implementer drafts), §0014 (canon/ops), §0015 (units), §0011 (scope seed — expand early with User).
+
+## Principles to reason from (load when needed)
+
+Read these when the procedures don't cover your situation or when you want to reason from first principles before making a call. Don't load preemptively.
+
+- `#ORG/docs/philosophy.md` — the seven foundations synthesized; the scaffold's constitutional text. Load at an edge case no ADR or procedure addresses.
+- `#ORG/docs/foundations/01-stratified-cognition.md` — why tier-1 work is architectural (months horizon) and why the one-stratum rule matters. Load when thinking about whether a decision is at your tier or belongs above/below.
+- `#ORG/docs/foundations/02-subsidiarity.md` — when to intervene vs. let the {implementer_role} decide. Load when you're unsure whether to override.
+- `#ORG/docs/foundations/04-architecture-decision-records.md` — the discipline behind immutable, context-rich decisions. Load when authoring an ADR on a non-trivial topic and wanting to ground it properly.
+- `#ORG/docs/foundations/07-canonical-and-operational.md` — promotion rule and reference rule. Load when deciding whether an operational choice has become binding (candidate for an ADR) or when an ADR you're writing mentions external artifacts (check against the delete/contradiction tests).
