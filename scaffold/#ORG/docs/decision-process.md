@@ -251,11 +251,11 @@ When an ADR is superseded, the citation graph is preserved but annotated.
 
 ### `:add-unit` — unit-establishing ADRs
 
-When the {lead_role} or {user_role} adds a new unit via the `agent-org-scaffold:add-unit` skill, the skill authors a unit-establishing ADR automatically (§0015). The ADR lands in the parent's `#ORG/adr/accepted/` with the establishing reasoning captured. This is the fast path for a specific kind of structural decision; the skill is doing what the author would otherwise do by hand.
+When the {lead_role} or {user_role} adds a new unit via the `silcrow:add-unit` skill, the skill authors a unit-establishing ADR automatically (§0015). The ADR lands in the parent's `#ORG/adr/accepted/` with the establishing reasoning captured. This is the fast path for a specific kind of structural decision; the skill is doing what the author would otherwise do by hand.
 
 ### `:update` — update audit ADRs
 
-When the {user_role} invokes `agent-org-scaffold:update` to bring the agency into conformity with the plugin's current canonical state, the Registrar orchestrates an audit (per §0016). At the end of the audit, the Registrar authors **one audit ADR** summarizing accepts, rejects, deferrals, and file changes. That ADR is canonical — per §0016, rejections and deferrals are decisions that bind future audit behavior, and they belong in the record.
+When the {user_role} invokes `silcrow:update` to bring the agency into conformity with the plugin's current canonical state, the Registrar orchestrates an audit (per §0016). At the end of the audit, the Registrar authors **one audit ADR** summarizing accepts, rejects, deferrals, and file changes. That ADR is canonical — per §0016, rejections and deferrals are decisions that bind future audit behavior, and they belong in the record.
 
 ### Both paths produce normal ADRs
 

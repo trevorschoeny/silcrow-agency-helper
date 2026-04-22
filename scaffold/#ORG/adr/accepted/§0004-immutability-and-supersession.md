@@ -20,7 +20,7 @@ because the same discipline is what makes legal citation, git commit history, ev
 
 ## Context and problem statement
 
-**Inherited decision.** This is a founding constitutional decision inherited from the agent-org-scaffold skill via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
+**Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
 
 Every decision log has to answer the same question: what happens when an accepted decision turns out to be wrong, or when circumstances change? The answer shapes everything downstream — whether citations remain stable, whether history is preserved, whether the log accumulates trust or decays into a decorative artifact.
 

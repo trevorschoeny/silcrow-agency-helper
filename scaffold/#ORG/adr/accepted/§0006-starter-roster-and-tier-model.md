@@ -20,7 +20,7 @@ because this configuration is the smallest one that honors stratified-cognition,
 
 ## Context and problem statement
 
-**Inherited decision.** This is a founding constitutional decision inherited from the agent-org-scaffold skill via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
+**Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
 
 Every hierarchical project faces an initial roster-shaping question: how many tiers, what roles, and what authority structure? The answer constrains every subsequent decision about who does what. Premature elaboration produces bureaucratic overhead; premature flattening produces coordination failure. The goal is the minimum structure that satisfies the project's current needs and provides a clear path for growth.
 

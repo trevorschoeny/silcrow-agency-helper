@@ -10,7 +10,7 @@
 
 ## Context and problem statement
 
-**Inherited decision.** This is a founding constitutional decision inherited from the agent-org-scaffold skill via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
+**Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
 
 Some of the most valuable learning in a project comes from patterns that failed. Preserving that learning — and making it reusable — requires a deliberate mechanism. Without one, anti-patterns are re-derived every time the tempting-but-wrong path presents itself, and the cost of learning is paid repeatedly.
 

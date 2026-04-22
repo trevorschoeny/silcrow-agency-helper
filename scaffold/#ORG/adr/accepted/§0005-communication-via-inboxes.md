@@ -10,7 +10,7 @@
 
 ## Context and problem statement
 
-**Inherited decision.** This is a founding constitutional decision inherited from the agent-org-scaffold skill via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
+**Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
 
 Agents need to coordinate. The mechanism for that coordination determines whether the project's history is auditable and whether agents can turn over without losing context. The choice of coordination mechanism is load-bearing — once made, it shapes every subsequent interaction.
 

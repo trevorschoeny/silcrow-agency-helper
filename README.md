@@ -1,12 +1,14 @@
-# agent-org-scaffold
+# Silcrow — Agency Helper
 
-A Claude Code plugin that scaffolds a disciplined **agency** — a hierarchical multi-agent organization with ADR decision tracking, actor-model message passing, an async-auditor registrar, canonical/operational artifact discipline, and multi-unit support.
+A Claude Code plugin that scaffolds a **Silcrow agency** — a disciplined hierarchical multi-agent organization with ADR decision tracking, actor-model message passing, an async-auditor registrar, canonical/operational artifact discipline, and multi-unit support.
+
+The name **Silcrow** is the traditional typographic name for the `§` symbol (from Latin *signum sectionis*). The plugin's most distinctive discipline is sequential, monotonic, never-reused §-numbered records — a 900-year-old legal-citation tradition applied to agent-organization decisions. You get a silcrow; your agency gets a citation graph.
 
 Three skills:
 
-- **`/agent-org-scaffold:init`** — create a new agency from scratch.
-- **`/agent-org-scaffold:add-unit`** — add a new unit (or sub-unit) to an existing agency.
-- **`/agent-org-scaffold:update`** — bring an existing agency into conformity with the plugin's current canonical state.
+- **`/silcrow:init`** — create a new agency from scratch.
+- **`/silcrow:add-unit`** — add a new unit (or sub-unit) to an existing agency.
+- **`/silcrow:update`** — bring an existing agency into conformity with the plugin's current canonical state.
 
 ---
 
@@ -26,15 +28,15 @@ A single-unit agency is the common case. Multi-unit agencies have `@<unit>/` sub
 
 ```
 /plugin marketplace add trevorschoeny/claude-plugins
-/plugin install agent-org-scaffold@trevorschoeny-claude-plugins
+/plugin install silcrow@trevorschoeny-claude-plugins
 ```
 
 Or from source:
 
 ```sh
-git clone https://github.com/trevorschoeny/agent-org-scaffold
-/plugin marketplace add /path/to/agent-org-scaffold
-/plugin install agent-org-scaffold@agent-org-scaffold
+git clone https://github.com/trevorschoeny/silcrow
+/plugin marketplace add /path/to/silcrow
+/plugin install silcrow@silcrow
 ```
 
 ---

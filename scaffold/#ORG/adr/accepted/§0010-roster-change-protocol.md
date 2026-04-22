@@ -10,7 +10,7 @@
 
 ## Context and problem statement
 
-**Inherited decision.** This is a founding constitutional decision inherited from the agent-org-scaffold skill via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
+**Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
 
 §0006 establishes the initial tier model and roster. Subsequent changes to that roster — adding a new agent, retiring an existing one, renaming a role — are significant architectural decisions that require governance. This ADR records the procedure that governs them, and the rule that each individual change is itself an ADR.
 

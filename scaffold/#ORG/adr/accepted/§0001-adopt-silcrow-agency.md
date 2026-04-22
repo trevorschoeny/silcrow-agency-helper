@@ -1,4 +1,4 @@
-# §0001 — Adopt the agent-org-scaffold pattern
+# §0001 — Adopt the Silcrow agency
 
 - **Status:** accepted
 - **Date:** {date}
@@ -12,7 +12,7 @@
 
 In the context of **{agency_name}**,
 facing the need to structure a multi-agent project so that decisions, rationale, and roles survive turnover and time,
-we decided for **the agent-org-scaffold pattern** — hierarchical tiers (User / {lead_role} / {implementer_role}), an immutable ADR decision log using §-numbering, a Registrar with procedural authority over record integrity, and actor-model message passing between agents —
+we decided for **the Silcrow agency** — hierarchical tiers (User / {lead_role} / {implementer_role}), an immutable ADR decision log using §-numbering, a Registrar with procedural authority over record integrity, and actor-model message passing between agents —
 and neglected informal conventions, lightweight-markdown-only approaches, and heavier process frameworks (Agile ceremonies, ISO/SDLC process models),
 to achieve decisions preserved across turnover, roles with clear cognitive horizons, and a navigable historical record,
 accepting the upfront structural overhead and the discipline required to maintain immutability,
@@ -45,12 +45,12 @@ We need a structure that:
 
 1. **No formal structure.** Agents act ad-hoc, communicate freely, no formal decision log. Lowest upfront cost.
 2. **Lightweight markdown notes only.** A `NOTES.md` or `DECISIONS.md` file where informal decisions accumulate. Medium upfront cost.
-3. **Agent-org-scaffold (this option).** The full pattern: tiered roster, ADR decision log with §-numbering, Registrar role, actor-model inboxes, philosophy documentation. High upfront cost, highest ongoing structure.
+3. **Silcrow (this option).** The full pattern: tiered roster, ADR decision log with §-numbering, Registrar role, actor-model inboxes, philosophy documentation. High upfront cost, highest ongoing structure.
 4. **A heavier process framework.** Full Agile ceremonies, RACI matrices, formal SDLC, change-management boards. Very high upfront cost, bureaucratic overhead.
 
 ## Decision outcome
 
-**Chosen option: (3) Agent-org-scaffold**, because the pattern directly addresses each decision driver while drawing on structural disciplines with decades (or centuries) of independent validation.
+**Chosen option: (3) Silcrow**, because the pattern directly addresses each decision driver while drawing on structural disciplines with decades (or centuries) of independent validation.
 
 The pattern is not a single novel invention; it is the composition of six well-established disciplines (see `docs/philosophy.md`): stratified systems theory (Jaques), subsidiarity (Catholic social teaching / EU law), the actor model (Hewitt, Armstrong), architecture decision records (Nygard), §-numbering (legal citation tradition), and the registrar pattern (academic and civil administration). Each discipline holds the others in place: immutability works because the Registrar enforces form; the actor model works because the record provides shared truth; stratified cognition works because subsidiarity prevents upward delegation.
 
@@ -84,7 +84,7 @@ Options (1) and (2) fail driver 1 (durability) within months, based on documente
 - ❌ Lacks the separation between proposal and acceptance, so in-progress thinking bleeds into the record.
 - ❌ Without a Registrar, the record's integrity degrades under busy weeks.
 
-### (3) Agent-org-scaffold
+### (3) Silcrow
 
 - ✅ Addresses every driver above.
 - ✅ Builds on independently validated disciplines.
@@ -121,4 +121,4 @@ In each case, write a superseding ADR referencing this one. Do not edit this rec
 - `docs/decision-process.md` — the lifecycle of ADRs, including this one.
 - `docs/foundations/` — per-thread intellectual history for the six foundational disciplines.
 - `agents/` — the directories of the starter roster this ADR implicitly defines.
-- Source: initialized via the `agent-org-scaffold` skill ({date}).
+- Source: initialized via the Silcrow plugin ({date}).

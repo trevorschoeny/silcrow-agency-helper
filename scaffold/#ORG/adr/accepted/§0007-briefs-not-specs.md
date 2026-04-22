@@ -10,7 +10,7 @@
 
 ## Context and problem statement
 
-**Inherited decision.** This is a founding constitutional decision inherited from the agent-org-scaffold skill via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
+**Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
 
 When the {lead_role} hands work to the {implementer_role}, the form of that handoff determines whether the stratification established in §0006 actually holds. A brief that's too prescriptive collapses the two tiers into one (the {lead_role} is doing {implementer_role}-stratum work); a brief that's too vague leaves the {implementer_role} guessing at intent and produces misaligned output.
 

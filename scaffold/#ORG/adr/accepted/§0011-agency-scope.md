@@ -18,7 +18,7 @@ Supersession (see §0004 and `docs/decision-process.md`) is the normal update pa
 
 ## Context and problem statement
 
-**Inherited decision.** This is a founding constitutional decision inherited from the agent-org-scaffold skill via §0001 at scaffold time.
+**Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at scaffold time.
 
 Every architectural and implementation decision made in this agency cites back — directly or transitively — to agency scope. Without a citable scope statement, later decisions lack a resolvable north star, and the question "was this in scope?" has no authoritative answer. This ADR establishes the seat where that answer lives, from Day 1, even before the scope is fully articulated.
 

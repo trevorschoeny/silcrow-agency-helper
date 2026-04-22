@@ -18,7 +18,7 @@ Bring an existing agency into conformity with the plugin's current canonical sta
 
 ## When to use
 
-- A new version of the `agent-org-scaffold` plugin has shipped and the user wants to adopt the changes.
+- A new version of the Silcrow plugin has shipped and the user wants to adopt the changes.
 - The user suspects their agency's governance has drifted from the current scaffold and wants a reconciliation.
 - The user says something like "update my scaffold," "sync to the latest," "run an update audit," or similar.
 
@@ -77,7 +77,7 @@ Message body:
 ## Request
 
 Audit this agency against the current scaffold canonical state shipped by the
-`agent-org-scaffold` plugin.
+Silcrow plugin.
 
 - **Plugin canonical source:** `${CLAUDE_PLUGIN_ROOT}/scaffold/#ORG/`
   - (resolve `${CLAUDE_PLUGIN_ROOT}` from the environment Claude Code provides; it points at the installed plugin's root directory)

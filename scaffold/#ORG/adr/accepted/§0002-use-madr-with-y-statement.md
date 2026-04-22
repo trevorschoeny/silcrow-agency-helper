@@ -10,7 +10,7 @@
 
 ## Context and problem statement
 
-**Inherited decision.** This is a founding constitutional decision inherited from the agent-org-scaffold skill via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle. "We" in this record refers to the project, which adopted this decision implicitly by adopting §0001.
+**Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle. "We" in this record refers to the project, which adopted this decision implicitly by adopting §0001.
 
 The scaffold needs a uniform template for architectural decision records. Multiple widely-adopted formats exist with different strengths. The choice constrains every future ADR in the project, so it deserves its own record.
 

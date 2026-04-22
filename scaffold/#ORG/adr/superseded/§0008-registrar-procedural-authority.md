@@ -28,7 +28,7 @@ because conflating form and substance in one role is a centuries-documented fail
 
 ## Context and problem statement
 
-**Inherited decision.** This is a founding constitutional decision inherited from the agent-org-scaffold skill via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
+**Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
 
 Record integrity (§0004) only works if someone is responsible for it. But the nature of that responsibility matters: a role that enforces record integrity *and* makes substantive calls on the record's content corrupts both roles over time. This decision fixes the Registrar's authority at *procedural only* — form, numbering, placement, citation — and explicitly excludes substantive adjudication.
 

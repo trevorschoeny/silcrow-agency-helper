@@ -33,7 +33,7 @@ If the agency decides to introduce a particular subfolder scheme, **that decisio
 
 | § | Title | Status | Date |
 |---|---|---|---|
-| §0001 | [Adopt the agent-org-scaffold pattern](accepted/§0001-adopt-agent-org-scaffold.md) | accepted | {date} |
+| §0001 | [Adopt the Silcrow agency](accepted/§0001-adopt-silcrow-agency.md) | accepted | {date} |
 | §0002 | [Use MADR + Y-statement as the ADR format](accepted/§0002-use-madr-with-y-statement.md) | accepted | {date} |
 | §0003 | [Use §-numbering: sequential, monotonic, never-reused](accepted/§0003-use-section-numbering.md) | accepted | {date} |
 | §0004 | [Accepted ADRs are immutable; supersession replaces editing](accepted/§0004-immutability-and-supersession.md) | accepted | {date} |

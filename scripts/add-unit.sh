@@ -2,7 +2,7 @@
 #
 # add-unit.sh — add a new unit to an existing agency or unit.
 #
-# Invoked by the agent-org-scaffold:add-unit skill. Creates the unit's directory,
+# Invoked by the silcrow:add-unit skill. Creates the unit's directory,
 # populates its #ORG/ governance folder, and writes an establishing ADR into the
 # parent's #ORG/adr/accepted/.
 #
