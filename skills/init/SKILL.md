@@ -1,6 +1,6 @@
 ---
 name: init
-description: Scaffold a hierarchical agent organization with ADR decision tracking, actor-model message passing between agents, and registrar-enforced record integrity. One-shot initialization only — after scaffolding, the generated structure and instructions maintain the conventions without further skill invocation. Use when the developer says "scaffold agent organization," "initialize agent hierarchy," "set up agent-based project," "bootstrap multi-agent org," "new agent org," "agent-org-scaffold," or similar.
+description: Scaffold a hierarchical agency — an agent organization with ADR decision tracking, actor-model messaging, and registrar-enforced record integrity. Use when the user says "scaffold agent organization," "initialize agency," "set up agent org," "bootstrap agency," "new agency," "agent-org-scaffold," or similar.
 user-invocable: true
 allowed-tools:
   - Read
@@ -8,82 +8,121 @@ allowed-tools:
   - Grep
   - Bash(ls:*)
   - Bash(test:*)
+  - Bash(mv:*)
+  - Bash(git:*)
   - Bash(${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh:*)
+  - Bash(${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh:*)
   - AskUserQuestion
 ---
 
 # Agent Org Scaffold — Init
 
-Initialize a disciplined multi-agent project with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships with a **founding record of nine seeded ADRs** (§0001–§0009) that capture the constitutional decisions of the pattern itself — each citable, each supersedable, each paired with a foundation doc explaining its reasoning.
+Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0019) that capture the pattern's load-bearing decisions.
+
+An **agency** may be a single unit (one cohesive body of work) or multi-unit (the agency oversees several semi-independent units, each with its own governance and agents). The scaffold supports both.
 
 ## One-shot skill
 
-Run this skill **once**, at project initialization. After scaffolding completes, the generated `docs/*` files and `agents/*/instructions.md` files carry every convention forward. **Do not re-invoke this skill** to modify an existing scaffold — edit files directly, or (better) submit a new ADR through the generated decision process.
+Run this skill **once**, at agency initialization. After scaffolding completes, the generated structure carries all conventions forward. **Do not re-invoke `:init`** to modify an existing agency — use `:add-unit` for new units or `:update` to bring the agency in line with the current scaffold release.
 
-If the user asks to "re-run" the skill against an existing project, stop and explain the one-shot design. The skill performs no diff logic, no migrations, no upgrades.
+If the user asks to "re-run" `:init` on an existing agency, stop and explain. Redirect them to `:update` (for plugin-driven changes) or manual editing (for their own conventions).
 
 ## How this skill works
 
-All file copy and token substitution is performed by a bundled bash script (`${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh`). Your job as the skill is to:
-
-1. Gather the scoping values from the user.
-2. Confirm them.
-3. Invoke the script with those values as arguments.
-4. Relay the result.
-
-The script handles conflict detection, directory creation, file copy, and sed-based token substitution across the full template tree (37 files, ~3,200 lines of markdown). It completes in under a second. Do not attempt to do these operations file-by-file via Read+Write — you will be slower by several orders of magnitude and you risk introducing accidental content changes.
+The skill follows a six-phase flow: **silent peek → locked intro → natural conversation → run scaffold script → report → locked next-steps**. Two bundled bash scripts do the mechanical work: `scripts/scaffold.sh` for the agency, and `scripts/add-unit.sh` for each additional unit (if any). Your job is to gather the inputs conversationally and invoke the scripts.
 
 ---
 
-## Phase 1 — Pre-flight
+## Phase 1 — Peek silently
 
-Ask the user for the **destination path** where the scaffold should be created. Default: the current working directory.
+Before any output to the user:
 
-You don't need to perform a conflict check yourself — the script does it and will exit non-zero with a clear message if conflicts exist. But if you want a faster negative signal to the user, a single `ls "$DST"` or `test -d "$DST/agents"` before collecting all the answers is reasonable. Optional.
+- `ls` the current working directory (and any path the user indicates as destination).
+- Look for obvious project markers: README, package.json, pyproject.toml, Cargo.toml, etc. Use these to orient.
+- Check for `.git/` at the destination. If present, git init will be skipped and existing history will be preserved.
+- Walk the destination (one level deep) to find any nested `.git/` directories — these are flagged for the user later but not acted on here.
+- Check CLAUDE.md or the environment for the user's name. If found, you'll substitute it into the locked intro; if not, you'll silently omit.
+- Note whether the destination directory's basename starts with `@`. That's the scaffold convention for units, and agencies are units (§0015). If it doesn't start with `@`, you'll offer a rename during conversation.
 
----
-
-## Phase 2 — Scoping questions
-
-Ask these five questions, in order. Use `AskUserQuestion` for closed-choice answers; prose for free-text answers.
-
-1. **Project name** (free text) — Used in README, roster, §0001.
-2. **One-sentence description** (free text) — Used in README and §0001.
-3. **User's directory name** (free text, default: `user`) — The directory under `agents/` that represents the human user. Common choices: first name, initials, or keep as `user`. Will be lowercased and kebab-cased for the directory; a display-cased form is used in prose. (If the user gives a name, the skill derives the display form by title-casing the first letter.)
-4. **Rename the generic roles?** (closed-choice) — Options: "Keep defaults (Lead, Implementer)" or "Rename to domain-specific titles". If renamed, ask separately for the new names for Lead and Implementer. Keep `registrar` as-is — the title is part of the pattern.
-5. **Destination path** — already collected in Phase 1; carry forward without re-asking.
-
-After collecting all answers, briefly echo them back in one message **and then immediately proceed to Phase 3**. Do **not** ask for confirmation — the user already invoked the skill; requesting an extra "shall I run it?" adds friction without adding safety (the script is idempotent up to the pre-flight conflict check, which handles the one real failure mode). The echo is an acknowledgment, not a gate. If the user typed something clearly wrong and catches it mid-echo, they'll say so; otherwise run the script.
-
-Exception: if an answer is genuinely ambiguous or incomplete (user skipped a question, gave a value that can't be parsed, provided a destination that doesn't exist and can't be created), ask the clarifying question. A well-formed set of answers should never produce a "shall I run it?" prompt.
-
-### Deriving the nine values
-
-| Value | How to compute |
-|---|---|
-| `<destination>` | Phase 1 / Q5, absolute path preferred |
-| `<project_name>` | Q1 verbatim |
-| `<project_description>` | Q2 verbatim |
-| `<user_dir>` | Q3, lowercased, kebab-cased (spaces → hyphens) |
-| `<user_role>` | Display form of Q3 (title case; e.g. `user`→`User`, `alice`→`Alice`). If Q3 is `user`, pass `User`. |
-| `<lead_dir>` | `lead` unless renamed in Q4 |
-| `<lead_role>` | `Lead` unless renamed in Q4 (then title-cased) |
-| `<implementer_dir>` | `implementer` unless renamed in Q4 |
-| `<implementer_role>` | `Implementer` unless renamed in Q4 (then title-cased) |
-
-The date is auto-computed by the script (`date -u +%Y-%m-%d`); you do not pass it.
+No questions yet. No output. Just orient.
 
 ---
 
-## Phase 3 — Run the scaffold script
+## Phase 2 — Deliver the locked intro (verbatim)
 
-Invoke the bundled script with the nine values as positional arguments **in this exact order**:
+Output this text exactly. The only substitution is the user's name — inserted when known, silently omitted when not. The `{, <name>}` token renders as `, <name>` when known and as empty when not.
+
+> *This scaffold sets up an **agency** — a disciplined structure for decision-making and coordinated work, whether that work is a product, a team, a research effort, a coding project, or any kind of initiative where decisions need to be recorded and authority needs to be clear.*
+>
+> *Every agency has a hierarchy: a user (you{, <name>} — the human) sets strategic direction and works with the lead to brainstorm and strategize; the lead translates that into briefs; the implementer does the work. A registrar keeps the decision record clean. That's the default shape.*
+>
+> *Some agencies are a single unit — one cohesive body of work. Others have multiple units — the agency oversees several semi-independent functions, each with its own governance and agent team, each still answering to the agency's decisions. Units can be departments, teams, product lines, research threads, codebases — any partition of the work that's independent enough to deserve its own decision record and agent team.*
+>
+> *Two rules matter: **units answer to the agency** (agency-level decisions bind all units), and **units don't police each other** (no cross-unit oversight).*
+
+Output this, then drop out of scripted mode.
+
+---
+
+## Phase 3 — Natural conversation
+
+Now converse naturally. Based on what you peeked, do the following in whichever order feels natural:
+
+### What to suggest/confirm
+
+- **Suggest** an agency name if the directory or project files imply one. Example: if the CWD is `my-wedding/`, suggest "Wedding" or similar.
+- **Confirm** the user's name if you couldn't detect it.
+- **Propose** single-unit vs multi-unit based on what you found. If multi-unit, suggest initial unit names and purposes.
+- **Note** if a `.git/` already exists at the destination (scaffold will skip `git init`). If nested `.git/` directories exist inside the destination, mention that you'll flag them for the Registrar at first audit.
+- **Check the directory-name convention.** If the current directory doesn't start with `@`, surface the convention and offer a rename:
+  > *By scaffold convention, agencies use the `@` prefix like units do (§0015). Your current directory is `foo/`. Should I rename it to `@foo/` before scaffolding?*
+  The user can accept the rename (do `git mv` or `mv` as appropriate) or proceed with the unprefixed name (the `#ORG/` marker identifies it as an agency either way).
+- **Ask only what you can't infer.** No forms, no numbered phases. Conversational.
+
+### What you need to gather
+
+**Agency-level (for `scripts/scaffold.sh`):**
+
+- Destination path (absolute preferred).
+- Agency name (display form, e.g. "Acme Co" or "Wedding").
+- Agency description (one sentence, one paragraph — whatever feels right).
+- User directory name (kebab-case, lowercase; default `user` or the user's first name).
+- User display name (title-case, e.g. "Trevor" or "User").
+- Lead directory name (default `lead`).
+- Lead display name (default `Lead`; user may rename to Director, Architect, Editor, etc.).
+- Implementer directory name (default `implementer`).
+- Implementer display name (default `Implementer`; may rename to Specialist, Engineer, Associate, etc.).
+
+**Per unit (only if multi-unit; `scripts/add-unit.sh` invoked for each):**
+
+- Unit name (kebab-case, lowercase; will be prefixed with `@`).
+- Unit purpose (one sentence).
+- Lead directory + display name for this unit (default inherits agency; may override).
+- Implementer directory + display name for this unit (default inherits agency; may override).
+- Mode: `directory` (default) or `submodule` (§0019 — for units with independent versioning).
+- If submodule, submodule source (remote URL, local path, or blank for fresh init).
+
+### Role rename guidance
+
+The `Registrar` name is part of the pattern — don't rename it. User, Lead, and Implementer are flexible display names. When a user wants domain-specific vocabulary, ask for both the display name (e.g., "Director") and whether they want a different directory name (by default, derive `director` from `Director` via kebab-case).
+
+### When you have enough, run the scaffold
+
+No "shall I run it?" confirmation. If the answers are well-formed, proceed to Phase 4. If an answer is genuinely ambiguous, ask the clarifying question. A well-formed set of answers should never produce an extra confirmation prompt.
+
+---
+
+## Phase 4 — Run the scaffold
+
+### Agency first
+
+Invoke `scripts/scaffold.sh` with nine positional arguments:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh" \
     "<destination>" \
-    "<project_name>" \
-    "<project_description>" \
+    "<agency_name>" \
+    "<agency_description>" \
     "<user_dir>" \
     "<user_role>" \
     "<lead_dir>" \
@@ -92,76 +131,113 @@ Invoke the bundled script with the nine values as positional arguments **in this
     "<implementer_role>"
 ```
 
-Quote each argument so values with spaces (project name, description, renamed role titles) pass through cleanly.
+If the destination already contains a git repo (the user is scaffolding inside an existing repo), the script detects that and skips `git init` gracefully. If the user declined git entirely, pass `--skip-git`.
+
+Quote every argument so values with spaces pass through cleanly.
 
 The script:
-- Exits **0** on success and prints `✓ Scaffolded <project_name> at <destination>`.
-- Exits **1** on any conflict (existing `agents/`, `adr/`, `proposed/`, `§*.md`, or scaffold docs at the destination). Error message explains what to remove.
-- Exits **2** on argument-count errors (you passed the wrong number of arguments).
+- Prints `✓ Scaffolded <agency_name> at <destination>` on success.
+- Exits 3 on conflict (existing `#ORG/` at destination). Relay the error; do not attempt recovery.
+- Prints nested `.git/` warnings if any were detected. Pass these forward in your report.
 
-If the script returns non-zero, **do not attempt recovery.** Relay the error message to the user and stop.
+### Units next (if multi-unit)
 
-On success, proceed to Phase 4.
+For each declared unit, invoke `scripts/add-unit.sh`:
+
+```bash
+"${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh" \
+    "<destination>" \
+    "<unit_name>" \
+    "<unit_purpose>" \
+    "<unit_lead_dir>" \
+    "<unit_lead_role>" \
+    "<unit_implementer_dir>" \
+    "<unit_implementer_role>" \
+    --user-role "<user_role>" \
+    --parent-lead-role "<lead_role>" \
+    [--mode directory|submodule] \
+    [--submodule-source <url_or_path>]
+```
+
+Pass `--user-role` and `--parent-lead-role` so the unit's establishing ADR uses
+the agency's actual role names in its body (for references like "route through
+the agency Lead or User").
+
+Each invocation:
+- Authors an establishing ADR in the agency's `#ORG/adr/accepted/`.
+- Creates the unit directory (or `git submodule add` if submodule mode).
+- Scaffolds the unit's `#ORG/` with agents, ADR tree, docs, and README.
+- Commits with `§NNNN: establish unit @<name>`.
+
+If any unit fails, relay the error and stop. Do not continue to further units until the user resolves the issue.
 
 ---
 
-## Phase 4 — Report and exit
+## Phase 5 — Ontology report
 
-Print a completion report. The script already printed `✓ Scaffolded ...`; you add the roster summary and next-reads so the user knows where to start:
+After all scripts complete, output a structured block describing what was built. Pattern:
+
+### Single-unit — example
 
 ```
-✓ <project_name> — agent organization scaffold initialized at <destination>
-
-Starter roster (agents/):
-  <user_dir>/          — tier 0 (<user_role>): strategic direction, agent-roster changes
-  <lead_dir>/          — tier 1 (<lead_role>): briefs, architecture, plan review
-  <implementer_dir>/   — tier 2 (<implementer_role>): planning + execution under briefs
-  registrar/           — outside hierarchy: form-integrity of the record
-
-Founding record (nine ADRs — §0001 + eight inherited constitutional decisions):
-  adr/accepted/§0001-adopt-agent-org-scaffold.md
-  adr/accepted/§0002-use-madr-with-y-statement.md
-  adr/accepted/§0003-use-section-numbering.md
-  adr/accepted/§0004-immutability-and-supersession.md
-  adr/accepted/§0005-communication-via-inboxes.md
-  adr/accepted/§0006-starter-roster-and-tier-model.md
-  adr/accepted/§0007-briefs-not-specs.md
-  adr/accepted/§0008-registrar-procedural-authority.md
-  adr/accepted/§0009-anti-patterns-as-first-class-records.md
-  adr/accepted/§0010-roster-change-protocol.md
-  adr/accepted/§0011-project-scope.md  (seed — expected to be superseded early)
-
-Read these, in order, before starting work:
-  1. README.md                          — project orientation
-  2. docs/philosophy.md                 — why this works the way it does
-  3. docs/decision-process.md           — ADR lifecycle, §-numbering, supersession
-  4. docs/message-protocol.md           — how agents communicate
-  5. agents/<your-role>/instructions.md — your role's duties
-
-First collaborative task for <user-role> and <lead-role>:
-  Expand §0011 into a real project-scope statement via supersession.
-
-This skill will not be invoked again. All further work happens through the
-scaffold's own process: messages between agent inboxes, proposals into
-proposed/, decisions into adr/accepted/ via the registrar.
+Agency: Acme Co
+Description: A coding project that coordinates product experimentation and release.
+User directory: trevor (display: Trevor)
+Agency roles: Lead, Implementer
+Destination: /Users/trevorschoeny/Code/@acme
 ```
+
+### Multi-unit — example
+
+```
+Agency: Acme Org
+Description: Coordinating product, research, and ops across the team.
+User directory: trevor (display: Trevor)
+Agency roles: Lead, Implementer
+Units:
+  - @product    purpose: Owns product strategy and roadmap.
+                roles:   Director, Specialist
+                mode:    directory
+  - @research   purpose: Owns experimentation and new-area exploration.
+                roles:   Lead, Implementer (inherited)
+                mode:    directory
+  - @ops        purpose: Owns infrastructure and day-to-day operations.
+                roles:   Architect, Engineer
+                mode:    submodule
+Destination: /Users/trevorschoeny/Code/@acme
+```
+
+Role names reflect whatever was chosen during onboarding. Unit roles are tagged `(inherited)` when they match the agency's; otherwise the unit's own role names are listed. Unit mode is always shown. The `Destination` is the only path in the ontology report — navigation to specific agent directories belongs to the next-steps block.
+
+If nested `.git/` directories were detected during scaffold, include a short note after the ontology report:
+
+> *Note: detected N nested .git/ directories inside the destination. The Registrar will surface these at first audit for you to decide how to handle (submodule, leave nested, or move elsewhere).*
+
+---
+
+## Phase 6 — Locked scripted next-steps
+
+Output this wording exactly, substituting agency name, user's name, role names, and §-numbers where needed.
+
+> *If you want to ground in the theory behind this scaffold before diving in, read `#ORG/docs/philosophy.md` first, then `#ORG/docs/decision-process.md` for how ADRs flow, and `#ORG/docs/message-protocol.md` for how agents talk to each other. `#ORG/docs/foundations/` has deeper reading on stratified cognition, subsidiarity, the actor model, ADRs as a tradition, legal-citation inheritance, the registrar pattern, and the canon/operational split — each one short, each one standalone.*
+>
+> *Agents work together by sending messages to each other's inboxes — small markdown files dropped into the receiving agent's `inbox/` directory. Each agent already knows where its own inbox lives, who it takes messages from, who it sends messages to, and how to archive what it's read. You don't need to configure any of that — it's baked into every agent's `instructions.md`.*
+>
+> *When you're ready to start working, close this session. Open a new one inside `#ORG/agents/<lead-dir>/` — that's your agency's lead, and the first conversation you want is planning-level: expanding §0011 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
+>
+> *You can start a session with any agent the same way — open it inside that agent's directory. Unit-level agents live under `@<unit-name>/#ORG/agents/<role>/`. The agent you open will read its own `instructions.md` and the surrounding context automatically.*
+>
+> *You can run the `:add-unit` skill at any time to add a new unit, or the `:update` skill to bring this agency into alignment with the latest plugin updates. The registrar assists with both.*
+>
+> *Good luck with {agency_name}! Let me know if you have any questions. Otherwise, I'll enjoy my retirement when you close this session. :)*
+
+Substitute the angle-bracketed tokens (`<lead-dir>`, etc.) with the actual values chosen during conversation.
 
 ---
 
 ## Rules
 
-- **Use the script.** Do not open individual template files and rewrite them file-by-file. The script is orders of magnitude faster and incapable of accidentally altering template content.
-- **Never overwrite existing files.** The script refuses on conflict; respect the refusal and relay the message to the user rather than trying to work around it.
-- **Never modify files outside the destination directory.** The script only writes under the destination path; you should only be handing it arguments.
-- If `${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh` is missing or not executable, stop and report that the plugin is not installed correctly.
-
-## What the script does internally (for reference, not for re-implementation)
-
-1. Validates its 9 positional arguments and computes today's date.
-2. Checks the destination for conflicts (existing `agents/`, `adr/`, `proposed/`, `docs/philosophy.md`, `docs/decision-process.md`, or `§*.md` files) and exits non-zero if any are present.
-3. Creates the destination tree with `mkdir -p`.
-4. Copies every `.gitkeep` file (empty placeholders).
-5. For every markdown file under `${CLAUDE_PLUGIN_ROOT}/scaffold/`, runs `sed` with nine `s|{token}|value|g` substitutions and writes the output to the destination. `user/`, `lead/`, and `implementer/` source directories are remapped to `<user_dir>/`, `<lead_dir>/`, `<implementer_dir>/` at write time. Template placeholders in `_templates/*.md` (like `{short decision title in imperative form}`) do not match any of the nine tokens and pass through unchanged.
-6. Prints a one-line success acknowledgment and exits 0.
-
-See `${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh` if you need to audit or modify this behavior.
+- **Use the scripts.** Don't hand-create template files; the scripts handle copy and substitution.
+- **The locked intro (Phase 2) and locked next-steps (Phase 6) are literal text** — substitute only named slots; do not paraphrase.
+- **If the scripts are missing or not executable**, stop and report the plugin is not installed correctly.
+- **On any script failure**, relay the error and stop. Don't attempt recovery.

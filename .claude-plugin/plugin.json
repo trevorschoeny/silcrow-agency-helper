@@ -1,7 +1,7 @@
 {
   "name": "agent-org-scaffold",
-  "version": "0.4.1",
-  "description": "One-shot scaffold for hierarchical multi-agent projects: ADR decision tracking, actor-model message passing, registrar-enforced record integrity. Ships with a founding record of nine seeded ADRs capturing the scaffold's constitutional decisions.",
+  "version": "0.5.0",
+  "description": "Scaffold a hierarchical agency — a disciplined multi-agent organization with ADR decision tracking, async-auditor registrar, canonical/operational artifact discipline, and multi-unit support. Three skills: init (create an agency), add-unit (add a new unit to an existing agency), update (sync an agency to the plugin's current canonical state).",
   "author": {
     "name": "Trevor Schoeny"
   },

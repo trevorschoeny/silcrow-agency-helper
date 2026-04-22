@@ -1,43 +1,35 @@
 # agent-org-scaffold
 
-A Claude Code plugin that scaffolds a disciplined multi-agent project structure with built-in decision tracking (ADRs), actor-model message passing, and registrar-enforced record integrity.
+A Claude Code plugin that scaffolds a disciplined **agency** — a hierarchical multi-agent organization with ADR decision tracking, actor-model message passing, an async-auditor registrar, canonical/operational artifact discipline, and multi-unit support.
 
-Single skill: **`/agent-org-scaffold:init`**.
+Three skills:
 
-## What it does
+- **`/agent-org-scaffold:init`** — create a new agency from scratch.
+- **`/agent-org-scaffold:add-unit`** — add a new unit (or sub-unit) to an existing agency.
+- **`/agent-org-scaffold:update`** — bring an existing agency into conformity with the plugin's current canonical state.
 
-Run once, at project initialization. The skill:
+---
 
-1. Asks five scoping questions (project name, description, your directory name, whether to rename roles, destination path).
-2. Creates a directory structure containing agents, ADRs, proposed-queue, and docs.
-3. Writes a **founding record of nine ADRs** (§0001–§0009): §0001 records the decision to adopt the scaffold; §0002–§0009 capture the constitutional decisions inherited through §0001 (ADR format, §-numbering, immutability, inbox messaging, tier model, briefs-not-specs, Registrar authority, anti-patterns as first-class records). Each cites a foundation doc for depth; each can be superseded like any other ADR.
-4. Populates eight reference documents covering philosophy, decision-process, message-protocol, registrar-playbook, and deep-dive foundations on the six disciplines the scaffold draws from.
+## Vocabulary
 
-After scaffolding, the generated structure is self-maintaining. **The skill is not re-invoked.** All further work in the scaffolded project flows through its own internal process: messages between agent inboxes, proposals into `proposed/`, decisions into `adr/accepted/` via the Registrar.
+- **Agency** — the whole scaffolded thing. The top-level unit.
+- **Unit** — any structured subdivision with its own governance, agents, and operational work. Recursive — a unit can contain units. The agency itself is the root unit.
+- **`#ORG/`** — the governance folder of any unit. Contains only decisions, agent instructions, and docs. Never operational content.
+- **`@<unit>/`** — a unit directory. `@` prefix for visual distinction; the `#ORG/` inside is the programmatic marker.
+- **Canonical** (ADRs) — immutable, citable, stable. **Operational** (everything else) — mutable, working.
 
-## What the scaffold is built on
+A single-unit agency is the common case. Multi-unit agencies have `@<unit>/` subdirectories, each with its own `#ORG/`.
 
-Six intellectual lineages, each with independent empirical or historical validation:
-
-1. **Stratified Systems Theory** — Elliott Jaques (1956–1996). Hierarchy reflects time horizons of cognitive work.
-2. **Subsidiarity** — Aquinas → Taparelli → *Quadragesimo Anno* (1931) → Article 5(3) TEU (2007). Decisions at the lowest competent level.
-3. **Actor model** — Hewitt (1973), Agha (1986), Armstrong (2003). Private state, message passing, supervision trees.
-4. **Architecture Decision Records** — Nygard (2011), MADR (2017–), Zimmermann Y-statements (2012). Immutable, context-rich decision documents.
-5. **Legal citation tradition** — Roman *signum sectionis* through modern Bluebook. §-numbered, monotonic, never-reused identifiers.
-6. **Registrar pattern** — University, court, and corporate registrars. Procedural authority over form, separated from substantive decision-making.
-
-Every generated project includes a full `docs/philosophy.md` explaining these, plus `docs/foundations/` with a 3-6 page treatment of each thread.
+---
 
 ## Installation
-
-### From Trevor's marketplace
 
 ```
 /plugin marketplace add trevorschoeny/claude-plugins
 /plugin install agent-org-scaffold@trevorschoeny-claude-plugins
 ```
 
-### From source (development)
+Or from source:
 
 ```sh
 git clone https://github.com/trevorschoeny/agent-org-scaffold
@@ -45,118 +37,86 @@ git clone https://github.com/trevorschoeny/agent-org-scaffold
 /plugin install agent-org-scaffold@agent-org-scaffold
 ```
 
-Or trigger conversationally: "scaffold an agent organization," "bootstrap multi-agent org," "initialize agent hierarchy."
+---
 
 ## Usage
 
-After installation, start Claude Code in the directory where you want to scaffold a new project (or an empty directory). Then:
+### `:init` — create an agency
+
+Run in the directory you want to scaffold (or an empty directory). The skill peeks silently, delivers a short intro, and then converses naturally to gather agency name, description, your role details, any role renames, and unit list (single- or multi-unit). It runs `scripts/scaffold.sh` to create `#ORG/`, initializes git with a minimal `.gitignore`, and commits. For multi-unit agencies it then runs `scripts/add-unit.sh` once per unit.
+
+The generated agency ships a **founding record of 19 ADRs** (§0001 + 18 constitutional decisions §0002–§0019, with §0008 superseded by §0012). Each ADR cites a foundation doc; each can be superseded like any other.
+
+### `:add-unit` — add a unit
+
+Run in an agency's directory (or any unit's directory, to add a sub-unit). The skill walks up to find the parent `#ORG/`, converses to gather the unit's details, and runs `scripts/add-unit.sh` — which authors an establishing ADR in the parent's `#ORG/adr/accepted/` and scaffolds the unit's own `#ORG/`.
+
+### `:update` — reconcile with the plugin's current state
+
+Intentionally thin. Confirms an agency exists, drops one message in the Registrar's inbox pointing at `${CLAUDE_PLUGIN_ROOT}/scaffold/#ORG/`, and exits. The Registrar does the real work: dynamic diff, per-item approval dialogue with User and Lead, execution of approved changes, one audit ADR (§0016) summarizing accepts/rejects/deferrals, one structured commit (§0018). No version tracking — every invocation diffs against current plugin state.
+
+---
+
+## Seven intellectual lineages
+
+1. **Stratified Systems Theory** — Elliott Jaques. Hierarchy reflects time horizons of cognitive work.
+2. **Subsidiarity** — Aquinas → *Quadragesimo Anno* (1931) → Article 5(3) TEU. Decisions at the lowest competent level.
+3. **Actor model** — Hewitt (1973), Agha, Armstrong. Private state, message passing, supervision.
+4. **Architecture Decision Records** — Nygard (2011), MADR, Zimmermann Y-statements. Immutable, context-rich decisions.
+5. **Legal citation tradition** — Roman *signum sectionis* through modern Bluebook. §-numbered, monotonic, never-reused.
+6. **Registrar pattern** — University, court, corporate registrars. Procedural authority over form, separated from substance. Async auditor mode preserves that separation without sync gatekeeping.
+7. **Canonical/operational split** — Buchanan, Hart, Popper, Ostrom, Nygard, Agile. Canon binds operational, never the reverse.
+
+Every generated agency includes `#ORG/docs/philosophy.md` (full synthesis) and `#ORG/docs/foundations/` (per-thread intellectual history).
+
+---
+
+## Scaffold layout — a new agency
 
 ```
-/agent-org-scaffold:init
+@<agency>/
+├── #ORG/                       ← governance (sorts first, ASCII 35)
+│   ├── README.md               ← agency orientation
+│   ├── agents/{user,lead,implementer,registrar}/instructions.md + inbox/archive/
+│   ├── adr/{accepted,proposed,superseded,rejected,anti-patterns,_templates}/
+│   │   └── accepted/ ships §0001–§0019 (§0008 in superseded/)
+│   └── docs/
+│       ├── philosophy.md, decision-process.md, message-protocol.md
+│       └── foundations/01–07
+├── @<unit-1>/                  ← (optional, multi-unit) each with its own #ORG/
+└── (operational artifacts)     ← your codebase, plans, research
 ```
 
-The skill will ask five questions:
+Sort order: `#ORG/` first, then `@<units>/`, then operational content — deterministic across shells.
 
-1. Project name.
-2. One-sentence description.
-3. Your directory name under `agents/` (default: `user`).
-4. Whether to rename Lead / Implementer to domain-specific titles.
-5. Destination path (default: current directory).
-
-After confirming the answers, the skill creates the structure and exits.
-
-## Scaffold layout
-
-The scaffold produces:
-
-```
-<destination>/
-├── README.md                      (project orientation)
-├── agents/
-│   ├── README.md                  (roster)
-│   ├── <user-dir>/                (tier 0)
-│   │   ├── instructions.md
-│   │   └── inbox/archive/
-│   ├── <lead-dir>/                (tier 1)
-│   │   └── instructions.md, inbox/archive/
-│   ├── <implementer-dir>/         (tier 2)
-│   │   └── instructions.md, inbox/archive/
-│   └── registrar/                 (outside hierarchy)
-│       └── instructions.md, inbox/archive/
-├── adr/
-│   ├── README.md                  (index)
-│   ├── _templates/
-│   │   ├── madr-full.md
-│   │   ├── madr-minimal.md
-│   │   └── anti-pattern.md
-│   ├── accepted/
-│   │   ├── §0001-adopt-agent-org-scaffold.md
-│   │   ├── §0002-use-madr-with-y-statement.md
-│   │   ├── §0003-use-section-numbering.md
-│   │   ├── §0004-immutability-and-supersession.md
-│   │   ├── §0005-communication-via-inboxes.md
-│   │   ├── §0006-starter-roster-and-tier-model.md
-│   │   ├── §0007-briefs-not-specs.md
-│   │   ├── §0008-registrar-procedural-authority.md
-│   │   └── §0009-anti-patterns-as-first-class-records.md
-│   ├── superseded/
-│   ├── rejected/
-│   └── anti-patterns/README.md
-├── proposed/
-└── docs/
-    ├── philosophy.md              (8–12pp)
-    ├── decision-process.md
-    ├── message-protocol.md
-    ├── registrar-playbook.md
-    └── foundations/
-        ├── 01-stratified-cognition.md
-        ├── 02-subsidiarity.md
-        ├── 03-actor-model.md
-        ├── 04-architecture-decision-records.md
-        ├── 05-legal-citation-tradition.md
-        └── 06-registrar-pattern.md
-```
+---
 
 ## Plugin internals
 
 ```
-<plugin-root>/                     (this repo)
-├── .claude-plugin/
-│   └── plugin.json                (plugin manifest)
-├── README.md                      (this file)
-├── skills/
-│   └── init/
-│       └── SKILL.md               (skill entrypoint — frontmatter + procedure)
-└── scaffold/                      (source-of-truth templates)
-    ├── README.md                  (becomes the generated project's README)
-    ├── agents/
-    ├── adr/
-    ├── proposed/
-    └── docs/
+<plugin-root>/
+├── .claude-plugin/plugin.json
+├── skills/{init,add-unit,update}/SKILL.md
+├── scripts/{scaffold,add-unit}.sh
+└── scaffold/#ORG/              ← source-of-truth governance templates
 ```
 
-`skills/init/SKILL.md` is what Claude reads when the skill is invoked. It contains the five-phase procedure (pre-flight, scoping, create dirs, interpolate templates, report). The `scaffold/` directory at the plugin root is the template source; files with `{token}` placeholders are interpolated before being written to the destination. The skill references it via `${CLAUDE_PLUGIN_ROOT}/scaffold/`.
+`scripts/scaffold.sh` copies `scaffold/#ORG/` into a user's agency, substituting `{agency_name}`, `{agency_description}`, `{user_dir}`, `{user_role}`, `{lead_dir}`, `{lead_role}`, `{implementer_dir}`, `{implementer_role}`, and `{date}`. `scripts/add-unit.sh` renders `establish-unit.md` into a new establishing ADR and scaffolds the unit's `#ORG/`. `:update` diffs `scaffold/#ORG/` directly against an existing agency (no staging).
 
-## Customization
+To customize: edit `scaffold/#ORG/`; changes apply to future `:init` invocations and propagate to existing agencies via `:update`. The Registrar role name is always `Registrar` — it's part of the pattern; everything else is flexible.
 
-Templates use `{token}` placeholders substituted at scaffold time:
-
-- `{project_name}`, `{project_description}` — from scoping Q1–Q2.
-- `{user_dir}`, `{user_role}` — the user's directory and display name.
-- `{lead_dir}`, `{lead_role}` — the Lead role (or its domain-specific rename).
-- `{implementer_dir}`, `{implementer_role}` — the Implementer role (or its rename).
-- `{date}` — scaffold date.
-
-To customize the scaffold itself — add agents, change templates, modify the philosophy — edit the files in `scaffold/` and they will apply to future invocations. Changes do not affect already-scaffolded projects.
+---
 
 ## Rationale
 
-Hierarchical multi-agent systems drift without discipline. Decisions get lost, rationale evaporates, roles blur, and the record of *why* things are the way they are becomes irrecoverable. This scaffold imposes discipline from day one — not as process theatre, but as a compact set of structural commitments grounded in disciplines with decades (or centuries) of validation.
+Hierarchical multi-agent systems drift without discipline. Decisions get lost, rationale evaporates, roles blur. This scaffold imposes discipline from day one — not as process theatre, but as a compact set of structural commitments with decades (or centuries) of independent validation.
 
-The scaffold is opinionated about *structure* but flexible about *vocabulary*. Roles can be renamed; tiers can be added as the organization grows; the ADR template can be replaced; the folder names can be changed. The load-bearing conventions are the §-numbering discipline, the inbox/archive pattern, the immutability of accepted records, and the separation of form from substance at the Registrar role.
+The scaffold is opinionated about **structure** and flexible about **vocabulary**. The load-bearing conventions are: §-numbering, inbox/archive pattern, immutability of accepted records, form/substance separation at the Registrar, and the canonical/operational split.
 
-If you are reading this and trying to decide whether to use it, the best orientation is actually the generated `docs/philosophy.md`. It is written for the end user of the scaffold, but it explains the *why* better than anything here can.
+If you're deciding whether to use it, read the generated `#ORG/docs/philosophy.md` — it explains the *why* better than anything here can.
+
+---
 
 ## License and attribution
 
-The scaffold draws on named sources throughout its philosophy and foundations documents. Those sources are cited by author, work, and year. The code and templates in this skill are yours to adapt — credit is appreciated but not required.
+The scaffold cites named sources throughout its philosophy and foundations docs. The code and templates are yours to adapt — credit is appreciated but not required.
