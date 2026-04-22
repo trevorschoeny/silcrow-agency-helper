@@ -32,7 +32,7 @@ A new reader — human or agent — should read these in order:
 2. **`#ORG/docs/philosophy.md`** — the intellectual foundation for every part of the structure.
 3. **`#ORG/docs/decision-process.md`** — how ADRs are proposed, accepted, superseded.
 4. **`#ORG/docs/message-protocol.md`** — how agents communicate.
-5. **`#ORG/agents/<your-role>/instructions.md`** — if you are occupying a role, your specific duties.
+5. **`#ORG/agents/<your-role>/AGENTS.md`** — if you are occupying a role, your specific duties.
 6. **`#ORG/adr/accepted/§0006-starter-roster-and-tier-model.md`** and **`§0013-user-as-principal-and-local-tier-numbering.md`** — the tier model and its multi-unit refinements.
 7. **`#ORG/adr/accepted/§0015-agency-and-unit-structure.md`** — agency/unit vocabulary and structural conventions.
 

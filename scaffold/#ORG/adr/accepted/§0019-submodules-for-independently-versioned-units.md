@@ -118,8 +118,8 @@ Reconsider this ADR if:
 
 ## References
 
-- `../../agents/registrar/instructions.md` — no special audit for submodule mode; normal unit↔ADR audit applies.
-- `../../agents/lead/instructions.md` — Lead's git notes include submodule management.
+- `../../agents/registrar/AGENTS.md` — no special audit for submodule mode; normal unit↔ADR audit applies.
+- `../../agents/lead/AGENTS.md` — Lead's git notes include submodule management.
 - §0001 — founding scaffold decision.
 - §0014 — canon/operational split; submodule mode aligns with operationally-independent units.
 - §0015 — agency and unit structure; submodules share internal structure with plain-directory units.

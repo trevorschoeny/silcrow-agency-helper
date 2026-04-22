@@ -390,7 +390,7 @@ Accepted:
 
 File-level changes:
   - Moved agents/ → #ORG/agents/
-  - Updated lead/instructions.md (sections 2-4)
+  - Updated lead/AGENTS.md (sections 2-4)
   - Archived docs/old-process.md
 
 Rejected:

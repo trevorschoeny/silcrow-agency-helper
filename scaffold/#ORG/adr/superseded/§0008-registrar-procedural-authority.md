@@ -113,8 +113,8 @@ This decision should be reconsidered only if a radically different governance st
 ## References
 
 - `../../docs/foundations/06-registrar-pattern.md` — full intellectual history.
-- `../../agents/registrar/instructions.md` — operational procedures.
-- `../../agents/registrar/instructions.md` — the Registrar's own instructions, which open with this stance.
+- `../../agents/registrar/AGENTS.md` — operational procedures.
+- `../../agents/registrar/AGENTS.md` — the Registrar's own instructions, which open with this stance.
 - AACRAO (American Association of Collegiate Registrars and Admissions Officers), professional standards materials.
 - *Robert's Rules of Order*, 12th ed. (2020), on the secretary's role.
 - Weber, M. (1922). *Wirtschaft und Gesellschaft*, Part III on bureaucracy.

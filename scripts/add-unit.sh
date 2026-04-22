@@ -289,16 +289,12 @@ README
 
 # --- Unit-level agent instructions -------------------------------------------
 
-# We reuse the agency's instructions.md files as starting points. The Lead,
-# Implementer, and Registrar roles operate the same way at unit level — tier-1
-# of unit, tier-2 of unit, outside-hierarchy auditor — with only the scope
-# changing.
-#
-# Rather than render new full instructions, we ship a brief unit-specific
-# "you are operating at unit level" preamble and point at the agency's
-# instructions for the full role definition.
+# Each agent directory gets two files: AGENTS.md (canonical content, auto-loaded
+# by cross-tool agents) and CLAUDE.md (one-line `@AGENTS.md` pointer that Claude
+# Code auto-loads and imports). The AGENTS.md preamble is unit-specific; the
+# agency's AGENTS.md carries the full role definition.
 
-cat > "$UNIT_PATH/#ORG/agents/$LEAD_DIR/instructions.md" <<INSTR
+cat > "$UNIT_PATH/#ORG/agents/$LEAD_DIR/AGENTS.md" <<INSTR
 # $LEAD_ROLE (unit: @$UNIT_NAME) — instructions
 
 ## Role identity
@@ -311,8 +307,8 @@ and inherit agency-level ADRs (§0001 through the current agency record).
 
 ## Read these first
 
-- The agency's Lead instructions at \`../../../../#ORG/agents/<lead-dir>/instructions.md\`
-  (the path may vary — walk up to the agency's root and look in \`#ORG/agents/\`).
+- The agency's Lead AGENTS.md (walk up to the agency's root and look in
+  \`#ORG/agents/<lead-dir>/AGENTS.md\`).
 - The agency's §0013 for the multi-unit tier model.
 - The agency's §0015 for unit structure and federation rules.
 - This unit's establishing ADR (§NNNN) in the parent's
@@ -337,11 +333,11 @@ Archive on read to \`#ORG/agents/$LEAD_DIR/inbox/archive/\`.
 ---
 
 *For the full role definition — authorship authority, working pattern, canon/ops
-discipline, git notes — refer to the agency's Lead instructions. The shape is
+discipline, git notes — refer to the agency's Lead AGENTS.md. The shape is
 identical; only the scope is unit-level.*
 INSTR
 
-cat > "$UNIT_PATH/#ORG/agents/$IMPL_DIR/instructions.md" <<INSTR
+cat > "$UNIT_PATH/#ORG/agents/$IMPL_DIR/AGENTS.md" <<INSTR
 # $IMPL_ROLE (unit: @$UNIT_NAME) — instructions
 
 ## Role identity
@@ -353,8 +349,8 @@ You are **tier-2 of this unit** (§0013). You report to the unit's $LEAD_ROLE.
 
 ## Read these first
 
-- The agency's Implementer instructions for the full role definition (walk up
-  to the agency's \`#ORG/agents/<implementer-dir>/instructions.md\`).
+- The agency's Implementer AGENTS.md for the full role definition (walk up
+  to the agency's \`#ORG/agents/<implementer-dir>/AGENTS.md\`).
 - The agency's §0013 for the tier model and your draft-with-approval path.
 - The agency's §0014 for the canon/operational split.
 - This unit's establishing ADR for scope and reasoning.
@@ -373,11 +369,11 @@ Archive on read to \`#ORG/agents/$IMPL_DIR/inbox/archive/\`.
 ---
 
 *For the full role definition — working pattern, canon/ops promotion, raising
-anti-patterns — refer to the agency's Implementer instructions. Shape identical;
+anti-patterns — refer to the agency's Implementer AGENTS.md. Shape identical;
 scope is unit-level.*
 INSTR
 
-cat > "$UNIT_PATH/#ORG/agents/registrar/instructions.md" <<INSTR
+cat > "$UNIT_PATH/#ORG/agents/registrar/AGENTS.md" <<INSTR
 # Registrar (unit: @$UNIT_NAME) — instructions
 
 ## Role identity
@@ -388,8 +384,8 @@ per §0012.
 
 ## Read these first
 
-- The agency's Registrar instructions (walk up to the agency's
-  \`#ORG/agents/registrar/instructions.md\`) for the full audit checklist,
+- The agency's Registrar AGENTS.md (walk up to the agency's
+  \`#ORG/agents/registrar/AGENTS.md\`) for the full audit checklist,
   hybrid correction authority, and \`:update\` workflow orchestration.
 - §0012 (async auditor mode).
 - §0015 (federation rule — you do not audit peer units).
@@ -413,8 +409,13 @@ Archive on read to \`#ORG/agents/registrar/inbox/archive/\`.
 
 *For the full role definition — audit checklist, correction authority,
 \`:update\` orchestration, git responsibilities — refer to the agency's
-Registrar instructions. Shape identical; scope is unit-level.*
+Registrar AGENTS.md. Shape identical; scope is unit-level.*
 INSTR
+
+# Write CLAUDE.md pointers alongside each AGENTS.md so Claude Code auto-loads.
+for dir in "$LEAD_DIR" "$IMPL_DIR" "registrar"; do
+    printf '@AGENTS.md\n' > "$UNIT_PATH/#ORG/agents/$dir/CLAUDE.md"
+done
 
 # --- Render the establishing ADR ---------------------------------------------
 

@@ -221,11 +221,11 @@ Output this wording exactly, substituting agency name, user's name, role names, 
 
 > *If you want to ground in the theory behind this scaffold before diving in, read `#ORG/docs/philosophy.md` first, then `#ORG/docs/decision-process.md` for how ADRs flow, and `#ORG/docs/message-protocol.md` for how agents talk to each other. `#ORG/docs/foundations/` has deeper reading on stratified cognition, subsidiarity, the actor model, ADRs as a tradition, legal-citation inheritance, the registrar pattern, and the canon/operational split — each one short, each one standalone.*
 >
-> *Agents work together by sending messages to each other's inboxes — small markdown files dropped into the receiving agent's `inbox/` directory. Each agent already knows where its own inbox lives, who it takes messages from, who it sends messages to, and how to archive what it's read. You don't need to configure any of that — it's baked into every agent's `instructions.md`.*
+> *Agents work together by sending messages to each other's inboxes — small markdown files dropped into the receiving agent's `inbox/` directory. Each agent already knows where its own inbox lives, who it takes messages from, who it sends messages to, and how to archive what it's read. You don't need to configure any of that — it's baked into every agent's `AGENTS.md`.*
 >
 > *When you're ready to start working, close this session. Open a new one inside `#ORG/agents/<lead-dir>/` — that's your agency's lead, and the first conversation you want is planning-level: expanding §0011 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
 >
-> *You can start a session with any agent the same way — open it inside that agent's directory. Unit-level agents live under `@<unit-name>/#ORG/agents/<role>/`. The agent you open will read its own `instructions.md` and the surrounding context automatically.*
+> *You can start a session with any agent the same way — open it inside that agent's directory. Unit-level agents live under `@<unit-name>/#ORG/agents/<role>/`. The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
 >
 > *You can run the `:add-unit` skill at any time to add a new unit, or the `:update` skill to bring this agency into alignment with the latest plugin updates. The registrar assists with both.*
 >

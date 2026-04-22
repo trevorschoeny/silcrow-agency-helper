@@ -122,4 +122,4 @@ Compare the alternative: a single category where everything is "documentation" a
 - `05-legal-citation-tradition.md` — citation-based canonical referencing.
 - `06-registrar-pattern.md` — form/substance separation that applies within the canonical layer.
 - `../decision-process.md` — how ADRs flow through proposal, acceptance, supersession.
-- `../../agents/registrar/instructions.md` — unsafe-reference audit item the Registrar runs.
+- `../../agents/registrar/AGENTS.md` — unsafe-reference audit item the Registrar runs.

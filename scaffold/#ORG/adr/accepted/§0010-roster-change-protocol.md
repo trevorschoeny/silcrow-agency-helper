@@ -33,7 +33,7 @@ Individual roster changes — add an agent, retire an agent, rename a role — e
 
 1. **Draft.** {user_role} or the {lead_role} drafts an ADR proposing the change. `madr-minimal.md` is usually sufficient; use `madr-full.md` when the change is non-trivial (new tier, multiple agents at once, role rename that cascades through prose and cross-references).
 2. **Submit.** The draft is moved to `proposed/` and a message is sent to the Registrar announcing the submission.
-3. **Validate.** The Registrar runs the standard validation checklist (see `../../agents/registrar/instructions.md`).
+3. **Validate.** The Registrar runs the standard validation checklist (see `../../agents/registrar/AGENTS.md`).
 4. **Approve.** {user_role} approves (or rejects). Roster changes are tier-0 decisions — {user_role} owns the roster as a strategic/HR concern.
 5. **Execute.** On acceptance, the Registrar:
    - Assigns the next §-number and files the ADR in `adr/accepted/`.
@@ -55,6 +55,6 @@ Individual roster changes — add an agent, retire an agent, rename a role — e
 ## References
 
 - `../../docs/foundations/02-subsidiarity.md` — why roster decisions belong at tier 0.
-- `../../agents/registrar/instructions.md` — the validate/execute half of the procedure.
+- `../../agents/registrar/AGENTS.md` — the validate/execute half of the procedure.
 - `../_templates/madr-minimal.md` — the usual template for roster-change ADRs.
 - `§0006` — the tier model this procedure operates within.

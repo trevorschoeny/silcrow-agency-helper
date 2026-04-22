@@ -203,11 +203,19 @@ touch \
 subst "$SRC/README.md" "$DST/#ORG/README.md"
 
 # Agent instructions (with role-directory remapping for user/lead/impl;
-# registrar is always "registrar")
-subst "$SRC/agents/user/instructions.md"         "$DST/#ORG/agents/$USER_DIR/instructions.md"
-subst "$SRC/agents/lead/instructions.md"         "$DST/#ORG/agents/$LEAD_DIR/instructions.md"
-subst "$SRC/agents/implementer/instructions.md"  "$DST/#ORG/agents/$IMPL_DIR/instructions.md"
-subst "$SRC/agents/registrar/instructions.md"    "$DST/#ORG/agents/registrar/instructions.md"
+# registrar is always "registrar").
+#
+# Each agent directory gets two files: AGENTS.md (the canonical instructions,
+# auto-loaded by Codex/Cursor/Copilot/etc.) and CLAUDE.md (a one-line pointer,
+# `@AGENTS.md`, that Claude Code auto-loads and recursively imports).
+subst "$SRC/agents/user/AGENTS.md"         "$DST/#ORG/agents/$USER_DIR/AGENTS.md"
+subst "$SRC/agents/lead/AGENTS.md"         "$DST/#ORG/agents/$LEAD_DIR/AGENTS.md"
+subst "$SRC/agents/implementer/AGENTS.md"  "$DST/#ORG/agents/$IMPL_DIR/AGENTS.md"
+subst "$SRC/agents/registrar/AGENTS.md"    "$DST/#ORG/agents/registrar/AGENTS.md"
+
+for dir in "$USER_DIR" "$LEAD_DIR" "$IMPL_DIR" "registrar"; do
+    printf '@AGENTS.md\n' > "$DST/#ORG/agents/$dir/CLAUDE.md"
+done
 
 # ADR tree: README, templates, accepted, superseded, anti-patterns
 subst "$SRC/adr/README.md"                       "$DST/#ORG/adr/README.md"

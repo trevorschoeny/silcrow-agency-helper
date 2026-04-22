@@ -130,9 +130,9 @@ Reconsider this ADR if:
 
 - `../../docs/foundations/01-stratified-cognition.md` — cognitive-horizon framing that tier-1-of-unit, tier-2-of-unit preserve.
 - `../../docs/foundations/02-subsidiarity.md` — decisions at lowest competent level; User-transcends-tiers is the limit case at the top.
-- `../../agents/user/instructions.md` — the User's role as principal.
-- `../../agents/lead/instructions.md` — Lead's first-class ADR authority.
-- `../../agents/implementer/instructions.md` — Implementer's draft-with-approval path.
+- `../../agents/user/AGENTS.md` — the User's role as principal.
+- `../../agents/lead/AGENTS.md` — Lead's first-class ADR authority.
+- `../../agents/implementer/AGENTS.md` — Implementer's draft-with-approval path.
 - §0006 (intact) — the starter tier model this ADR extends.
 - §0010 — roster change protocol; applies to adding tiers or roles.
 - §0012 — Registrar as async auditor; related role-authority refinement.

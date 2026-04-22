@@ -114,7 +114,7 @@ Reconsider this ADR if:
 
 ## References
 
-- `../../agents/registrar/instructions.md` — the Registrar's git-advisory role includes flagging uncommitted governance content.
+- `../../agents/registrar/AGENTS.md` — the Registrar's git-advisory role includes flagging uncommitted governance content.
 - §0001 — founding scaffold decision.
 - §0014 — canon/operational split; governance-scope gitignore changes are canonical.
 - §0018 — commit message convention; operational commits are free-form.

@@ -144,11 +144,11 @@ From the Registrar to the submitter when a proposal is accepted or rejected. Nam
 
 ### Audit report
 
-From the Registrar to the {user_role} and/or {lead_role} after an audit run (invoked by the `:update` skill, by the User/Lead directly, or on the Registrar's own cadence). Categorizes findings: procedural corrections made, substantive issues for Lead, substantive issues for User. See `../agents/registrar/instructions.md` for the full format.
+From the Registrar to the {user_role} and/or {lead_role} after an audit run (invoked by the `:update` skill, by the User/Lead directly, or on the Registrar's own cadence). Categorizes findings: procedural corrections made, substantive issues for Lead, substantive issues for User. See `../agents/registrar/AGENTS.md` for the full format.
 
 ### Update request
 
-Dropped into the Registrar's inbox by the `:update` skill. Contains the plugin's canonical source path and a request to run a dynamic diff. See `../agents/registrar/instructions.md` for the Registrar's response workflow.
+Dropped into the Registrar's inbox by the `:update` skill. Contains the plugin's canonical source path and a request to run a dynamic diff. See `../agents/registrar/AGENTS.md` for the Registrar's response workflow.
 
 ### Others
 
@@ -224,7 +224,7 @@ Over time, `inbox/archive/` accumulates. Here's what it gives you:
 - **Continuity across agent turnover.** If an agent is replaced, the replacement reads the archive to reconstruct context.
 - **Auditability.** A skeptical reader can trace any decision back through the messages that produced it.
 
-If the archive ever gets large enough to cause navigation pain, the Registrar can partition it by date (e.g., `archive/2026-Q2/`), but **never delete**. See `../agents/registrar/instructions.md` ("Partitioning at scale") for notes.
+If the archive ever gets large enough to cause navigation pain, the Registrar can partition it by date (e.g., `archive/2026-Q2/`), but **never delete**. See `../agents/registrar/AGENTS.md` ("Partitioning at scale") for notes.
 
 ---
 
@@ -233,6 +233,6 @@ If the archive ever gets large enough to cause navigation pain, the Registrar ca
 - `philosophy.md` — especially the actor-model and registrar-pattern sections.
 - `foundations/03-actor-model.md` — the full intellectual basis for this protocol.
 - `decision-process.md` — proposals and acknowledgments are both message kinds in that flow.
-- `../agents/registrar/instructions.md` — how the Registrar processes incoming messages.
-- `../agents/` — the agency-level roster; each role has its own `inbox/` and `instructions.md`.
+- `../agents/registrar/AGENTS.md` — how the Registrar processes incoming messages.
+- `../agents/` — the agency-level roster; each role has its own `inbox/` and `AGENTS.md`.
 - `../adr/accepted/§0005-communication-via-inboxes.md` — the canonical decision behind this protocol.

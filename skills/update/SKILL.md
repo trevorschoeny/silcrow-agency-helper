@@ -104,7 +104,7 @@ Please:
 7. Commit the whole update as one structured commit per §0018.
 8. Send a final acknowledgment to User and Lead.
 
-See the `:update` workflow section of `#ORG/agents/registrar/instructions.md`
+See the `:update` workflow section of `#ORG/agents/registrar/AGENTS.md`
 for the detailed orchestration procedure. This message is the single trigger;
 everything from here is yours.
 ```
@@ -135,4 +135,4 @@ Output a short message to the user:
 - **Refuse to proceed without `#ORG/`.** If the CWD is not inside a scaffolded agency, redirect to `:init`.
 - **Write to the correct inbox.** If the skill is invoked inside a unit (not the agency), the audit scope is that unit. Write to that unit's Registrar inbox. The Registrar for that scope handles their scope only (§0015 federation rule).
 - **Never edit `#ORG/` content directly.** This skill only writes one message file into an inbox. All substantive work happens through the Registrar.
-- **The message triggers the workflow.** The Registrar's `instructions.md` describes what happens after. You don't orchestrate — you initiate.
+- **The message triggers the workflow.** The Registrar's `AGENTS.md` describes what happens after. You don't orchestrate — you initiate.

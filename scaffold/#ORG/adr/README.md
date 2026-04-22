@@ -25,7 +25,7 @@ The scaffold prescribes one discipline about ADR identity: §-numbering is **seq
 
 How ADRs are *organized within* `accepted/` — whether to introduce topic subfolders (`arch/`, `data/`, `ops/`, etc.), what to name them, when to introduce them — is a **local decision**. It's a navigation concern, not an identity concern. Citations still resolve by §-number regardless of subfolder placement; you update `adr/README.md` (this file) to point to the current location.
 
-If the agency decides to introduce a particular subfolder scheme, **that decision is itself a candidate for an ADR** — the convention binds every future ADR, which is exactly the bar for recording. Partitioning the record incidentally demonstrates the record's own pattern. See `../agents/registrar/instructions.md` ("Partitioning at scale") for the mechanical procedure and the scaling notes.
+If the agency decides to introduce a particular subfolder scheme, **that decision is itself a candidate for an ADR** — the convention binds every future ADR, which is exactly the bar for recording. Partitioning the record incidentally demonstrates the record's own pattern. See `../agents/registrar/AGENTS.md` ("Partitioning at scale") for the mechanical procedure and the scaling notes.
 
 ---
 
@@ -77,4 +77,4 @@ See [anti-patterns/README.md](anti-patterns/README.md).
 
 This index is maintained by the Registrar. Agents should not edit it directly — the Registrar updates it when authoring or superseding ADRs.
 
-See `../agents/registrar/instructions.md` for the full procedure.
+See `../agents/registrar/AGENTS.md` for the full procedure.

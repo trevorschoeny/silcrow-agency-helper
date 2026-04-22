@@ -154,7 +154,7 @@ Reconsider this ADR if:
 ## References
 
 - `../../docs/philosophy.md` — canon/operational framing underlying this structure.
-- `../../agents/registrar/instructions.md` — audit procedure for unit↔ADR consistency.
+- `../../agents/registrar/AGENTS.md` — audit procedure for unit↔ADR consistency.
 - `../../docs/foundations/07-canonical-and-operational.md` — intellectual history.
 - `_templates/establish-unit.md` — the ADR template used when adding a new unit.
 - §0001 — the founding decision this structure implements.

@@ -136,7 +136,7 @@ Reconsider this ADR if:
 
 - `../../docs/foundations/07-canonical-and-operational.md` — full intellectual history covering Buchanan, Hart, Popper, Ostrom, Nygard, and the Agile analog.
 - `../../docs/philosophy.md` — canon/operational framing embedded in the agency's guiding principles.
-- `../../agents/registrar/instructions.md` — the unsafe-reference audit item and how the Registrar surfaces it.
+- `../../agents/registrar/AGENTS.md` — the unsafe-reference audit item and how the Registrar surfaces it.
 - §0004 — immutability discipline that this ADR protects against reference-based erosion.
 - §0007 — briefs-not-specs sits inside the operational side; this ADR governs its relation to canon.
 - §0012 — Registrar audit includes unsafe-reference detection.

@@ -132,7 +132,7 @@ The Registrar's authority in this scaffold is strictly procedural:
 - **Status-folder placement.** Accepted ADRs in `accepted/`, superseded in `superseded/`, rejected in `rejected/`.
 - **Index updates.** `adr/README.md` reflects the current state of all records.
 - **Anti-pattern registration.** `ap-NNN` numbering for standalone anti-pattern records.
-- **Audit execution.** On-demand audit against the checklist (see `../../agents/registrar/instructions.md`).
+- **Audit execution.** On-demand audit against the checklist (see `../../agents/registrar/AGENTS.md`).
 - **Update-workflow orchestration.** The `:update` skill's diff, report, per-item review, and audit-ADR authoring.
 
 Per §0012, the Registrar operates as **async auditor**: Lead and User commit ADRs directly to `accepted/` when confident; Implementers draft into `proposed/` for Lead approval; the Registrar audits the record on demand and corrects procedural issues or surfaces substantive ones. No per-proposal gating.
@@ -146,7 +146,7 @@ The Registrar does **not**:
 
 When the Registrar encounters inconsistencies they cannot resolve mechanically, they **surface them upward** — by message, to the author or the appropriate tier — and let the substantive decision-makers respond. The Registrar does not block acceptance because they personally disagree with content; they don't block acceptance at all (that's the mode shift).
 
-This stance is unusual for agents accustomed to broader authority. It takes explicit articulation and repeated reinforcement. That's why the stance is the first thing in `../../agents/registrar/instructions.md` and why this foundation document restates it.
+This stance is unusual for agents accustomed to broader authority. It takes explicit articulation and repeated reinforcement. That's why the stance is the first thing in `../../agents/registrar/AGENTS.md` and why this foundation document restates it.
 
 ## Common failure modes
 
@@ -176,7 +176,7 @@ This stance is unusual for agents accustomed to broader authority. It takes expl
 ## See also
 
 - `../philosophy.md` — the short synthesis with the other six foundations.
-- `../../agents/registrar/instructions.md` — the operational procedures the Registrar follows.
+- `../../agents/registrar/AGENTS.md` — the operational procedures the Registrar follows.
 - `07-canonical-and-operational.md` — the canon/operational split that the Registrar audits for unsafe references.
 - `04-architecture-decision-records.md` — the immutability discipline the Registrar enforces.
 - `05-legal-citation-tradition.md` — the §-numbering the Registrar assigns.

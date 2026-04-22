@@ -77,7 +77,7 @@ Every generated agency includes `#ORG/docs/philosophy.md` (full synthesis) and `
 @<agency>/
 ├── #ORG/                       ← governance (sorts first, ASCII 35)
 │   ├── README.md               ← agency orientation
-│   ├── agents/{user,lead,implementer,registrar}/instructions.md + inbox/archive/
+│   ├── agents/{user,lead,implementer,registrar}/AGENTS.md + inbox/archive/
 │   ├── adr/{accepted,proposed,superseded,rejected,anti-patterns,_templates}/
 │   │   └── accepted/ ships §0001–§0019 (§0008 in superseded/)
 │   └── docs/

@@ -44,6 +44,6 @@ Option (3) — verbal — fails the record-preservation discipline (§0005). Opt
 
 - `../../docs/foundations/01-stratified-cognition.md` — the stratification this decision preserves.
 - `../../docs/foundations/02-subsidiarity.md` — the subsidiarity principle this decision operationalizes.
-- `../../agents/{lead_dir}/instructions.md` — where this pattern is operationalized for the {lead_role}.
-- `../../agents/{implementer_dir}/instructions.md` — where the receiving side is described.
+- `../../agents/{lead_dir}/AGENTS.md` — where this pattern is operationalized for the {lead_role}.
+- `../../agents/{implementer_dir}/AGENTS.md` — where the receiving side is described.
 - `../../docs/message-protocol.md` §6 — brief/plan/report message kinds.

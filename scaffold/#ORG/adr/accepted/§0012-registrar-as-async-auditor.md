@@ -66,7 +66,7 @@ The audit model is not new; it mirrors real-world practice. University registrar
 
 ## What the Registrar audits and how corrections work
 
-On-demand audits cover form, contradictions, staleness, citation integrity, orphans, scope violations (§0011), federation-rule violations, unsafe references (§0014), unit↔ADR consistency (§0015), and git hygiene (§0018, informational). The full checklist lives in `../../agents/registrar/instructions.md`.
+On-demand audits cover form, contradictions, staleness, citation integrity, orphans, scope violations (§0011), federation-rule violations, unsafe references (§0014), unit↔ADR consistency (§0015), and git hygiene (§0018, informational). The full checklist lives in `../../agents/registrar/AGENTS.md`.
 
 Correction authority is **hybrid**:
 - **Procedural issues** (filename typos, malformed §-numbering, broken citation paths, bidirectional-link repair) — Registrar fixes directly.
@@ -92,7 +92,7 @@ Reconsider this ADR if:
 ## References
 
 - `../../docs/foundations/06-registrar-pattern.md` — full intellectual history of the procedural/substantive split, with a section on why the audit mode preserves it.
-- `../../agents/registrar/instructions.md` — the Registrar's complete operational reference: audit checklist, correction procedures, and `:update` orchestration.
+- `../../agents/registrar/AGENTS.md` — the Registrar's complete operational reference: audit checklist, correction procedures, and `:update` orchestration.
 - §0008 (superseded) — the synchronous-gatekeeper original whose principle this ADR preserves.
 - §0013 — Implementer drafting-with-approval path uses `proposed/` as required staging.
 - §0014 — unsafe-reference audit item.

@@ -233,4 +233,4 @@ Each of the seven threads has its own full treatment in `foundations/`:
 
 These are not decorative. They are the reference material for agents who hit edge cases and want to reason from principles. They are teaching you to recognize the patterns in unfamiliar form, so you can adapt and defend the scaffold in situations this document didn't anticipate.
 
-The procedural docs — `decision-process.md`, `message-protocol.md`, and each agent's `instructions.md` — tell you *what to do*. The foundations teach you *why it works*. You need both. In a pinch, you can follow the procedures on faith; over time, you will need to understand the principles to adapt them.
+The procedural docs — `decision-process.md`, `message-protocol.md`, and each agent's `AGENTS.md` — tell you *what to do*. The foundations teach you *why it works*. You need both. In a pinch, you can follow the procedures on faith; over time, you will need to understand the principles to adapt them.

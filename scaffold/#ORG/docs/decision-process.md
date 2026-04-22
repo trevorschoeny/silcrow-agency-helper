@@ -1,6 +1,6 @@
 # Decision process
 
-This document governs how decisions become records in this agency. It is referenced from every agent's `instructions.md` and from the Registrar's playbook. Read it before authoring, reviewing, or handling ADRs.
+This document governs how decisions become records in this agency. It is referenced from every agent's `AGENTS.md` and from the Registrar's playbook. Read it before authoring, reviewing, or handling ADRs.
 
 The underlying philosophy — *why* we do it this way — is in `philosophy.md`. This doc is the operational how.
 
@@ -50,7 +50,7 @@ The §-number is assigned by the Registrar at acceptance time, or by a Lead/User
 
 ### Identity vs. navigation
 
-The §-numbering discipline above governs ADR *identity* and is scaffold-prescribed. How ADRs are *organized* within `accepted/` — whether to introduce topic subfolders — is a **local decision**. See `../adr/README.md` and the "Partitioning at scale" section of `../agents/registrar/instructions.md` for the mechanical procedure.
+The §-numbering discipline above governs ADR *identity* and is scaffold-prescribed. How ADRs are *organized* within `accepted/` — whether to introduce topic subfolders — is a **local decision**. See `../adr/README.md` and the "Partitioning at scale" section of `../agents/registrar/AGENTS.md` for the mechanical procedure.
 
 ---
 
@@ -295,7 +295,7 @@ The discipline — preserve the original, don't edit — is about learning, not 
 
 - `philosophy.md` — why this process works the way it does.
 - `message-protocol.md` — the message format used for proposals, briefs, and acknowledgments.
-- `../agents/registrar/instructions.md` — the Registrar's side of every operation above.
+- `../agents/registrar/AGENTS.md` — the Registrar's side of every operation above.
 - `foundations/04-architecture-decision-records.md` — deep dive on ADRs.
 - `foundations/05-legal-citation-tradition.md` — deep dive on §-numbering.
 - `foundations/07-canonical-and-operational.md` — canon/operational split.

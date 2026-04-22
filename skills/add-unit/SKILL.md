@@ -104,7 +104,7 @@ Invoke `scripts/add-unit.sh` with positional arguments:
 ```
 
 To find the agency's user role and lead role: read the parent's `#ORG/README.md`
-or inspect `#ORG/agents/` directory names and the matching `instructions.md`
+or inspect `#ORG/agents/` directory names and the matching `AGENTS.md`
 role names. These values feed into the unit's establishing ADR so references
 like "route through the agency Director or Trevor" render with the real names.
 

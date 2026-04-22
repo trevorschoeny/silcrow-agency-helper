@@ -125,7 +125,7 @@ Reconsider this ADR if:
 
 ## References
 
-- `../../agents/registrar/instructions.md` — `:update` orchestration, audit-ADR authoring, and past-audit scanning on subsequent invocations.
+- `../../agents/registrar/AGENTS.md` — `:update` orchestration, audit-ADR authoring, and past-audit scanning on subsequent invocations.
 - §0002 — MADR+Y-statement format used by audit ADRs.
 - §0004 — immutability; audit ADRs are immutable like any other ADR.
 - §0012 — Registrar as async auditor; the `:update` workflow is the most elaborate audit.

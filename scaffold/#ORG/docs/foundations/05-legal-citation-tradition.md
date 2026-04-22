@@ -108,7 +108,7 @@ The scaffold compensates for the loss of topic-at-a-glance with the filename's s
 ## Debates and open questions
 
 - **Is § the right character?** Some argue for ASCII-safe identifiers (e.g., `S0014`) because § can be awkward in some tooling (shells, some search engines). The scaffold's position: use §. Tooling mostly handles it well; where it doesn't, wildcards work. The historical and semantic weight of § is worth the occasional friction.
-- **Agency-global vs. partitioned numbering.** At scale, you might want to partition § sequences by topic or module. The scaffold's default is agency-global; see `../../agents/registrar/instructions.md` ("Partitioning at scale") for the partition discussion. The key discipline either way: never restart numbering.
+- **Agency-global vs. partitioned numbering.** At scale, you might want to partition § sequences by topic or module. The scaffold's default is agency-global; see `../../agents/registrar/AGENTS.md` ("Partitioning at scale") for the partition discussion. The key discipline either way: never restart numbering.
 - **Pilcrow for sub-sections.** Formal legal writing uses § for sections and ¶ (pilcrow) for paragraphs within them. The scaffold doesn't use ¶ today — ADRs are short enough not to need paragraph-level identifiers — but the option exists.
 
 ## Further reading

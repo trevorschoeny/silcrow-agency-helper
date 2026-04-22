@@ -93,7 +93,7 @@ Reconsider this ADR if:
 
 ## References
 
-- `../../agents/registrar/instructions.md` — the Registrar's git-advisory role includes informational flagging of convention violations.
+- `../../agents/registrar/AGENTS.md` — the Registrar's git-advisory role includes informational flagging of convention violations.
 - §0003 — §-numbering discipline that citations reference.
 - §0012 — Registrar as async auditor; git-hygiene items are advisory.
 - §0014 — canon/operational split that this convention mirrors.
