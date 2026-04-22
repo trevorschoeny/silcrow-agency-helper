@@ -34,7 +34,7 @@ A single-unit agency is the common case. Multi-unit agencies have `@<unit>/` sub
 Or from source:
 
 ```sh
-git clone https://github.com/trevorschoeny/silcrow
+git clone https://github.com/trevorschoeny/silcrow-agency-helper
 /plugin marketplace add /path/to/silcrow
 /plugin install silcrow@silcrow
 ```
