@@ -2,7 +2,7 @@
 #
 # add-unit.sh — add a new unit to an existing agency or unit.
 #
-# Invoked by the silcrow:add-unit skill. Creates the unit's directory,
+# Invoked by the silcrow:silcrow-add-unit skill. Creates the unit's directory,
 # populates its #ORG/ governance folder, and writes an establishing ADR into the
 # parent's #ORG/adr/accepted/.
 #
@@ -134,7 +134,7 @@ fi
 
 if [ ! -d "$PARENT_PATH/#ORG" ]; then
     echo "Error: parent path '$PARENT_PATH' does not contain #ORG/." >&2
-    echo "Run :init first to scaffold the agency, or navigate to an existing unit." >&2
+    echo "Run :silcrow-init first to scaffold the agency, or navigate to an existing unit." >&2
     exit 3
 fi
 
@@ -386,7 +386,7 @@ per §0012.
 
 - The agency's Registrar AGENTS.md (walk up to the agency's
   \`#ORG/agents/registrar/AGENTS.md\`) for the full audit checklist,
-  hybrid correction authority, and \`:update\` workflow orchestration.
+  hybrid correction authority, and \`:silcrow-update\` workflow orchestration.
 - §0012 (async auditor mode).
 - §0015 (federation rule — you do not audit peer units).
 - This unit's establishing ADR for scope.
@@ -408,7 +408,7 @@ Archive on read to \`#ORG/agents/registrar/inbox/archive/\`.
 ---
 
 *For the full role definition — audit checklist, correction authority,
-\`:update\` orchestration, git responsibilities — refer to the agency's
+\`:silcrow-update\` orchestration, git responsibilities — refer to the agency's
 Registrar AGENTS.md. Shape identical; scope is unit-level.*
 INSTR
 
@@ -467,7 +467,7 @@ if [ -f "$INDEX" ]; then
     # Append a note at the end; Registrar can normalize on next audit.
     cat >> "$INDEX" <<INDEX_NOTE
 
-<!-- §$NEXT_SECTION auto-added by :add-unit on $DATE; Registrar: incorporate into Accepted table. -->
+<!-- §$NEXT_SECTION auto-added by :silcrow-add-unit on $DATE; Registrar: incorporate into Accepted table. -->
 INDEX_NOTE
 fi
 

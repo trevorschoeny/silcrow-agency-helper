@@ -144,11 +144,11 @@ From the Registrar to the submitter when a proposal is accepted or rejected. Nam
 
 ### Audit report
 
-From the Registrar to the {user_role} and/or {lead_role} after an audit run (invoked by the `:update` skill, by the User/Lead directly, or on the Registrar's own cadence). Categorizes findings: procedural corrections made, substantive issues for Lead, substantive issues for User. See `../agents/registrar/AGENTS.md` for the full format.
+From the Registrar to the {user_role} and/or {lead_role} after an audit run (invoked by the `:silcrow-update` skill, by the User/Lead directly, or on the Registrar's own cadence). Categorizes findings: procedural corrections made, substantive issues for Lead, substantive issues for User. See `../agents/registrar/AGENTS.md` for the full format.
 
 ### Update request
 
-Dropped into the Registrar's inbox by the `:update` skill. Contains the plugin's canonical source path and a request to run a dynamic diff. See `../agents/registrar/AGENTS.md` for the Registrar's response workflow.
+Dropped into the Registrar's inbox by the `:silcrow-update` skill. Contains the plugin's canonical source path and a request to run a dynamic diff. See `../agents/registrar/AGENTS.md` for the Registrar's response workflow.
 
 ### Others
 

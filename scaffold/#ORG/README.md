@@ -8,7 +8,7 @@
 
 This directory (`#ORG/`) is the **governance folder** for the agency, per §0015. It contains only governance artifacts — decisions, agent instructions, foundational docs. Operational work — codebases, plans, research, schedules, deliverables — lives alongside `#ORG/` at the agency root (or in sub-units, if this agency has any).
 
-The agency is organized as a **hierarchical agent organization** with built-in decision tracking (ADRs), actor-model message passing between agents, a registrar that audits the record, and a clean separation between canonical and operational artifacts. The structure was initialized by the `silcrow:init` skill on {date}.
+The agency is organized as a **hierarchical agent organization** with built-in decision tracking (ADRs), actor-model message passing between agents, a registrar that audits the record, and a clean separation between canonical and operational artifacts. The structure was initialized by the `silcrow:silcrow-init` skill on {date}.
 
 The shape of the agency is opinionated and comes from a composition of seven independently-validated disciplines:
 
@@ -132,8 +132,8 @@ Each cites its foundation doc (`docs/foundations/0N-*.md`) for the full reasonin
 These are significant decisions, each governed by its own ADR.
 
 - **Roster changes** (adding, renaming, retiring agents) follow `#ORG/adr/accepted/§0010-roster-change-protocol.md`.
-- **New units** — use the `silcrow:add-unit` skill, which authors the establishing ADR and creates the unit's `#ORG/` and directory structure in one motion (per §0015).
-- **Scaffold updates** (new ADRs, reorg, conventions shipped by the plugin) — use the `silcrow:update` skill. The Registrar orchestrates; every change is user-approved; the session produces one audit ADR (§0016).
+- **New units** — use the `silcrow:silcrow-add-unit` skill, which authors the establishing ADR and creates the unit's `#ORG/` and directory structure in one motion (per §0015).
+- **Scaffold updates** (new ADRs, reorg, conventions shipped by the plugin) — use the `silcrow:silcrow-update` skill. The Registrar orchestrates; every change is user-approved; the session produces one audit ADR (§0016).
 
 ---
 

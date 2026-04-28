@@ -1,6 +1,6 @@
 # Registrar — audit checklist
 
-Read this file **when you're invoked to audit the record** (by User, Lead, or via the `:update` skill). Don't load it preemptively in other sessions — the core audit stance and categories are in `../agents/registrar/AGENTS.md`; this file is the detailed walk-through for active audit sessions.
+Read this file **when you're invoked to audit the record** (by User, Lead, or via the `:silcrow-update` skill). Don't load it preemptively in other sessions — the core audit stance and categories are in `../agents/registrar/AGENTS.md`; this file is the detailed walk-through for active audit sessions.
 
 ---
 

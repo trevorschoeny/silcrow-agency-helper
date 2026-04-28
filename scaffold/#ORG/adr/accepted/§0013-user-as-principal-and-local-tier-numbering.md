@@ -26,7 +26,7 @@ because subsidiarity (lowest competent level) plus principal authority (the User
 
 2. **What do tier numbers mean across units?** Is the Agency Lead tier-1 and every Unit Lead tier-2? That reading collapses the one-stratum rule §0006 relies on — the Unit Lead's work is full tier-1 work for their unit's scope, not tier-2 work under the Agency Lead's scope.
 
-3. **May an Implementer author ADRs?** §0006 assigns ADR authoring to Lead-and-up by default, but the `:update` flow, §0012's audit flow, and the general principle of subsidiarity all invite cases where an Implementer has hands-on knowledge that earns ADR treatment. Blocking Implementer authorship entirely loses that signal; leaving it fully open collapses the authority split.
+3. **May an Implementer author ADRs?** §0006 assigns ADR authoring to Lead-and-up by default, but the `:silcrow-update` flow, §0012's audit flow, and the general principle of subsidiarity all invite cases where an Implementer has hands-on knowledge that earns ADR treatment. Blocking Implementer authorship entirely loses that signal; leaving it fully open collapses the authority split.
 
 This ADR answers all three with three companion refinements.
 

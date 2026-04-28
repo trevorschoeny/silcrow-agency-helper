@@ -249,13 +249,13 @@ When an ADR is superseded, the citation graph is preserved but annotated.
 
 ## 10. Skill-assisted ADR flows
 
-### `:add-unit` — unit-establishing ADRs
+### `:silcrow-add-unit` — unit-establishing ADRs
 
-When the {lead_role} or {user_role} adds a new unit via the `silcrow:add-unit` skill, the skill authors a unit-establishing ADR automatically (§0015). The ADR lands in the parent's `#ORG/adr/accepted/` with the establishing reasoning captured. This is the fast path for a specific kind of structural decision; the skill is doing what the author would otherwise do by hand.
+When the {lead_role} or {user_role} adds a new unit via the `silcrow:silcrow-add-unit` skill, the skill authors a unit-establishing ADR automatically (§0015). The ADR lands in the parent's `#ORG/adr/accepted/` with the establishing reasoning captured. This is the fast path for a specific kind of structural decision; the skill is doing what the author would otherwise do by hand.
 
-### `:update` — update audit ADRs
+### `:silcrow-update` — update audit ADRs
 
-When the {user_role} invokes `silcrow:update` to bring the agency into conformity with the plugin's current canonical state, the Registrar orchestrates an audit (per §0016). At the end of the audit, the Registrar authors **one audit ADR** summarizing accepts, rejects, deferrals, and file changes. That ADR is canonical — per §0016, rejections and deferrals are decisions that bind future audit behavior, and they belong in the record.
+When the {user_role} invokes `silcrow:silcrow-update` to bring the agency into conformity with the plugin's current canonical state, the Registrar orchestrates an audit (per §0016). At the end of the audit, the Registrar authors **one audit ADR** summarizing accepts, rejects, deferrals, and file changes. That ADR is canonical — per §0016, rejections and deferrals are decisions that bind future audit behavior, and they belong in the record.
 
 ### Both paths produce normal ADRs
 
@@ -303,4 +303,4 @@ The discipline — preserve the original, don't edit — is about learning, not 
 - `../adr/accepted/§0012-registrar-as-async-auditor.md` — why Lead commits direct.
 - `../adr/accepted/§0013-user-as-principal-and-local-tier-numbering.md` — the Implementer-draft-with-approval path.
 - `../adr/accepted/§0014-canonical-and-operational-artifacts.md` — the promotion rule and reference rule.
-- `../adr/accepted/§0016-update-audits-produce-audit-adrs.md` — the `:update` audit-ADR pattern.
+- `../adr/accepted/§0016-update-audits-produce-audit-adrs.md` — the `:silcrow-update` audit-ADR pattern.

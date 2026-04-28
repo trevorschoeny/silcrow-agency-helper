@@ -2,12 +2,12 @@
 #
 # scaffold.sh — generate a Silcrow agency at a destination path.
 #
-# Invoked by the silcrow:init skill. Handles file copy, token
+# Invoked by the silcrow:silcrow-init skill. Handles file copy, token
 # substitution, git initialization, and initial commit.
 #
 # Agency = top-level unit, following the #ORG/ + @<unit>/ convention (§0015).
 # This script scaffolds the agency itself. Sub-units are added separately via
-# scripts/add-unit.sh, orchestrated by the :add-unit skill.
+# scripts/add-unit.sh, orchestrated by the :silcrow-add-unit skill.
 #
 # Usage:
 #   scaffold.sh <destination> <agency_name> <agency_description> \
@@ -125,7 +125,7 @@ fi
 for path in adr agents docs proposed; do
     if [ -d "$DST/$path" ]; then
         echo "Error: destination contains legacy scaffold directory '$path/'." >&2
-        echo "This looks like an older-style scaffold that needs migration via :update." >&2
+        echo "This looks like an older-style scaffold that needs migration via :silcrow-update." >&2
         echo "Refusing to overwrite." >&2
         exit 3
     fi

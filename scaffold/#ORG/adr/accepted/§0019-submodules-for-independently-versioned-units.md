@@ -5,7 +5,7 @@
 - **Authors:** scaffold initialization (inherited via §0001)
 - **Supersedes:** —
 - **Superseded by:** —
-- **Influences:** how `:add-unit` handles each new unit; when a unit's changes commit to the agency vs its own repo.
+- **Influences:** how `:silcrow-add-unit` handles each new unit; when a unit's changes commit to the agency vs its own repo.
 - **Influenced by:** §0001, §0014, §0015, §0017, §0018
 
 ## Y-statement
@@ -20,7 +20,7 @@ because the canon/operational split (§0014) applies to git the same way it appl
 
 ## Context and problem statement
 
-When a user adds a unit to an agency via `:add-unit` (§0015's unit-addition flow), the new unit becomes a directory inside the agency. That directory is tracked by git. The question is *how*:
+When a user adds a unit to an agency via `:silcrow-add-unit` (§0015's unit-addition flow), the new unit becomes a directory inside the agency. That directory is tracked by git. The question is *how*:
 
 - **Plain directory.** The agency has one git repo; the unit's files commit alongside the agency's. Everything versions together.
 - **Git submodule.** The unit has its own git repo, nested inside the agency via `git submodule add`. The unit has independent history, its own remote, and its own release lifecycle.
@@ -55,7 +55,7 @@ Neither answer is universally correct:
 - **A unit is a submodule** when it has independent versioning needs — typically when it's also (or will be) a separately-managed project with its own deployment or release cycle.
 - **A unit is a plain directory** when it's always-in-sync with the agency and has no separate release lifecycle.
 - The choice is made per-unit at creation time, not globally for the agency. An agency can mix both.
-- The `:add-unit` skill inspects the agency's current pattern and suggests the same pattern by default for new units, but always accepts an override.
+- The `:silcrow-add-unit` skill inspects the agency's current pattern and suggests the same pattern by default for new units, but always accepts an override.
 
 ### Submodule source options
 
@@ -65,7 +65,7 @@ When a unit is added in submodule mode, the user provides the source:
 - **Local path** — the submodule adds an existing local repo.
 - **Fresh init** — the submodule is initialized as a new local repo with no remote; the user can set a remote later.
 
-The default depends on context. If the user mentions an existing codebase URL during `:add-unit`, that's the remote. If they say "start a new independent repo for this unit," it's fresh init. Otherwise, plain directory.
+The default depends on context. If the user mentions an existing codebase URL during `:silcrow-add-unit`, that's the remote. If they say "start a new independent repo for this unit," it's fresh init. Otherwise, plain directory.
 
 ### Internal structure of a submodule unit
 
@@ -84,7 +84,7 @@ An agency can have (for example):
 - `@pebble/@pebble-core/` — plain directory (always moves with the agency).
 - `@pebble/@pebble-app/` — submodule (has its own release cycle and GitHub repo).
 
-The `:add-unit` skill handles both. Registrar audits the canon/ops ADR record the same way for both. Only the commit-cadence behavior differs.
+The `:silcrow-add-unit` skill handles both. Registrar audits the canon/ops ADR record the same way for both. Only the commit-cadence behavior differs.
 
 ### Why not worktrees
 
@@ -99,7 +99,7 @@ Worktrees are still useful for agent-session isolation (an agent wants its own w
 - **Positive:** Per-unit choice lets an agency mix modes as the reality demands.
 - **Negative:** Mixed-mode agencies require the Lead to hold both patterns in their head when working across units.
 - **Negative:** Submodule management adds cognitive load for the Lead (two-step commits, `git submodule update`, detached HEAD states on checkout).
-- **Neutral:** The `:add-unit` skill handles the mechanics; the Lead only has to answer "submodule or directory?" during unit creation.
+- **Neutral:** The `:silcrow-add-unit` skill handles the mechanics; the Lead only has to answer "submodule or directory?" during unit creation.
 
 ## Anti-patterns surfaced
 

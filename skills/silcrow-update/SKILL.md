@@ -1,5 +1,5 @@
 ---
-name: update
+name: silcrow-update
 description: Bring an existing agency into conformity with the plugin's current canonical state. Drops a message into the Registrar's inbox requesting an update audit; the Registrar does the intelligent work (dynamic diff, per-change approval, execution, audit-ADR authoring). Use when the user says "update the scaffold," "sync to the latest plugin," "apply scaffold updates," "run scaffold update audit," or similar.
 user-invocable: true
 allowed-tools:
@@ -24,7 +24,7 @@ Bring an existing agency into conformity with the plugin's current canonical sta
 
 ## Two principles (§0016)
 
-- **No version tracking.** The plugin ships "current canonical state." Every `:update` invocation is "here's the plugin's current state; compare to your current state." Whether the agency is one small change behind or many large changes behind, the workflow is the same.
+- **No version tracking.** The plugin ships "current canonical state." Every `:silcrow-update` invocation is "here's the plugin's current state; compare to your current state." Whether the agency is one small change behind or many large changes behind, the workflow is the same.
 - **User approves every change.** Additions, deletions, content modifications, structural moves — all pass through user approval before execution. The Registrar never auto-clobbers.
 
 ## How this skill works
@@ -47,8 +47,8 @@ That's it. No diffing. No reporting. No file operations. The Registrar is the en
 Before any output:
 
 - `pwd` to find the current working directory.
-- Walk upward to find the nearest `#ORG/`. That's the agency (or a unit — `:update` works at any level; the Registrar for that scope handles it).
-- If no `#ORG/` is found, stop. Tell the user: *"I don't see an agency here (no `#ORG/` in the current or parent directories). Run `:init` to scaffold one, or navigate to an existing agency's directory."*
+- Walk upward to find the nearest `#ORG/`. That's the agency (or a unit — `:silcrow-update` works at any level; the Registrar for that scope handles it).
+- If no `#ORG/` is found, stop. Tell the user: *"I don't see an agency here (no `#ORG/` in the current or parent directories). Run `:silcrow-init` to scaffold one, or navigate to an existing agency's directory."*
 - Find the Registrar's inbox: `<found_org_parent>/#ORG/agents/registrar/inbox/`. Verify it exists.
 
 ---
@@ -68,7 +68,7 @@ Message body:
 ```markdown
 # Update audit request
 
-- **From:** :update skill
+- **From:** :silcrow-update skill
 - **To:** Registrar
 - **Date:** YYYY-MM-DD
 - **References:** §0012 (your async audit mode), §0016 (audit-ADR pattern), §0018 (one commit per update)
@@ -104,7 +104,7 @@ Please:
 7. Commit the whole update as one structured commit per §0018.
 8. Send a final acknowledgment to User and Lead.
 
-See the `:update` workflow section of `#ORG/agents/registrar/AGENTS.md`
+See the `:silcrow-update` workflow section of `#ORG/agents/registrar/AGENTS.md`
 for the detailed orchestration procedure. This message is the single trigger;
 everything from here is yours.
 ```
@@ -132,7 +132,7 @@ Output a short message to the user:
 ## Rules
 
 - **Be thin.** This skill does nothing except drop the trigger message. No diffing, reporting, file operations, ADR authoring. All of that is the Registrar's role.
-- **Refuse to proceed without `#ORG/`.** If the CWD is not inside a scaffolded agency, redirect to `:init`.
+- **Refuse to proceed without `#ORG/`.** If the CWD is not inside a scaffolded agency, redirect to `:silcrow-init`.
 - **Write to the correct inbox.** If the skill is invoked inside a unit (not the agency), the audit scope is that unit. Write to that unit's Registrar inbox. The Registrar for that scope handles their scope only (§0015 federation rule).
 - **Never edit `#ORG/` content directly.** This skill only writes one message file into an inbox. All substantive work happens through the Registrar.
 - **The message triggers the workflow.** The Registrar's `AGENTS.md` describes what happens after. You don't orchestrate — you initiate.

@@ -1,6 +1,6 @@
-# Registrar — `:update` workflow
+# Registrar — `:silcrow-update` workflow
 
-This is the Registrar's most elaborate workflow. Read this file **only when a message from the `:update` skill lands in your inbox**; don't preemptively load it. The core operational reference is `../agents/registrar/AGENTS.md`; this file is the detailed procedure for one specific trigger.
+This is the Registrar's most elaborate workflow. Read this file **only when a message from the `:silcrow-update` skill lands in your inbox**; don't preemptively load it. The core operational reference is `../agents/registrar/AGENTS.md`; this file is the detailed procedure for one specific trigger.
 
 ---
 
@@ -10,7 +10,7 @@ The skill drops a message like:
 
 ```
 Subject: Update audit request
-From: :update skill
+From: :silcrow-update skill
 Body:
   Plugin canonical source: ${CLAUDE_PLUGIN_ROOT}/scaffold/#ORG/...
   Request: Audit this agency against the current scaffold canonical state.
@@ -136,7 +136,7 @@ File-level changes applied:
   - <summary of moves, rewrites, archivals>
 ```
 
-Place in `#ORG/adr/accepted/` with the next §-number. This is the canonical record of the audit session and will be consulted on future `:update` runs.
+Place in `#ORG/adr/accepted/` with the next §-number. This is the canonical record of the audit session and will be consulted on future `:silcrow-update` runs.
 
 ## 9. Final acknowledgment and commit
 
@@ -166,4 +166,4 @@ Deferred:
 See §00XX audit ADR for full reasoning.
 ```
 
-Rationale: multiple small commits per change would make `:update` slow and noisy. The audit ADR preserves the granular reasoning; the git log stays clean.
+Rationale: multiple small commits per change would make `:silcrow-update` slow and noisy. The audit ADR preserves the granular reasoning; the git log stays clean.

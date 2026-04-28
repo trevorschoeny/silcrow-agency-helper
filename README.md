@@ -6,9 +6,9 @@ The name **Silcrow** is the traditional typographic name for the `§` symbol (fr
 
 Three skills:
 
-- **`/silcrow:init`** — create a new agency from scratch.
-- **`/silcrow:add-unit`** — add a new unit (or sub-unit) to an existing agency.
-- **`/silcrow:update`** — bring an existing agency into conformity with the plugin's current canonical state.
+- **`/silcrow:silcrow-init`** — create a new agency from scratch.
+- **`/silcrow:silcrow-add-unit`** — add a new unit (or sub-unit) to an existing agency.
+- **`/silcrow:silcrow-update`** — bring an existing agency into conformity with the plugin's current canonical state.
 
 ---
 
@@ -43,17 +43,17 @@ git clone https://github.com/trevorschoeny/silcrow-agency-helper
 
 ## Usage
 
-### `:init` — create an agency
+### `:silcrow-init` — create an agency
 
 Run in the directory you want to scaffold (or an empty directory). The skill peeks silently, delivers a short intro, and then converses naturally to gather agency name, description, your role details, any role renames, and unit list (single- or multi-unit). It runs `scripts/scaffold.sh` to create `#ORG/`, initializes git with a minimal `.gitignore`, and commits. For multi-unit agencies it then runs `scripts/add-unit.sh` once per unit.
 
 The generated agency ships a **founding record of 19 ADRs** (§0001 + 18 constitutional decisions §0002–§0019, with §0008 superseded by §0012). Each ADR cites a foundation doc; each can be superseded like any other.
 
-### `:add-unit` — add a unit
+### `:silcrow-add-unit` — add a unit
 
 Run in an agency's directory (or any unit's directory, to add a sub-unit). The skill walks up to find the parent `#ORG/`, converses to gather the unit's details, and runs `scripts/add-unit.sh` — which authors an establishing ADR in the parent's `#ORG/adr/accepted/` and scaffolds the unit's own `#ORG/`.
 
-### `:update` — reconcile with the plugin's current state
+### `:silcrow-update` — reconcile with the plugin's current state
 
 Intentionally thin. Confirms an agency exists, drops one message in the Registrar's inbox pointing at `${CLAUDE_PLUGIN_ROOT}/scaffold/#ORG/`, and exits. The Registrar does the real work: dynamic diff, per-item approval dialogue with User and Lead, execution of approved changes, one audit ADR (§0016) summarizing accepts/rejects/deferrals, one structured commit (§0018). No version tracking — every invocation diffs against current plugin state.
 
@@ -103,9 +103,9 @@ Sort order: `#ORG/` first, then `@<units>/`, then operational content — determ
 └── scaffold/#ORG/              ← source-of-truth governance templates
 ```
 
-`scripts/scaffold.sh` copies `scaffold/#ORG/` into a user's agency, substituting `{agency_name}`, `{agency_description}`, `{user_dir}`, `{user_role}`, `{lead_dir}`, `{lead_role}`, `{implementer_dir}`, `{implementer_role}`, and `{date}`. `scripts/add-unit.sh` renders `establish-unit.md` into a new establishing ADR and scaffolds the unit's `#ORG/`. `:update` diffs `scaffold/#ORG/` directly against an existing agency (no staging).
+`scripts/scaffold.sh` copies `scaffold/#ORG/` into a user's agency, substituting `{agency_name}`, `{agency_description}`, `{user_dir}`, `{user_role}`, `{lead_dir}`, `{lead_role}`, `{implementer_dir}`, `{implementer_role}`, and `{date}`. `scripts/add-unit.sh` renders `establish-unit.md` into a new establishing ADR and scaffolds the unit's `#ORG/`. `:silcrow-update` diffs `scaffold/#ORG/` directly against an existing agency (no staging).
 
-To customize: edit `scaffold/#ORG/`; changes apply to future `:init` invocations and propagate to existing agencies via `:update`. The Registrar role name is always `Registrar` — it's part of the pattern; everything else is flexible.
+To customize: edit `scaffold/#ORG/`; changes apply to future `:silcrow-init` invocations and propagate to existing agencies via `:silcrow-update`. The Registrar role name is always `Registrar` — it's part of the pattern; everything else is flexible.
 
 ---
 

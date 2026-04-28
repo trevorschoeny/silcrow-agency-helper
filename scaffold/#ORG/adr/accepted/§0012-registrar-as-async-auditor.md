@@ -5,7 +5,7 @@
 - **Authors:** scaffold initialization (inherited via §0001)
 - **Supersedes:** §0008
 - **Superseded by:** —
-- **Influences:** every Registrar action; every ADR submission flow; the `:update` skill workflow.
+- **Influences:** every Registrar action; every ADR submission flow; the `:silcrow-update` skill workflow.
 - **Influenced by:** §0001, §0004, §0005, §0006
 
 ## Y-statement
@@ -78,7 +78,7 @@ The `proposed/` directory is retained as a **voluntary pre-review channel**: Lea
 
 - **Registrar as sync gatekeeper.** Reverting to per-proposal validation defeats the purpose. If a workflow starts requiring Registrar sign-off before commit, push back.
 - **Registrar as silent fixer.** Correcting substantive content — even subtly — under the guise of procedural repair. The distinction must be held carefully.
-- **Audit queue growing without audit.** If the on-demand audit never happens, the record decays silently. The User or Lead should invoke audits periodically (and the `:update` skill invokes one implicitly).
+- **Audit queue growing without audit.** If the on-demand audit never happens, the record decays silently. The User or Lead should invoke audits periodically (and the `:silcrow-update` skill invokes one implicitly).
 - **Pre-review-by-default.** Dropping everything into `proposed/` out of habit recreates the latency this ADR was built to remove. Lead's default should be direct commit.
 
 ## Review trigger
@@ -92,10 +92,10 @@ Reconsider this ADR if:
 ## References
 
 - `../../docs/foundations/06-registrar-pattern.md` — full intellectual history of the procedural/substantive split, with a section on why the audit mode preserves it.
-- `../../agents/registrar/AGENTS.md` — the Registrar's complete operational reference: audit checklist, correction procedures, and `:update` orchestration.
+- `../../agents/registrar/AGENTS.md` — the Registrar's complete operational reference: audit checklist, correction procedures, and `:silcrow-update` orchestration.
 - §0008 (superseded) — the synchronous-gatekeeper original whose principle this ADR preserves.
 - §0013 — Implementer drafting-with-approval path uses `proposed/` as required staging.
 - §0014 — unsafe-reference audit item.
 - §0015 — unit↔ADR consistency audit item.
-- §0016 — `:update` audit-ADR pattern builds on this model.
+- §0016 — `:silcrow-update` audit-ADR pattern builds on this model.
 - §0018 — governance commit convention; Registrar audits for unpushed governance.

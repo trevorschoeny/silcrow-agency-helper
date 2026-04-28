@@ -1,5 +1,5 @@
 ---
-name: init
+name: silcrow-init
 description: Scaffold a Silcrow agency — a hierarchical agent organization with ADR decision tracking, actor-model messaging, and registrar-enforced record integrity. Use when the user says "scaffold agent organization," "initialize agency," "set up agent org," "bootstrap agency," "new agency," "silcrow," "Silcrow agency," or similar.
 user-invocable: true
 allowed-tools:
@@ -23,9 +23,9 @@ An **agency** may be a single unit (one cohesive body of work) or multi-unit (th
 
 ## One-shot skill
 
-Run this skill **once**, at agency initialization. After scaffolding completes, the generated structure carries all conventions forward. **Do not re-invoke `:init`** to modify an existing agency — use `:add-unit` for new units or `:update` to bring the agency in line with the current scaffold release.
+Run this skill **once**, at agency initialization. After scaffolding completes, the generated structure carries all conventions forward. **Do not re-invoke `:silcrow-init`** to modify an existing agency — use `:silcrow-add-unit` for new units or `:silcrow-update` to bring the agency in line with the current scaffold release.
 
-If the user asks to "re-run" `:init` on an existing agency, stop and explain. Redirect them to `:update` (for plugin-driven changes) or manual editing (for their own conventions).
+If the user asks to "re-run" `:silcrow-init` on an existing agency, stop and explain. Redirect them to `:silcrow-update` (for plugin-driven changes) or manual editing (for their own conventions).
 
 ## How this skill works
 
@@ -227,7 +227,7 @@ Output this wording exactly, substituting agency name, user's name, role names, 
 >
 > *You can start a session with any agent the same way — open it inside that agent's directory. Unit-level agents live under `@<unit-name>/#ORG/agents/<role>/`. The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
 >
-> *You can run the `:add-unit` skill at any time to add a new unit, or the `:update` skill to bring this agency into alignment with the latest plugin updates. The registrar assists with both.*
+> *You can run the `:silcrow-add-unit` skill at any time to add a new unit, or the `:silcrow-update` skill to bring this agency into alignment with the latest plugin updates. The registrar assists with both.*
 >
 > *Good luck with {agency_name}! Let me know if you have any questions. Otherwise, I'll enjoy my retirement when you close this session. :)*
 

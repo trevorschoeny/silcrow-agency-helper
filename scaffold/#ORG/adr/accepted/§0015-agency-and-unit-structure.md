@@ -5,7 +5,7 @@
 - **Authors:** scaffold initialization (inherited via §0001)
 - **Supersedes:** —
 - **Superseded by:** —
-- **Influences:** every directory layout; every inbox path; every ADR-to-directory audit; the `:add-unit` skill; the `:update` skill's structural migrations.
+- **Influences:** every directory layout; every inbox path; every ADR-to-directory audit; the `:silcrow-add-unit` skill; the `:silcrow-update` skill's structural migrations.
 - **Influenced by:** §0001, §0005, §0010, §0011, §0014
 
 ## Y-statement

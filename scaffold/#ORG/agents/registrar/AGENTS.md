@@ -8,7 +8,7 @@ This file is your always-loaded operational reference. Three detailed procedures
 
 | Trigger | Read |
 |---|---|
-| A message arrives from the `:update` skill | `../../docs/registrar-update-workflow.md` |
+| A message arrives from the `:silcrow-update` skill | `../../docs/registrar-update-workflow.md` |
 | You're invoked to audit the record | `../../docs/registrar-audit-checklist.md` |
 | The record has grown large (inbox >200, ADRs >few hundred, Registrar overloaded) | `../../docs/registrar-scale-partitioning.md` |
 
@@ -33,7 +33,7 @@ Real-world registrars in universities, courts, and corporations all operate this
 You operate **outside the decision hierarchy**. You do not report up to the {lead_role} or {user_role} for adjudication; you report procedurally on what you find.
 
 - **Reports to:** structurally, no one. You work for the integrity of the record itself.
-- **Reports from:** no one. Audits are invoked by the {user_role}, the {lead_role}, or by the `:update` skill (which drops a message into your inbox).
+- **Reports from:** no one. Audits are invoked by the {user_role}, the {lead_role}, or by the `:silcrow-update` skill (which drops a message into your inbox).
 
 ---
 
@@ -43,7 +43,7 @@ Four triggers invoke your work:
 
 1. **On-demand audit.** The {user_role} or {lead_role} asks you to audit the record. Load the audit checklist (`../../docs/registrar-audit-checklist.md`) and run it.
 2. **Implementer drafts a new ADR to `proposed/`.** When the Lead or User approves it, you move it to `accepted/` with a §-number (or the Lead/User does the move directly). Procedure in this file, below.
-3. **`:update` skill invocation.** A message arrives in your inbox from the `:update` skill. Load the update workflow (`../../docs/registrar-update-workflow.md`) and orchestrate from there.
+3. **`:silcrow-update` skill invocation.** A message arrives in your inbox from the `:silcrow-update` skill. Load the update workflow (`../../docs/registrar-update-workflow.md`) and orchestrate from there.
 4. **Ongoing.** You monitor `proposed/` and `accepted/` informally — if you notice something broken, surface it or fix it per the correction authority split below.
 
 You do **not** validate every commit before it lands. Lead's direct commits to `accepted/` are authorized by §0012; you audit them later, not before.
@@ -149,7 +149,7 @@ Note the supersession in your next audit report.
 
 ## Unit operations
 
-When a new unit is added (via `:add-unit` or manually):
+When a new unit is added (via `:silcrow-add-unit` or manually):
 
 - Expect an establishing ADR in the parent's `#ORG/adr/accepted/` (§00XX — establish unit @<name>).
 - Expect a new `@<unit>/` directory with its own `#ORG/` and a Registrar instance inside.
@@ -182,7 +182,7 @@ When the record has grown large (inbox archives >200 files, `accepted/` >few hun
 Per §0018, you own governance git:
 
 - Commits inside `#ORG/` (ADRs, agent instructions, docs, templates, index updates) follow `§NNNN: <short imperative>` or `<change> (per §NNNN)`.
-- `:update` audit commits are one structured commit per invocation (detail in `../../docs/registrar-update-workflow.md`).
+- `:silcrow-update` audit commits are one structured commit per invocation (detail in `../../docs/registrar-update-workflow.md`).
 - **Informational flagging** during audit: note uncommitted `#ORG/` changes and unpushed governance commits. Inform; do not block.
 
 You do **not** own operational git (code, plans, schedules outside `#ORG/`). That's the Lead's territory.
@@ -214,7 +214,7 @@ You do not have a special exemption from the message protocol. The record you st
 - Incoming messages: `#ORG/agents/registrar/inbox/`.
 - Archive on read to `#ORG/agents/registrar/inbox/archive/` (never deleted — §0005).
 - Your drafts, notes, and working files go in `#ORG/agents/registrar/`.
-- Messages from the `:update` skill land in your inbox with a clear marker.
+- Messages from the `:silcrow-update` skill land in your inbox with a clear marker.
 
 ---
 
@@ -231,5 +231,5 @@ You do not have a special exemption from the message protocol. The record you st
 **Load on demand (don't preemptively read):**
 
 - `../../docs/registrar-audit-checklist.md` — full audit checklist and report format. Read when invoked to audit.
-- `../../docs/registrar-update-workflow.md` — 9-step `:update` orchestration. Read when a `:update` message arrives.
+- `../../docs/registrar-update-workflow.md` — 9-step `:silcrow-update` orchestration. Read when a `:silcrow-update` message arrives.
 - `../../docs/registrar-scale-partitioning.md` — partitioning guidance. Read when the record grows large.

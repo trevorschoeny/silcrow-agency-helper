@@ -1,8 +1,8 @@
 # §NNNN — Establish unit @{unit_name}
 
-- **Status:** accepted <!-- populated by :add-unit -->
+- **Status:** accepted <!-- populated by :silcrow-add-unit -->
 - **Date:** {date}
-- **Authors:** {authoring_lead_or_user} (via `silcrow:add-unit`)
+- **Authors:** {authoring_lead_or_user} (via `silcrow:silcrow-add-unit`)
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every subsequent operational artifact scoped to `@{unit_name}`; all unit-level ADRs authored inside `@{unit_name}/#ORG/adr/`.
@@ -110,12 +110,12 @@ Reconsider this unit's establishment if:
 - `§0015` — agency and unit structure; this ADR implements the unit-addition pattern.
 - `§0019` — submodule decision (if the unit is a submodule).
 - Parent unit's `#ORG/README.md` — governance overview of the parent unit.
-- `silcrow:add-unit` — the skill that orchestrated this establishment.
+- `silcrow:silcrow-add-unit` — the skill that orchestrated this establishment.
 
 ---
 
 <!--
-This ADR template is rendered by the `silcrow:add-unit` skill when
+This ADR template is rendered by the `silcrow:silcrow-add-unit` skill when
 adding a new unit to an agency or unit. Placeholders in curly braces are filled
 during the skill's conversation phase; the skill then writes the completed file
 to the parent's #ORG/adr/accepted/ with the next available §-number.

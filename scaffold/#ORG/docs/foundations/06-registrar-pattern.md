@@ -133,7 +133,7 @@ The Registrar's authority in this scaffold is strictly procedural:
 - **Index updates.** `adr/README.md` reflects the current state of all records.
 - **Anti-pattern registration.** `ap-NNN` numbering for standalone anti-pattern records.
 - **Audit execution.** On-demand audit against the checklist (see `../../agents/registrar/AGENTS.md`).
-- **Update-workflow orchestration.** The `:update` skill's diff, report, per-item review, and audit-ADR authoring.
+- **Update-workflow orchestration.** The `:silcrow-update` skill's diff, report, per-item review, and audit-ADR authoring.
 
 Per §0012, the Registrar operates as **async auditor**: Lead and User commit ADRs directly to `accepted/` when confident; Implementers draft into `proposed/` for Lead approval; the Registrar audits the record on demand and corrects procedural issues or surfaces substantive ones. No per-proposal gating.
 

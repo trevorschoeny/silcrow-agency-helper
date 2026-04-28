@@ -52,7 +52,7 @@ Without a convention, `git log` becomes either over-formal (every commit cites s
   - When the commit implements or follows from an ADR: `<change description> (per §NNNN)`. Example: `Move agents/ → #ORG/agents/ (per §0015)`.
   - When a commit touches multiple ADRs: list them. Example: `§0012, §0013: registrar and tier refinements`.
 - **Operational commits** — anything outside `#ORG/`, or anything inside `#ORG/` that's purely mechanical with no ADR bearing (e.g., an inbox archive commit) — are free-form. The Lead names them however they want. The scaffold does not prescribe a format for operational work.
-- **Update audits** — the `:update` skill's one-commit-per-invocation uses the form `§NNNN: update audit — accepted A, rejected B, deferred C` (with the audit ADR's §-number; see §0016).
+- **Update audits** — the `:silcrow-update` skill's one-commit-per-invocation uses the form `§NNNN: update audit — accepted A, rejected B, deferred C` (with the audit ADR's §-number; see §0016).
 
 ### Enforcement: none
 
@@ -97,7 +97,7 @@ Reconsider this ADR if:
 - §0003 — §-numbering discipline that citations reference.
 - §0012 — Registrar as async auditor; git-hygiene items are advisory.
 - §0014 — canon/operational split that this convention mirrors.
-- §0016 — `:update` audit commits use this convention.
+- §0016 — `:silcrow-update` audit commits use this convention.
 - §0017 — `.gitignore` defaults; this ADR completes the initial git-convention set.
 - §0019 — submodule decision; submodule commits follow this convention in the parent repo.
 - Git documentation: commit-message conventions (there's no single standard, but this ADR aligns with the "type: subject" family of conventions by replacing "type" with the §-number).
