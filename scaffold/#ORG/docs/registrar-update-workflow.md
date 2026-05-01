@@ -18,9 +18,9 @@ Body:
   Execute approved changes.
 ```
 
-## 2. Scan past audit ADRs (§0016)
+## 2. Scan past audit ADRs (§0015)
 
-Before diffing, read all past audit ADRs in `#ORG/adr/accepted/`. They'll have titles like *"Update audit, YYYY-MM-DD"*. From these:
+Before diffing, read all past audit ADRs in `#ORG@{unit_name}/adr/accepted/`. They'll have titles like *"Update audit, YYYY-MM-DD"*. From these:
 
 - **Items previously rejected** — skip re-proposing if the plugin's current version is unchanged. Summarize in the report: *"2 items previously rejected in §00XX remain in the plugin's current state; skipping per your past decision."*
 - **Items previously deferred** — re-surface with their original context if the deferral trigger has fired (or just re-surface with a prompt).
@@ -31,7 +31,7 @@ Before diffing, read all past audit ADRs in `#ORG/adr/accepted/`. They'll have t
 Walk both trees:
 
 - Plugin source: `${CLAUDE_PLUGIN_ROOT}/scaffold/#ORG/...`
-- Agency: the `#ORG/` of the unit you are operating in, plus the `#ORG/` of every sub-unit nested below it (the audit's reach is the subtree rooted at your unit; if you are the root unit's Registrar, that's the whole agency).
+- Agency: the `#ORG@{unit_name}/` of the unit you are operating in, plus the `#ORG@<sub-unit-name>/` of every sub-unit nested below it (the audit's reach is the subtree rooted at your unit; if you are the root unit's Registrar, that's the whole agency).
 
 Classify each file:
 
@@ -48,7 +48,7 @@ For equality checks, hash files; for content differences, read them. Whichever i
 For each non-match, write a single sentence capturing what it is and why it matters. Examples:
 
 - *"New ADR: Registrar operates as async auditor, not sync gatekeeper."*
-- *"Your customized lead instructions have a stale path reference (`agents/` → `#ORG/agents/`)."*
+- *"Your customized lead instructions have a stale path reference (`agents/` → `#ORG@{unit_name}/agents/`)."*
 - *"Agency has `docs/old-process.md` that the plugin no longer ships — likely safe to archive."*
 - *"Plugin ships a new foundation doc (07-canonical-and-operational.md); your agency doesn't have one."*
 
@@ -84,7 +84,7 @@ REMOVALS
        → Archive / Keep / Defer
 
 CONFLICTS
-  [C1] Plugin §00YY conflicts with your §0015 (both supersede §0008 with different approaches).
+  [C1] Plugin §00YY conflicts with your §0014 (both supersede §0008 with different approaches).
        → Options: adopt plugin, keep yours, merge, defer
 
 Previously rejected items still present in plugin (skipped):
@@ -106,15 +106,15 @@ Let the User and Lead review and respond. Each non-match needs a per-item decisi
 For each approved item:
 
 - **File moves/renames** — execute directly.
-- **ADR creations** — assign §-numbers, place in `#ORG/adr/accepted/`, update index and bidirectional citations.
+- **ADR creations** — assign §-numbers, place in `#ORG@{unit_name}/adr/accepted/`, update index and bidirectional citations.
 - **Content rewrites** — only on files the user explicitly approved rewriting. For customized files, engage per-file dialogue:
 
    > *"Your current content diverges from the plugin's here, here, and here. Would you like to (a) adopt the plugin's version, (b) keep yours, (c) merge section by section?"*
 
-- **Removals** — never delete. Archive to `#ORG/.archive/<date>/` with a note explaining why.
+- **Removals** — never delete. Archive to `#ORG@{unit_name}/.archive/<date>/` with a note explaining why.
 - **Conflicts** — never choose between local and plugin versions yourself. Present options and execute what the user picks. On request, you may draft a merged option (c) as a starting point.
 
-## 8. Author the audit ADR (§0016)
+## 8. Author the audit ADR (§0015)
 
 After executing, write one audit ADR summarizing the session:
 
@@ -123,7 +123,7 @@ After executing, write one audit ADR summarizing the session:
 
 Y-statement, listing accepts, rejects, and deferrals.
 
-Accepted (now in #ORG/adr/accepted/ under their §-numbers):
+Accepted (now in #ORG@{unit_name}/adr/accepted/ under their §-numbers):
   - §00YY — <descriptor>
 
 Rejected (user's reasoning preserved):
@@ -136,7 +136,7 @@ File-level changes applied:
   - <summary of moves, rewrites, archivals>
 ```
 
-Place in `#ORG/adr/accepted/` with the next §-number. This is the canonical record of the audit session and will be consulted on future `:silcrow-update` runs.
+Place in `#ORG@{unit_name}/adr/accepted/` with the next §-number. This is the canonical record of the audit session and will be consulted on future `:silcrow-update` runs.
 
 ## 9. Final acknowledgment and commit
 
@@ -144,7 +144,7 @@ Send a short message to both {user_role} and {lead_role}:
 
 > *"Update audit complete. §00XX records the session. Accepted: N; rejected: K; deferred: J. File changes committed in one structured commit."*
 
-Commit the entire update's changes in **one commit** (§0018):
+Commit the entire update's changes in **one commit** (§0017):
 
 ```
 §00XX: update audit — accepted A, rejected B, deferred C
@@ -153,7 +153,7 @@ Accepted:
   - §00YY: <descriptor>
 
 File-level changes:
-  - Moved agents/ → #ORG/agents/
+  - Moved agents/ → #ORG@{unit_name}/agents/
   - Updated lead/AGENTS.md (sections 2-4)
   - Archived docs/old-process.md
 

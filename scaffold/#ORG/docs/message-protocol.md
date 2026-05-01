@@ -10,15 +10,15 @@ The *why* is in `philosophy.md` and `foundations/03-actor-model.md`. This doc is
 
 Every agent has:
 
-- A **private directory** — `#ORG/agents/<role>@<unit-name>/`. Nothing in another agent's directory is citable or reviewable by anyone else. This is the actor's private state. You can draft, iterate, fail, and recover here without exposing half-formed thinking.
-- An **inbox** — `#ORG/agents/<role>@<unit-name>/inbox/`. Other agents deposit messages here. This is your mailbox.
-- An **archive** — `#ORG/agents/<role>@<unit-name>/inbox/archive/`. When you read a message, you move it here. Archives are **never deleted** (§0005). They are the historical record of every communication this agent received.
+- A **private directory** — `#ORG@<unit-name>/agents/<role>@<unit-name>/`. Nothing in another agent's directory is citable or reviewable by anyone else. This is the actor's private state. You can draft, iterate, fail, and recover here without exposing half-formed thinking.
+- An **inbox** — `#ORG@<unit-name>/agents/<role>@<unit-name>/inbox/`. Other agents deposit messages here. This is your mailbox.
+- An **archive** — `#ORG@<unit-name>/agents/<role>@<unit-name>/inbox/archive/`. When you read a message, you move it here. Archives are **never deleted** (§0005). They are the historical record of every communication this agent received.
 
 No agent reads another agent's directory or inbox without going through a message. No agent mutates another agent's archive. No agent deletes messages. These rules are load-bearing — they are what makes the system reconstructible.
 
 ### Agencies with multiple units
 
-In agencies that span multiple units (§0015), the same rules apply recursively at every depth. Every unit — root and sub-units alike — has its own `#ORG/agents/<role>@<unit-name>/inbox/` for each role on its roster. Messages stay scoped to their unit unless explicitly addressed cross-unit. Cross-unit messages typically go through a Lead as the routing point — a sub-unit's Lead messages the Lead of its parent unit, who in turn messages a peer's Lead (or escalates to the {user_role}).
+In agencies that span multiple units (§0014), the same rules apply recursively at every depth. Every unit — root and sub-units alike — has its own `#ORG@<unit-name>/agents/<role>@<unit-name>/inbox/` for each role on its roster. Messages stay scoped to their unit unless explicitly addressed cross-unit. Cross-unit messages typically go through a Lead as the routing point — a sub-unit's Lead messages the Lead of its parent unit, who in turn messages a peer's Lead (or escalates to the {user_role}).
 
 ---
 
@@ -26,7 +26,7 @@ In agencies that span multiple units (§0015), the same rules apply recursively 
 
 To send a message to another agent:
 
-1. Draft the message in your own directory (e.g., `#ORG/agents/{lead_dir}@{unit_name}/draft-brief-2026-04-19.md`). You iterate privately.
+1. Draft the message in your own directory (e.g., `#ORG@{unit_name}/agents/{lead_dir}@{unit_name}/draft-brief-2026-04-19.md`). You iterate privately.
 2. When ready, copy the file into the recipient's inbox with the canonical filename (see §3). Use `Write` (or equivalent); do not edit in-place in someone else's directory.
 3. Delete or keep the draft in your own directory, as you prefer. Drafts are not part of the permanent record.
 
@@ -136,7 +136,7 @@ Structure:
 
 ### Proposal notice
 
-To the Registrar when an Implementer submits an ADR draft to `#ORG/adr/proposed/`. Short. Names the proposal file, the template used, and relevant context. The Implementer also sends a companion message to the Lead (or User) requesting approval.
+To the Registrar when an Implementer submits an ADR draft to `#ORG@<unit-name>/adr/proposed/`. Short. Names the proposal file, the template used, and relevant context. The Implementer also sends a companion message to the Lead (or User) requesting approval.
 
 ### Acknowledgment
 
@@ -160,12 +160,12 @@ You'll develop your own conventions over time. When a recurring message kind eme
 
 Everything you reference in a message should be cited by a stable, resolvable pointer. Good citations:
 
-- `§0014` — an accepted ADR.
-- `#ORG/adr/superseded/§0012-shared-cache.md` — a superseded ADR.
+- `§0013` — an accepted ADR.
+- `#ORG@{unit_name}/adr/superseded/§0011-shared-cache.md` — a superseded ADR.
 - `ap-007` — a standalone anti-pattern record.
-- `#ORG/docs/philosophy.md#subsidiarity` — a section within a document.
-- `#ORG/agents/{lead_dir}@{unit_name}/inbox/archive/2026-04-19-implementer-plan-for-logging.md` — a specific prior message.
-- `@pebble-core/#ORG/adr/accepted/§0005-...` — an ADR in a unit (if your agency has units).
+- `#ORG@{agency_dir}/docs/philosophy.md#subsidiarity` — a section within a document.
+- `#ORG@{unit_name}/agents/{lead_dir}@{unit_name}/inbox/archive/2026-04-19-implementer-plan-for-logging.md` — a specific prior message.
+- `@pebble-core/#ORG@pebble-core/adr/accepted/§0005-...` — an ADR in a unit (if your agency has units).
 
 Avoid:
 
@@ -208,7 +208,7 @@ In this scaffold:
 
 ## 10. Git commits for inbox archives
 
-Inbox messages and archives are part of the agency's durable record, so they belong in version control. Per §0018:
+Inbox messages and archives are part of the agency's durable record, so they belong in version control. Per §0017:
 
 - Either the Lead or the Registrar can commit inbox archives (it's shared responsibility).
 - Commits on messages are free-form in subject — no §NNNN citation required unless the message itself references governance in a way that warrants citation.

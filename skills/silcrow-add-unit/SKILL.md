@@ -1,6 +1,6 @@
 ---
 name: silcrow-add-unit
-description: Add a new unit to an existing agency (or sub-unit to an existing unit). Authors the establishing ADR and scaffolds the unit's #ORG/ governance folder in one coherent motion. Use when the user says "add a unit," "create a new unit," "split off a unit," "new sub-unit," "scaffold unit," or similar within an existing scaffolded agency.
+description: Add a new unit to an existing agency (or sub-unit to an existing unit). Authors the establishing ADR and scaffolds the unit's #ORG@<unit-name>/ governance folder in one coherent motion. Use when the user says "add a unit," "create a new unit," "split off a unit," "new sub-unit," "scaffold unit," or similar within an existing scaffolded agency.
 user-invocable: true
 allowed-tools:
   - Read
@@ -16,7 +16,7 @@ allowed-tools:
 
 # Agent Org Scaffold — Add Unit
 
-Add a new unit to an existing agency (or sub-unit to an existing unit). The skill authors the establishing ADR (per §0015) *and* runs the mechanical scaffolding in one motion. Lead or User invokes; Registrar audits afterwards.
+Add a new unit to an existing agency (or sub-unit to an existing unit). The skill authors the establishing ADR (per §0014) *and* runs the mechanical scaffolding in one motion. Lead or User invokes; Registrar audits afterwards.
 
 ## When to use
 
@@ -28,7 +28,7 @@ If the user hasn't yet run `:silcrow-init`, this skill will detect that and redi
 
 ## How this skill works
 
-Four-phase flow: **silent peek → natural conversation → run add-unit script → report with hand-off**. The bundled script `scripts/add-unit.sh` does the mechanical work — renders the establishing ADR, creates the unit directory, scaffolds its `#ORG/`, and commits.
+Four-phase flow: **silent peek → natural conversation → run add-unit script → report with hand-off**. The bundled script `scripts/add-unit.sh` does the mechanical work — renders the establishing ADR, creates the unit directory, scaffolds its `#ORG@<unit-name>/`, and commits.
 
 ---
 
@@ -37,11 +37,11 @@ Four-phase flow: **silent peek → natural conversation → run add-unit script 
 Before any output:
 
 - `pwd` to find the current working directory.
-- Walk upward from the CWD to find the nearest `#ORG/` directory. That's the parent unit this skill will add a unit inside.
-  - If the CWD itself has `#ORG/`, the parent is the CWD.
-  - If no `#ORG/` is found walking up, stop and tell the user: *"I don't see an agency or unit here (no `#ORG/` in the current or parent directories). Run `:silcrow-init` first to scaffold an agency, or navigate to an existing agency's directory."* Do not proceed.
-- Read the parent's `#ORG/README.md` to understand the agency's context and naming conventions.
-- Scan the parent's `#ORG/adr/accepted/` for existing unit-establishing ADRs (look for filenames containing `establish-unit`) — these tell you what units already exist and what names are taken.
+- Walk upward from the CWD to find the nearest `#ORG@<unit-name>/` directory. That's the parent unit this skill will add a unit inside.
+  - If the CWD itself has `#ORG@<unit-name>/`, the parent is the CWD.
+  - If no `#ORG@<unit-name>/` is found walking up, stop and tell the user: *"I don't see an agency or unit here (no `#ORG@<unit-name>/` in the current or parent directories). Run `:silcrow-init` first to scaffold an agency, or navigate to an existing agency's directory."* Do not proceed.
+- Read the parent's `#ORG@<parent-unit-name>/README.md` to understand the agency's context and naming conventions.
+- Scan the parent's `#ORG@<parent-unit-name>/adr/accepted/` for existing unit-establishing ADRs (look for filenames containing `establish-unit`) — these tell you what units already exist and what names are taken.
 - Check whether the parent is a git repo (`git rev-parse --is-inside-work-tree`).
 - Check whether the parent uses submodules (`git submodule status` — non-empty output means yes).
 - Check the environment / CLAUDE.md for the user's name.
@@ -71,7 +71,7 @@ Now converse naturally. No locked intro this time — the user has already seen 
 - **Unit purpose** — one sentence describing what this unit owns.
 - **Lead directory + display name** — default inherits agency; may override.
 - **Implementer directory + display name** — default inherits agency; may override.
-- **Mode** — `directory` (default) or `submodule` (§0019).
+- **Mode** — `directory` (default) or `submodule` (§0018).
 - **If submodule:** source (remote URL, local path, or blank for fresh init).
 
 ### Role rename guidance
@@ -108,13 +108,13 @@ Invoke `scripts/add-unit.sh` with positional arguments:
 ```
 
 To find the agency's user role/directory and the parent unit's lead role: read
-the parent's `#ORG/README.md` or inspect `#ORG/agents/` directory names and the
+the parent's `#ORG@<parent-unit-name>/README.md` or inspect `#ORG@<parent-unit-name>/agents/` directory names and the
 matching `AGENTS.md` role names. These values feed into the unit's establishing
 ADR so references like "route through the parent Lead or Trevor" render with
 the real names.
 
 `--agency-dir` and `--agency-name` are **optional** — the script walks up the
-tree from `<parent_path>` to find the agency's root unit (the topmost `#ORG/`)
+tree from `<parent_path>` to find the agency's root unit (the topmost `#ORG@<unit-name>/`)
 and reads the agency name from there. Pass them explicitly only when you need
 to override the auto-detection.
 
@@ -122,13 +122,13 @@ to override the auto-detection.
 `<unit_name>` (e.g. `pebble-core` → `Pebble Core`). Pass it when you want a
 different display form.
 
-`<parent_path>` is the directory that contains the target `#ORG/` (the one the skill found in Phase 1). Usually that's the agency root, but for sub-units of a unit it's the unit's root.
+`<parent_path>` is the directory that contains the target `#ORG@<parent-unit-name>/` (the one the skill found in Phase 1). Usually that's the agency root, but for sub-units of a unit it's the unit's root.
 
 The script:
-- Authors `§NNNN-establish-unit-<name>.md` in `<parent_path>/#ORG/adr/accepted/` using the `establish-unit.md` template.
+- Authors `§NNNN-establish-unit-<name>.md` in `<parent_path>/#ORG@<parent-unit-name>/adr/accepted/` using the `establish-unit.md` template.
 - Creates `<parent_path>/@<unit_name>/` (or `git submodule add ... @<unit_name>` if submodule mode).
-- Scaffolds the unit's `#ORG/` with agents, ADR tree, docs, README.
-- Commits with `§NNNN: establish unit @<name>` (per §0018), unless `--skip-commit` is passed.
+- Scaffolds the unit's `#ORG@<unit-name>/` with agents, ADR tree, docs, README.
+- Commits with `§NNNN: establish unit @<name>` (per §0017), unless `--skip-commit` is passed.
 
 On success, prints a summary block:
 
@@ -138,7 +138,7 @@ On success, prints a summary block:
   Roles:   Director, Specialist, Registrar
   Parent:  /Users/trevorschoeny/Code/@pebble
   Mode:    directory
-  Registering ADR: /Users/trevorschoeny/Code/@pebble/#ORG/adr/accepted/§0020-establish-unit-pebble-core.md
+  Registering ADR: /Users/trevorschoeny/Code/@pebble/#ORG@pebble/adr/accepted/§0020-establish-unit-pebble-core.md
 ```
 
 On failure, relay the error message and stop.
@@ -149,9 +149,9 @@ On failure, relay the error message and stop.
 
 Echo the script's summary block, then output this locked scripted next-steps:
 
-> *The new unit is ready. Open a session inside `<parent_path>/@<unit_name>/#ORG/agents/<lead_dir>/` to brief your unit lead. The unit's Registrar is already set up to audit its decision record.*
+> *The new unit is ready. Open a session inside `<parent_path>/@<unit_name>/#ORG@<unit_name>/agents/<lead_dir>@<unit_name>/` to brief your unit lead. The unit's Registrar is already set up to audit its decision record.*
 >
-> *To verify the addition landed clean, ask the agency's Registrar to run an audit: they'll check that the ADR and directory agree, and flag any inconsistencies (§0012, §0015).*
+> *To verify the addition landed clean, ask the agency's Registrar to run an audit: they'll check that the ADR and directory agree, and flag any inconsistencies (§0011, §0014).*
 >
 > *The establishing ADR (`§NNNN-establish-unit-<unit_name>.md`) has placeholders for deeper context (y-statement reasoning, scope details, etc.). The unit's Lead or the agency Lead can edit it to fill them in — ADRs are immutable only after they're substantively complete; editing an auto-generated placeholder is part of finishing authorship.*
 
@@ -161,8 +161,8 @@ Substitute the angle-bracketed tokens with actual values.
 
 ## Rules
 
-- **Walk up to find `#ORG/`.** Don't assume the CWD is the parent. Sub-units can be added inside units, and the skill must figure out the correct parent.
-- **Refuse to proceed if no `#ORG/` is found.** Redirect to `:silcrow-init`.
+- **Walk up to find `#ORG@<unit-name>/`.** Don't assume the CWD is the parent. Sub-units can be added inside units, and the skill must figure out the correct parent.
+- **Refuse to proceed if no `#ORG@<unit-name>/` is found.** Redirect to `:silcrow-init`.
 - **Use the script.** Don't try to hand-create the unit's directory tree or ADR.
 - **Never overwrite existing units.** The script refuses on conflict; relay the error.
 - **The ADR template has placeholders** that the script fills only partially (name, purpose, roles, date, §-number). Other placeholders (reasoning, scope specifics) are left for the Lead/User to fill in after the unit is established.

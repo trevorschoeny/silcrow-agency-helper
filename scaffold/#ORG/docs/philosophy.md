@@ -28,13 +28,13 @@ Jaques identified eight strata, each with a characteristic time horizon: Stratum
 
 Two operational rules come out of Jaques' research:
 
-**The one-stratum rule.** Each boss should sit exactly one stratum above their reports. More creates micromanagement (the boss is doing the same kind of work). Less creates burnout (the boss can't provide the cognitive scaffolding the report needs). The scaffold places {lead_role} exactly one tier above {implementer_role} (per §0006, extended by §0013 for agencies with sub-units: tier numbers are local per unit — every Lead is tier-1-of-their-unit, every Implementer is tier-2-of-their-unit, regardless of where their unit sits in the tree).
+**The one-stratum rule.** Each boss should sit exactly one stratum above their reports. More creates micromanagement (the boss is doing the same kind of work). Less creates burnout (the boss can't provide the cognitive scaffolding the report needs). The scaffold places {lead_role} exactly one tier above {implementer_role} (per §0006, extended by §0012 for agencies with sub-units: tier numbers are local per unit — every Lead is tier-1-of-their-unit, every Implementer is tier-2-of-their-unit, regardless of where their unit sits in the tree).
 
 **Capacity matches stratum.** An agent is fit for a role not by general "smarts" but by whether their cognitive capacity matches the time horizon of the work. This is the correct framing when evaluating whether an agent should stay in role, be promoted, or hand work off.
 
-**What this means for the scaffold.** The tiering is the minimum viable stratification: {user_role} as principal (§0013 — not a tier but the principal above the lattice), {lead_role} at tier 1 of their unit, {implementer_role} at tier 2 of their unit, with the Registrar outside the hierarchy (because their work is not stratified in Jaques' sense — it is categorically different). When the scaffold grows, new tiers should be added between existing ones *only when the work genuinely spans more than one stratum*.
+**What this means for the scaffold.** The tiering is the minimum viable stratification: {user_role} as principal (§0012 — not a tier but the principal above the lattice), {lead_role} at tier 1 of their unit, {implementer_role} at tier 2 of their unit, with the Registrar outside the hierarchy (because their work is not stratified in Jaques' sense — it is categorically different). When the scaffold grows, new tiers should be added between existing ones *only when the work genuinely spans more than one stratum*.
 
-**Where to read more.** Jaques, *Requisite Organization* (2nd ed., 1996). Jaques, *A General Theory of Bureaucracy* (1976). For a shorter entry point: Jaques, "In Praise of Hierarchy," *Harvard Business Review* (January–February 1990). And `#ORG/docs/foundations/01-stratified-cognition.md`.
+**Where to read more.** Jaques, *Requisite Organization* (2nd ed., 1996). Jaques, *A General Theory of Bureaucracy* (1976). For a shorter entry point: Jaques, "In Praise of Hierarchy," *Harvard Business Review* (January–February 1990). And `#ORG@{agency_dir}/docs/foundations/01-stratified-cognition.md`.
 
 ---
 
@@ -52,9 +52,9 @@ Two companion ideas travel with subsidiarity:
 
 **Proportionality.** Article 5(4) of the TEU states that "the content and form of Union action shall not exceed what is necessary to achieve the objectives of the Treaties." Intervention from above goes no further than necessary. Higher tiers do not take over; they provide the minimum correction needed to restore trajectory.
 
-**What this means for the scaffold.** The {implementer_role} makes implementation decisions. The {lead_role} does not override unless the implementation crosses into architectural territory. The {lead_role} makes architectural decisions. {user_role} does not override unless architecture crosses into strategic territory. When unsure whether a decision belongs to a higher tier, the default is to let the lower tier decide and observe the result. The Registrar sits outside this hierarchy because their authority is over *form*, not *substantive decisions*. In agencies with multiple units (§0015), subsidiarity scales along the tree: decisions made at deeper units stay there unless they cross into a broader scope, and decisions made at higher units (especially the root) propagate down to bind their sub-units. A unit's Lead doesn't intervene in a sub-unit's implementation; a sub-unit's Lead doesn't author decisions that bind peers or ancestors.
+**What this means for the scaffold.** The {implementer_role} makes implementation decisions. The {lead_role} does not override unless the implementation crosses into architectural territory. The {lead_role} makes architectural decisions. {user_role} does not override unless architecture crosses into strategic territory. When unsure whether a decision belongs to a higher tier, the default is to let the lower tier decide and observe the result. The Registrar sits outside this hierarchy because their authority is over *form*, not *substantive decisions*. In agencies with multiple units (§0014), subsidiarity scales along the tree: decisions made at deeper units stay there unless they cross into a broader scope, and decisions made at higher units (especially the root) propagate down to bind their sub-units. A unit's Lead doesn't intervene in a sub-unit's implementation; a sub-unit's Lead doesn't author decisions that bind peers or ancestors.
 
-**Where to read more.** *Quadragesimo Anno* (1931), available at vatican.va. Article 5 TEU, via EUR-Lex. The Stanford Encyclopedia of Philosophy entry on subsidiarity is a strong secondary source. `#ORG/docs/foundations/02-subsidiarity.md`.
+**Where to read more.** *Quadragesimo Anno* (1931), available at vatican.va. Article 5 TEU, via EUR-Lex. The Stanford Encyclopedia of Philosophy entry on subsidiarity is a strong secondary source. `#ORG@{agency_dir}/docs/foundations/02-subsidiarity.md`.
 
 ---
 
@@ -66,7 +66,7 @@ The actor model was introduced in Hewitt, Bishop, and Steiger's paper "A Univers
 
 An actor has three properties: a **private mailbox**, **private state**, and the ability to **send messages** to other actors. Actors do not share memory. All coordination between them is via messages. Three consequences matter for this scaffold:
 
-**Private state enables honest thinking.** An actor reasoning in its own address space does not have to defend half-formed thoughts. It iterates privately, then sends a finished message. This is the discipline the scaffold imposes by giving each agent a private directory (`#ORG/agents/<role>@<unit-name>/`) that no other agent reads. Drafts, failures, and exploratory thinking live there, never forced into a shared artifact prematurely.
+**Private state enables honest thinking.** An actor reasoning in its own address space does not have to defend half-formed thoughts. It iterates privately, then sends a finished message. This is the discipline the scaffold imposes by giving each agent a private directory (`#ORG@<unit-name>/agents/<role>@<unit-name>/`) that no other agent reads. Drafts, failures, and exploratory thinking live there, never forced into a shared artifact prematurely.
 
 **Messages create auditable history.** Every interaction is a discrete, persistent artifact. Over time, the archive of messages is a complete record of how the system coordinated. Debugging reduces to replaying messages — you can reconstruct, from the archive alone, why a given state exists. The scaffold applies this directly: messages deposited in an agent's inbox, archived on read, never deleted.
 
@@ -74,7 +74,7 @@ An actor has three properties: a **private mailbox**, **private state**, and the
 
 **What this means for the scaffold.** Each agent has a private directory. The only shared mutable state is the committed record — the ADR tree — and mutations to it are mediated by the Registrar. Messages are first-class artifacts. Out-of-band communication is a discipline violation because it defeats auditability.
 
-**Where to read more.** Hewitt, Bishop, Steiger (1973). Agha (1986). Armstrong (2003) is available at erlang.org/download/armstrong_thesis_2003.pdf. `#ORG/docs/foundations/03-actor-model.md`.
+**Where to read more.** Hewitt, Bishop, Steiger (1973). Agha (1986). Armstrong (2003) is available at erlang.org/download/armstrong_thesis_2003.pdf. `#ORG@{agency_dir}/docs/foundations/03-actor-model.md`.
 
 ---
 
@@ -96,7 +96,7 @@ The research literature describes the cost of not doing this as "decision ration
 
 **What this means for the scaffold.** ADRs are the decision log. MADR is the default template, with a Y-statement header added. §-numbering gives them stable identifiers. Immutability is enforced by the Registrar. Supersession replaces editing. Anti-patterns are first-class records because avoiding a bad decision is as valuable as making a good one.
 
-**Where to read more.** Nygard (2011): https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions. The ADR community site: https://adr.github.io. MADR: https://adr.github.io/madr/. Zimmermann on Y-statements: https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html. `#ORG/docs/foundations/04-architecture-decision-records.md`.
+**Where to read more.** Nygard (2011): https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions. The ADR community site: https://adr.github.io. MADR: https://adr.github.io/madr/. Zimmermann on Y-statements: https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html. `#ORG@{agency_dir}/docs/foundations/04-architecture-decision-records.md`.
 
 ---
 
@@ -116,11 +116,11 @@ Three properties of legal section numbering are load-bearing:
 
 These three properties together mean that if you cite § 1983 today, and someone reads your citation in fifty years, they can find exactly what you were referring to.
 
-The same logic applies to a decision log. Decisions reference each other. A decision citing §0014 commits to a particular reading of §0014. If §0014 could be edited, the citing decision is suddenly ambiguous. The only way to keep the record citable is to enforce the same discipline legal citation has enforced for centuries — sequential, monotonic, never-reused.
+The same logic applies to a decision log. Decisions reference each other. A decision citing §0013 commits to a particular reading of §0013. If §0013 could be edited, the citing decision is suddenly ambiguous. The only way to keep the record citable is to enforce the same discipline legal citation has enforced for centuries — sequential, monotonic, never-reused.
 
 **What this means for the scaffold.** Every accepted ADR gets a §-number assigned by the Registrar. Numbers are monotonic and never reused, even for rejected proposals. Filenames embed the §-number and never change after assignment. Status changes move files between folders, but the filename — the identifier — is permanent.
 
-**Where to read more.** *The Bluebook: A Uniform System of Citation* (21st ed., Harvard Law Review Association, 2020). Matthew Butterick, *Typography for Lawyers* (O'Connor's, 2018), entry on "Paragraph and section marks." `#ORG/docs/foundations/05-legal-citation-tradition.md`.
+**Where to read more.** *The Bluebook: A Uniform System of Citation* (21st ed., Harvard Law Review Association, 2020). Matthew Butterick, *Typography for Lawyers* (O'Connor's, 2018), entry on "Paragraph and section marks." `#ORG@{agency_dir}/docs/foundations/05-legal-citation-tradition.md`.
 
 ---
 
@@ -138,13 +138,13 @@ The separation between form and substance is load-bearing. When form and substan
 
 Either way, separation fails. Independent, dedicated registrars — with procedural authority only — avoid both failure modes.
 
-The pattern scales by **fan-out, not strata**. As records proliferate, you add more registrars handling partitioned scopes — not a hierarchy of registrars making substantive calls. In agencies with multiple units (§0015), every unit — root and sub-units alike — has its own Registrar auditing its own unit's record. No "Chief Registrar" adjudicates across units; they federate.
+The pattern scales by **fan-out, not strata**. As records proliferate, you add more registrars handling partitioned scopes — not a hierarchy of registrars making substantive calls. In agencies with multiple units (§0014), every unit — root and sub-units alike — has its own Registrar auditing its own unit's record. No "Chief Registrar" adjudicates across units; they federate.
 
-**Sync gate vs async auditor.** This scaffold's Registrar operates as an **async auditor** (§0012) — not gatekeeping every ADR before it lands in `accepted/` but auditing the record on demand, correcting procedural issues directly, and surfacing substantive ones for the Lead or User. The form/substance separation is preserved by role design, not by serial validation. Historical real-world registrars operate the same way — court clerks file documents as they arrive and audit the docket periodically; university registrars process registrations in real-time and audit enrollment records on a cadence.
+**Sync gate vs async auditor.** This scaffold's Registrar operates as an **async auditor** (§0011) — not gatekeeping every ADR before it lands in `accepted/` but auditing the record on demand, correcting procedural issues directly, and surfacing substantive ones for the Lead or User. The form/substance separation is preserved by role design, not by serial validation. Historical real-world registrars operate the same way — court clerks file documents as they arrive and audit the docket periodically; university registrars process registrations in real-time and audit enrollment records on a cadence.
 
 **What this means for the scaffold.** The Registrar is a starter agent even though their initial workload is light. They establish from day one the discipline that nothing enters the record without registration. Their authority is strictly procedural: filename format, §-number assignment, reference integrity, status-folder placement, index updates, audit execution. When they encounter substantive issues they surface them upward — they do not silently fix substance.
 
-**Where to read more.** AACRAO professional materials (aacrao.org). *Judiciaries Worldwide*, Federal Judicial Center (judiciariesworldwide.fjc.gov). *Robert's Rules of Order*, 12th edition (2020). `#ORG/docs/foundations/06-registrar-pattern.md`.
+**Where to read more.** AACRAO professional materials (aacrao.org). *Judiciaries Worldwide*, Federal Judicial Center (judiciariesworldwide.fjc.gov). *Robert's Rules of Order*, 12th edition (2020). `#ORG@{agency_dir}/docs/foundations/06-registrar-pattern.md`.
 
 ---
 
@@ -163,15 +163,15 @@ The pattern has been independently discovered across multiple traditions:
 
 That the same structural answer emerges from constitutional economics, legal philosophy, mid-century liberal political thought, polycentric commons research, and 21st-century software is evidence the pattern is load-bearing.
 
-**Three rules.** §0014 codifies the pattern in three explicit rules:
+**Three rules.** §0013 codifies the pattern in three explicit rules:
 
 - **Direction-of-Constraint Principle.** Canonical binds operational; never the reverse.
 - **Promotion Rule.** An operational choice is promoted to canonical when it needs to constrain future work beyond the current execution.
 - **Reference Rule.** ADRs may reference operational artifacts only via safe references (orienting pointer, provenance citation, compliance pointer) — references that survive the delete test and contradiction test.
 
-**What this means for the scaffold.** ADRs are canonical; plans, briefs, implementations, research, schedules, codebases are operational. The `#ORG/` structural marker (§0015) physically separates them at the filesystem level: everything inside `#ORG/` is governance; everything outside is operational. The Registrar audits for unsafe references as part of its checklist (§0012). Authors apply the promotion rule when they notice an operational choice has quietly become binding.
+**What this means for the scaffold.** ADRs are canonical; plans, briefs, implementations, research, schedules, codebases are operational. The `#ORG@<unit-name>/` structural marker (§0014) physically separates them at the filesystem level: everything inside `#ORG@<unit-name>/` is governance; everything outside is operational. The Registrar audits for unsafe references as part of its checklist (§0011). Authors apply the promotion rule when they notice an operational choice has quietly become binding.
 
-**Where to read more.** Buchanan & Tullock (1962). Hart (1961). Popper (1945). Ostrom (1990). Nygard (2011). `#ORG/docs/foundations/07-canonical-and-operational.md`.
+**Where to read more.** Buchanan & Tullock (1962). Hart (1961). Popper (1945). Ostrom (1990). Nygard (2011). `#ORG@{agency_dir}/docs/foundations/07-canonical-and-operational.md`.
 
 ---
 

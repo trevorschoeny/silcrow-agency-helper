@@ -1,4 +1,4 @@
-# §0016 — Update audits produce per-session audit ADRs
+# §0015 — Update audits produce per-session audit ADRs
 
 - **Status:** accepted
 - **Date:** {date}
@@ -6,7 +6,7 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every `:silcrow-update` skill invocation; how rejections and deferrals during updates are recorded and later consulted.
-- **Influenced by:** §0001, §0002, §0004, §0012, §0014
+- **Influenced by:** §0001, §0002, §0004, §0011, §0013
 
 ## Y-statement
 
@@ -16,13 +16,13 @@ we decided for **one canonical audit ADR per `:silcrow-update` invocation** summ
 and neglected one ADR per individual decision (would proliferate ADRs rapidly), an ever-growing mutable audit log (would violate §0004 immutability), and inbox-archive-only storage (not canonical, re-litigates on next update),
 to achieve a decision record that respects past user choices and surfaces deferrals when they're ready to be revisited, without flooding the ADR space with per-item records,
 accepting that the Registrar must author one additional ADR per `:silcrow-update` invocation and that the one-per-session structure bundles heterogeneous decisions into a single ADR,
-because real-world audit traditions (corporate audit, university review, peer review rounds) produce one audit record per session rather than one per item, and the canon/operational rule (§0014) requires binding decisions to be canonical.
+because real-world audit traditions (corporate audit, university review, peer review rounds) produce one audit record per session rather than one per item, and the canon/operational rule (§0013) requires binding decisions to be canonical.
 
 ## Context and problem statement
 
 The `:silcrow-update` skill hands off to the Registrar, who dynamically diffs the plugin's current canonical state against the agency's current state and proposes a set of changes to User and Lead. The user responds per item: accept, reject, defer, or request more detail.
 
-**Acceptances are already recorded canonically.** An accepted plugin ADR lands in `#ORG/adr/accepted/` with its own §-number. That's a canonical record of "yes, we adopted this."
+**Acceptances are already recorded canonically.** An accepted plugin ADR lands in `#ORG@{unit_name}/adr/accepted/` with its own §-number. That's a canonical record of "yes, we adopted this."
 
 **Rejections and deferrals are not.** Without an explicit mechanism, a rejection lives only in the inbox-thread archive. On the next `:silcrow-update` invocation, the Registrar has no canonical record of the rejection and would re-propose the same item, re-litigating resolved matters and disrespecting past user choices. A deferral is similar — without a canonical record, the deferral's "revisit at X" trigger is lost.
 
@@ -30,7 +30,7 @@ This ADR closes the gap.
 
 ## Decision drivers
 
-- **Respect past decisions.** A rejection is a decision; a deferral is a decision with a trigger. Both are canonical per §0014's direction-of-constraint principle (they bind how future audits behave).
+- **Respect past decisions.** A rejection is a decision; a deferral is a decision with a trigger. Both are canonical per §0013's direction-of-constraint principle (they bind how future audits behave).
 - **Preserve immutability (§0004).** Whatever form the record takes must not be a mutable growing log.
 - **Avoid ADR proliferation.** A busy agency might have dozens of items per `:silcrow-update` invocation. One ADR per item would flood the §-number space.
 - **Match real-world audit practice.** Corporate audits, university reviews, and peer review rounds produce one audit record per session. This is a well-understood pattern.
@@ -47,7 +47,7 @@ This ADR closes the gap.
 
 **Chosen option: (4).**
 
-Each `:silcrow-update` invocation produces **one canonical ADR** summarizing the entire audit session. The Registrar authors it at the end of the session, landing it in `#ORG/adr/accepted/` with its own §-number. The ADR is immutable per §0004; reconsideration produces a new audit ADR that joins the old one in the record.
+Each `:silcrow-update` invocation produces **one canonical ADR** summarizing the entire audit session. The Registrar authors it at the end of the session, landing it in `#ORG@{unit_name}/adr/accepted/` with its own §-number. The ADR is immutable per §0004; reconsideration produces a new audit ADR that joins the old one in the record.
 
 Option (1) discards the decision content. Option (2) floods the §-number space and fragments a single session across many records. Option (3) violates §0004 (the log is mutable) and collapses discrete sessions into one blended document.
 
@@ -66,10 +66,10 @@ Y-statement:
   bulk-reject, to achieve an agency that adopts aligned changes
   while preserving local character, accepting the ongoing cost
   of periodic audit dialogue, because the direction-of-constraint
-  rule (§0014) requires each change to pass through deliberate
+  rule (§0013) requires each change to pass through deliberate
   review.
 
-Accepted (now in #ORG/adr/accepted/ under their assigned §-numbers):
+Accepted (now in #ORG@{unit_name}/adr/accepted/ under their assigned §-numbers):
   - §00YY — <descriptor of accepted plugin ADR>
   - §00ZZ — <descriptor>
 
@@ -88,7 +88,7 @@ Each audit ADR is immutable per §0004. Future invocations produce new audit ADR
 
 ### How the Registrar consults past audit ADRs
 
-On every subsequent `:silcrow-update` invocation, the Registrar scans `#ORG/adr/accepted/` for past audit ADRs before writing a new report. From those it determines:
+On every subsequent `:silcrow-update` invocation, the Registrar scans `#ORG@{unit_name}/adr/accepted/` for past audit ADRs before writing a new report. From those it determines:
 
 - **Skip re-proposing rejected items** if the plugin's current version is the same as what was previously rejected. The Registrar summarizes in the new report rather than re-asking: *"2 items previously rejected in §00XX remain in the plugin's current state; skipping per your past decision. Let me know if you want to reconsider."*
 - **Re-surface deferred items** with their original context: *"Previously deferred in §00YY — the reason was [context]. Ready to decide now?"*
@@ -128,6 +128,6 @@ Reconsider this ADR if:
 - `../../agents/registrar/AGENTS.md` — `:silcrow-update` orchestration, audit-ADR authoring, and past-audit scanning on subsequent invocations.
 - §0002 — MADR+Y-statement format used by audit ADRs.
 - §0004 — immutability; audit ADRs are immutable like any other ADR.
-- §0012 — Registrar as async auditor; the `:silcrow-update` workflow is the most elaborate audit.
-- §0014 — canon/operational rule; rejections/deferrals are canonical because they bind future audit behavior.
-- §0018 — governance commit convention; audit ADRs are committed with `§NNNN: update audit — <summary>`.
+- §0011 — Registrar as async auditor; the `:silcrow-update` workflow is the most elaborate audit.
+- §0013 — canon/operational rule; rejections/deferrals are canonical because they bind future audit behavior.
+- §0017 — governance commit convention; audit ADRs are committed with `§NNNN: update audit — <summary>`.

@@ -6,9 +6,9 @@
 
 ## What this is
 
-This directory (`#ORG/`) is the **governance folder** for the root unit of this agency, per §0015. It contains only governance artifacts — decisions, agent instructions, foundational docs. Operational work — codebases, plans, research, schedules, deliverables — lives alongside `#ORG/`, either at this unit's root or inside any sub-unit's directory.
+This directory (`#ORG@{unit_name}/`) is the **governance folder** for the root unit of this agency, per §0014. It contains only governance artifacts — decisions, agent instructions, foundational docs. Operational work — codebases, plans, research, schedules, deliverables — lives alongside `#ORG@{unit_name}/`, either at this unit's root or inside any sub-unit's directory.
 
-The agency is the entire organizational tree. Its topmost node is the **root unit** (this directory's parent, sharing the agency's name). Every unit — root or sub-unit — is structurally identical: its own `#ORG/`, its own agents, its own operational work, with sub-units arbitrarily nested below. The agency is organized as a **hierarchical agent organization** with built-in decision tracking (ADRs), actor-model message passing between agents, a registrar that audits the record, and a clean separation between canonical and operational artifacts. The structure was initialized by the `silcrow:silcrow-init` skill on {date}.
+The agency is the entire organizational tree. Its topmost node is the **root unit** (this directory's parent, sharing the agency's name). Every unit — root or sub-unit — is structurally identical: its own `#ORG@<unit-name>/`, its own agents, its own operational work, with sub-units arbitrarily nested below. The agency is organized as a **hierarchical agent organization** with built-in decision tracking (ADRs), actor-model message passing between agents, a registrar that audits the record, and a clean separation between canonical and operational artifacts. The structure was initialized by the `silcrow:silcrow-init` skill on {date}.
 
 The shape of the agency is opinionated and comes from a composition of seven independently-validated disciplines:
 
@@ -28,13 +28,13 @@ If you are new here, read `docs/philosophy.md` before going deeper.
 
 A new reader — human or agent — should read these in order:
 
-1. **This file** — `#ORG/README.md` — for orientation.
-2. **`#ORG/docs/philosophy.md`** — the intellectual foundation for every part of the structure.
-3. **`#ORG/docs/decision-process.md`** — how ADRs are proposed, accepted, superseded.
-4. **`#ORG/docs/message-protocol.md`** — how agents communicate.
-5. **`#ORG/agents/<your-role>@<unit>/AGENTS.md`** — if you are occupying a role, your specific duties.
-6. **`#ORG/adr/accepted/§0006-starter-roster-and-tier-model.md`** and **`§0013-user-as-principal-and-local-tier-numbering.md`** — the tier model and its multi-unit refinements.
-7. **`#ORG/adr/accepted/§0015-agency-and-unit-structure.md`** — agency/unit vocabulary and structural conventions.
+1. **This file** — `#ORG@{unit_name}/README.md` — for orientation.
+2. **`#ORG@{unit_name}/docs/philosophy.md`** — the intellectual foundation for every part of the structure.
+3. **`#ORG@{unit_name}/docs/decision-process.md`** — how ADRs are proposed, accepted, superseded.
+4. **`#ORG@{unit_name}/docs/message-protocol.md`** — how agents communicate.
+5. **`#ORG@{unit_name}/agents/<your-role>@{unit_name}/AGENTS.md`** — if you are occupying a role, your specific duties.
+6. **`#ORG@{unit_name}/adr/accepted/§0006-starter-roster-and-tier-model.md`** and **`§0012-user-as-principal-and-local-tier-numbering.md`** — the tier model and its multi-unit refinements.
+7. **`#ORG@{unit_name}/adr/accepted/§0014-agency-and-unit-structure.md`** — agency/unit vocabulary and structural conventions.
 
 For deeper dives on any of the seven disciplines, `docs/foundations/` has per-thread treatments.
 
@@ -42,10 +42,10 @@ For deeper dives on any of the seven disciplines, `docs/foundations/` has per-th
 
 ## Directory layout
 
-### Inside this `#ORG/` (governance only)
+### Inside this `#ORG@{unit_name}/` (governance only)
 
 ```
-#ORG/
+#ORG@{unit_name}/
 ├── README.md                      ← you are here
 ├── agents/
 │   ├── {user_dir}@{agency_dir}/         ← principal (transcends tiers)
@@ -69,17 +69,17 @@ For deeper dives on any of the seven disciplines, `docs/foundations/` has per-th
     └── foundations/               ← deep dives on each of the seven disciplines
 ```
 
-### Alongside `#ORG/` at the root unit's directory
+### Alongside `#ORG@{unit_name}/` at the root unit's directory
 
 ```
-@{agency-dir-name}/                ← root unit (shares the agency's name)
-├── #ORG/                          ← governance (this folder)
-├── @<sub-unit>/                   ← sub-units, if any (each with its own #ORG/)
+@{agency_dir}/                     ← root unit (shares the agency's name)
+├── #ORG@{agency_dir}/              ← governance (this folder)
+├── @<sub-unit-name>/               ← sub-units, if any (each with its own #ORG@<sub-unit-name>/)
 │   └── ...
-└── (operational artifacts)        ← your codebase, plans, research, etc.
+└── (operational artifacts)         ← your codebase, plans, research, etc.
 ```
 
-Operational artifacts live wherever is natural — alongside any unit's `#ORG/`, inside sub-unit directories, or externally (connected repos, shared drives, etc.). `#ORG/` contains only governance.
+Operational artifacts live wherever is natural — alongside any unit's `#ORG@<unit-name>/`, inside sub-unit directories, or externally (connected repos, shared drives, etc.). `#ORG@<unit-name>/` contains only governance.
 
 ---
 
@@ -87,19 +87,19 @@ Operational artifacts live wherever is natural — alongside any unit's `#ORG/`,
 
 - **Decisions are immutable** (§0004). Accepted ADRs are never edited. They are superseded by new ADRs; both remain in the record.
 - **§-numbers are permanent** (§0003). Every accepted ADR gets a §-number. Numbers are sequential, monotonic, and never reused.
-- **Messages are first-class** (§0005). Communication between agents goes through inboxes (`#ORG/agents/<role>@<unit>/inbox/`) and is archived on read (`inbox/archive/`). No out-of-band communication.
+- **Messages are first-class** (§0005). Communication between agents goes through inboxes (`#ORG@<unit-name>/agents/<role>@<unit-name>/inbox/`) and is archived on read (`inbox/archive/`). No out-of-band communication.
 - **The {lead_role} writes briefs, not specs** (§0007). What and why, not how. The {implementer_role} retains agency over execution.
-- **The Registrar owns form, not substance** (§0012). They audit the record on demand, correct procedural issues, and surface substantive ones. They do not gate every commit.
+- **The Registrar owns form, not substance** (§0011). They audit the record on demand, correct procedural issues, and surface substantive ones. They do not gate every commit.
 - **Subsidiarity**. Decisions are made at the lowest tier capable of making them well.
-- **Canon vs operational** (§0014). ADRs are canonical (immutable, citable); plans/briefs/implementations are operational (mutable). Canon binds operational; never the reverse.
-- **The User is the principal** (§0013). Not a tier, but the one the agents serve. May act as the superior of any tier at any time.
-- **Every unit is a unit** (§0015). The agency is the whole tree; the root unit is its topmost node; sub-units live nested inside their parent. Every unit — root or sub — has its own `#ORG/` and follows the same rules. The pattern is recursive; the rules are identical at every depth.
+- **Canon vs operational** (§0013). ADRs are canonical (immutable, citable); plans/briefs/implementations are operational (mutable). Canon binds operational; never the reverse.
+- **The User is the principal** (§0012). Not a tier, but the one the agents serve. May act as the superior of any tier at any time.
+- **Every unit is a unit** (§0014). The agency is the whole tree; the root unit is its topmost node; sub-units live nested inside their parent. Every unit — root or sub — has its own `#ORG@<unit-name>/` and follows the same rules. The pattern is recursive; the rules are identical at every depth.
 
 ---
 
 ## The founding constitution
 
-The scaffold ships with **nineteen seeded ADRs** (§0001–§0019, minus §0008 which has been superseded by §0012). §0001 records the decision to adopt the scaffold itself. §0002 through §0019 are **constitutional decisions inherited through §0001** — they make the load-bearing choices of the pattern explicit and supersedable rather than leaving them as unrecorded convention.
+The scaffold ships with **nineteen seeded ADRs** (§0001–§0018, minus §0008 which has been superseded by §0011). §0001 records the decision to adopt the scaffold itself. §0002 through §0018 are **constitutional decisions inherited through §0001** — they make the load-bearing choices of the pattern explicit and supersedable rather than leaving them as unrecorded convention.
 
 | § | Constitutional decision |
 |---|---|
@@ -110,18 +110,18 @@ The scaffold ships with **nineteen seeded ADRs** (§0001–§0019, minus §0008 
 | §0005 | Inter-agent communication via inboxes; no out-of-band channels |
 | §0006 | Starter roster and tier model |
 | §0007 | {lead_role} writes briefs, not specs |
-| §0008 | *(superseded by §0012)* Registrar authority is procedural, not substantive |
+| §0008 | *(superseded by §0011)* Registrar authority is procedural, not substantive |
 | §0009 | Anti-patterns are first-class records |
 | §0010 | Roster change protocol |
-| §0011 | Agency scope (seed — expand early) |
-| §0012 | Registrar operates as async auditor, not sync gatekeeper |
-| §0013 | User as principal; local tier numbering; Implementer drafts-with-approval |
-| §0014 | Canonical and operational artifacts: direction of constraint, promotion rule, reference rule |
-| §0015 | Agency and unit structure; `#ORG/` and `@<unit>/` conventions |
-| §0016 | Update audits produce per-session audit ADRs |
-| §0017 | Agency default `.gitignore` — OS, editor, and secrets patterns only |
-| §0018 | Governance commits cite the governing §NNNN; operational commits are free-form |
-| §0019 | Units with independent versioning needs are git submodules |
+| §0019 | Agency scope (seed — expand early) |
+| §0011 | Registrar operates as async auditor, not sync gatekeeper |
+| §0012 | User as principal; local tier numbering; Implementer drafts-with-approval |
+| §0013 | Canonical and operational artifacts: direction of constraint, promotion rule, reference rule |
+| §0014 | Agency and unit structure; `#ORG@<unit-name>/` and `@<unit-name>/` conventions |
+| §0015 | Update audits produce per-session audit ADRs |
+| §0016 | Agency default `.gitignore` — OS, editor, and secrets patterns only |
+| §0017 | Governance commits cite the governing §NNNN; operational commits are free-form |
+| §0018 | Units with independent versioning needs are git submodules |
 
 Each cites its foundation doc (`docs/foundations/0N-*.md`) for the full reasoning, and each lists real alternatives so it can be evaluated or superseded like any other ADR. The seed set serves as **both the working base of the agency's decision graph and a demonstration set** — showing new agents what proper ADRs look like.
 
@@ -131,9 +131,9 @@ Each cites its foundation doc (`docs/foundations/0N-*.md`) for the full reasonin
 
 These are significant decisions, each governed by its own ADR.
 
-- **Roster changes** (adding, renaming, retiring agents) follow `#ORG/adr/accepted/§0010-roster-change-protocol.md`.
-- **New units** — use the `silcrow:silcrow-add-unit` skill, which authors the establishing ADR and creates the unit's `#ORG/` and directory structure in one motion (per §0015).
-- **Scaffold updates** (new ADRs, reorg, conventions shipped by the plugin) — use the `silcrow:silcrow-update` skill. The Registrar orchestrates; every change is user-approved; the session produces one audit ADR (§0016).
+- **Roster changes** (adding, renaming, retiring agents) follow `#ORG@{unit_name}/adr/accepted/§0010-roster-change-protocol.md`.
+- **New units** — use the `silcrow:silcrow-add-unit` skill, which authors the establishing ADR and creates the unit's `#ORG@<unit-name>/` and directory structure in one motion (per §0014).
+- **Scaffold updates** (new ADRs, reorg, conventions shipped by the plugin) — use the `silcrow:silcrow-update` skill. The Registrar orchestrates; every change is user-approved; the session produces one audit ADR (§0015).
 
 ---
 

@@ -6,7 +6,7 @@ You are the human principal of **{agency_name}** — the agency as a whole tree,
 
 ## You are not a tier; you are the principal
 
-The tier model (§0006, extended by §0013) describes cognitive horizons and default reporting chains for the **agent roles**. It does not describe you.
+The tier model (§0006, extended by §0012) describes cognitive horizons and default reporting chains for the **agent roles**. It does not describe you.
 
 - You sit **outside** the tier lattice.
 - You may act as the superior of any agent at any tier in any unit at any time — the Lead of the root unit, the Lead of any sub-unit, any Implementer at any depth.
@@ -17,9 +17,9 @@ The agency's tier model constrains the agents. It does not constrain you.
 
 ## Authorship authority
 
-You have **first-class ADR authority**. You may author, commit, supersede, or revise ADRs directly in any unit's `#ORG/adr/accepted/`. No approval is needed — you are the principal.
+You have **first-class ADR authority**. You may author, commit, supersede, or revise ADRs directly in any unit's `#ORG@{agency_dir}/adr/accepted/`. No approval is needed — you are the principal.
 
-Per §0012, direct commit to `accepted/` is the default path for first-class authors. The `#ORG/adr/proposed/` directory is available if you want Registrar pre-review, but it's optional for you.
+Per §0011, direct commit to `accepted/` is the default path for first-class authors. The `#ORG@{agency_dir}/adr/proposed/` directory is available if you want Registrar pre-review, but it's optional for you.
 
 ## Owned decisions
 
@@ -44,32 +44,36 @@ None. You are the principal.
 
 ## First tasks
 
-- **Expand §0011 (agency scope).** The scaffold seeded `#ORG/adr/accepted/§0011-agency-scope.md` with a minimal scope statement. One of your earliest collaborative tasks with {lead_role} @ {agency_name} is to supersede it with a richer version: what the agency is for, who it serves, what's in scope, what's out, what "done" looks like. This ADR becomes the north star every downstream decision cites.
+- **Supersede §0019 (agency scope) — don't edit it.** The scaffold seeded `#ORG@{agency_dir}/adr/accepted/§0019-agency-scope.md` with a minimal scope statement. One of your earliest collaborative tasks with {lead_role} @ {agency_name} is to *supersede* §0019 (per §0004) with a richer version: what the agency is for, who it serves, what's in scope, what's out, what "done" looks like. The seed lives at the end of the founding set deliberately — it's positioned to be the next ADR you author against, your first lesson in the supersession discipline that governs every binding decision in this agency. Author a new ADR with `Supersedes: §0019` in its header; the Lead or Registrar handles the file move from `accepted/` to `superseded/`. The new ADR becomes the north star every downstream decision cites.
 
 ## Inbox conventions
 
-- Messages arrive in `#ORG/agents/{user_dir}@{agency_dir}/inbox/`.
-- Read a message by moving it to `#ORG/agents/{user_dir}@{agency_dir}/inbox/archive/` (archives are never deleted — they're durable history per §0005).
-- You may also draft outgoing messages in `#ORG/agents/{user_dir}@{agency_dir}/` before depositing them in a recipient's inbox. See `#ORG/docs/message-protocol.md` for the filename convention.
+**Mailbox paths.** Messages arrive in `#ORG@{agency_dir}/agents/{user_dir}@{agency_dir}/inbox/`; once read, they live in `#ORG@{agency_dir}/agents/{user_dir}@{agency_dir}/inbox/archive/` (never deleted — §0005).
+
+**Reading is moving (§0005).** When you open a message, your *first* action — before responding or acting on it — is to move it from `inbox/` to `inbox/archive/`. The inbox represents only unread or in-flight items; archives hold the complete received history. If you've read but aren't ready to act, archive the message and draft a "received, will respond by {date}" reply per the deferred-response pattern in `#ORG@{agency_dir}/docs/message-protocol.md` §5.
+
+**Substantial inputs you receive outside the inbox.** When you paste a report, drop in an image, attach a document, or otherwise hand substantial input directly to one of your agents (whether to a Lead, Implementer, or any other role) — instruct that agent to save it to their `inbox/archive/` with a dated, subject-tagged filename. The agents already carry this rule, but the principal noticing whether the practice is followed is part of how the discipline holds. The archive is the durable record of what shaped this agency's work; don't let pasted artifacts orphan it.
+
+**Drafting outgoing messages.** Draft in `#ORG@{agency_dir}/agents/{user_dir}@{agency_dir}/` before depositing in a recipient's inbox. See `#ORG@{agency_dir}/docs/message-protocol.md` for the filename convention.
 
 ## Git notes
 
-- The scaffold initialized git at the agency root (§0017, §0018).
+- The scaffold initialized git at the agency root (§0016, §0017).
 - You may commit anything at any time; there's no gating on your commits.
-- Governance commits cite §NNNN (per §0018); operational commits are free-form.
-- In agencies with submodule sub-units (§0019), operations that cross the submodule boundary require the usual two-step commit (submodule first, then the parent repo's submodule pointer).
+- Governance commits cite §NNNN (per §0017); operational commits are free-form.
+- In agencies with submodule sub-units (§0018), operations that cross the submodule boundary require the usual two-step commit (submodule first, then the parent repo's submodule pointer).
 
 ## Key references
 
-- `#ORG/docs/decision-process.md` — how ADRs flow through the system.
-- `#ORG/adr/README.md` — index of all decisions (starting points: §0011 scope seed, §0013 principal framing, §0010 roster changes).
-- `#ORG/agents/` — the root unit's roster. Sub-unit agents live at `@<sub-unit>/#ORG/agents/<role>@<sub-unit>/`, recursively at any depth.
+- `#ORG@{agency_dir}/docs/decision-process.md` — how ADRs flow through the system.
+- `#ORG@{agency_dir}/adr/README.md` — index of all decisions (starting points: §0019 scope seed, §0012 principal framing, §0010 roster changes).
+- `#ORG@{agency_dir}/agents/` — the root unit's roster. Sub-unit agents live at `@<sub-unit>/#ORG@<sub-unit>/agents/<role>@<sub-unit>/`, recursively at any depth.
 
 ## Principles to reason from (load when needed)
 
 Read these when the procedures don't cover your situation or when you want to reason from first principles before making a call. Don't load preemptively.
 
-- `#ORG/docs/philosophy.md` — the seven foundations synthesized; the scaffold's constitutional text. Load at an edge case no ADR or procedure addresses.
-- `#ORG/docs/foundations/02-subsidiarity.md` — decisions at the lowest competent level. Load when deciding whether to make a call yourself vs. delegate it to a Lead.
-- `#ORG/docs/foundations/01-stratified-cognition.md` — cognitive horizons by tier. Load when thinking about what kind of work each tier should actually be doing.
-- `#ORG/docs/foundations/07-canonical-and-operational.md` — direction-of-constraint, promotion rule, reference rule. Load when deciding whether a choice deserves ADR treatment or stays operational.
+- `#ORG@{agency_dir}/docs/philosophy.md` — the seven foundations synthesized; the scaffold's constitutional text. Load at an edge case no ADR or procedure addresses.
+- `#ORG@{agency_dir}/docs/foundations/02-subsidiarity.md` — decisions at the lowest competent level. Load when deciding whether to make a call yourself vs. delegate it to a Lead.
+- `#ORG@{agency_dir}/docs/foundations/01-stratified-cognition.md` — cognitive horizons by tier. Load when thinking about what kind of work each tier should actually be doing.
+- `#ORG@{agency_dir}/docs/foundations/07-canonical-and-operational.md` — direction-of-constraint, promotion rule, reference rule. Load when deciding whether a choice deserves ADR treatment or stays operational.

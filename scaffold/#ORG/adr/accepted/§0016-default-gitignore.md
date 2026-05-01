@@ -1,4 +1,4 @@
-# §0017 — Agency default `.gitignore` — OS, editor, and secrets patterns only
+# §0016 — Agency default `.gitignore` — OS, editor, and secrets patterns only
 
 - **Status:** accepted
 - **Date:** {date}
@@ -6,11 +6,11 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every agency's initial `.gitignore`; the discipline of what's tracked by default; how gitignore changes are governed.
-- **Influenced by:** §0001, §0014
+- **Influenced by:** §0001, §0013
 
 ## Y-statement
 
-In the context of **agencies that use git for version control and audit history** (§0018, §0019 continue this integration),
+In the context of **agencies that use git for version control and audit history** (§0017, §0018 continue this integration),
 facing the question of what the scaffold's default `.gitignore` should exclude,
 we decided for **a minimal default covering only OS noise, editor artifacts, and common secret-file patterns** — nothing operational is ignored by default —
 and neglected a large preset of language-specific patterns (`node_modules/`, `target/`, `__pycache__/`, `.venv/`), gitignoring working folders by default, and shipping no `.gitignore` at all,
@@ -31,9 +31,9 @@ The right default is small enough to apply to every agency regardless of domain 
 
 - **Scaffold-agnosticism.** Agencies can be coding projects, wedding-planning, research labs, homekeeping systems, small-business operations, family systems. The default must fit all of these.
 - **Tracked-by-default for operational work.** Plans, briefs, inbox archives, research reports, working documents — all should be tracked unless the user explicitly excludes them. Durability depends on it.
-- **Canonical content never ignored.** `#ORG/` is governance; nothing inside it should ever be in `.gitignore`. Audit history depends on this.
+- **Canonical content never ignored.** `#ORG@{unit_name}/` is governance; nothing inside it should ever be in `.gitignore`. Audit history depends on this.
 - **User extension is easy.** Whatever the default is, users should be able to add patterns trivially.
-- **Governance changes flow through canon.** Additions that affect `#ORG/` tracking are governance decisions and need an ADR (see §0014 direction-of-constraint).
+- **Governance changes flow through canon.** Additions that affect `#ORG@{unit_name}/` tracking are governance decisions and need an ADR (see §0013 direction-of-constraint).
 
 ## Considered options
 
@@ -82,15 +82,15 @@ Three sections:
 
 ### Gitignore changes become ADRs when they touch governance
 
-- **Governance-scope gitignore additions** — anything that affects what's tracked inside `#ORG/` (an unusual case; usually `#ORG/` contents should all be tracked). Requires an ADR proposed by the Registrar or Lead.
-- **Operational-scope gitignore additions** — Lead's call; no ADR required. The Lead commits the `.gitignore` change like any other operational commit (per §0018, operational commits are free-form).
+- **Governance-scope gitignore additions** — anything that affects what's tracked inside `#ORG@{unit_name}/` (an unusual case; usually `#ORG@{unit_name}/` contents should all be tracked). Requires an ADR proposed by the Registrar or Lead.
+- **Operational-scope gitignore additions** — Lead's call; no ADR required. The Lead commits the `.gitignore` change like any other operational commit (per §0017, operational commits are free-form).
 - **Initial default** — this ADR. Future changes to the default supersede this ADR.
 
 ### Consequences
 
 - **Positive:** Safe default across every domain the scaffold serves.
 - **Positive:** Operational work is tracked by default; durability follows.
-- **Positive:** `#ORG/` contents are always tracked; audit history is never compromised by a stale `.gitignore`.
+- **Positive:** `#ORG@{unit_name}/` contents are always tracked; audit history is never compromised by a stale `.gitignore`.
 - **Positive:** Users add what they need without fighting the default.
 - **Negative:** A JavaScript user still has to add `node_modules/` themselves on day one.
 - **Negative:** The secret patterns are a best-effort safeguard, not a substitute for secret-scanning tooling. A user could still commit a secret at `api_token.txt` or some other non-matching path.
@@ -98,7 +98,7 @@ Three sections:
 
 ## Anti-patterns surfaced
 
-- **Ignoring contents of `#ORG/`.** Violates the audit-history requirement. Every governance change must be committable.
+- **Ignoring contents of `#ORG@{unit_name}/`.** Violates the audit-history requirement. Every governance change must be committable.
 - **Ignoring inbox archives.** Collapses the durability of inter-agent communication. Inbox archives must be tracked.
 - **Adding language-specific patterns to this scaffold-shipped default.** This default should remain agnostic. If a particular language scaffold is warranted, it's a separate variant (future work), not an edit to this one.
 - **Commit-by-accident of a secret.** The patterns here reduce the risk but don't eliminate it. Users who handle secrets should use additional secret-scanning tooling.
@@ -116,7 +116,7 @@ Reconsider this ADR if:
 
 - `../../agents/registrar/AGENTS.md` — the Registrar's git-advisory role includes flagging uncommitted governance content.
 - §0001 — founding scaffold decision.
-- §0014 — canon/operational split; governance-scope gitignore changes are canonical.
-- §0018 — commit message convention; operational commits are free-form.
-- §0019 — submodule decision for independently-versioned units.
+- §0013 — canon/operational split; governance-scope gitignore changes are canonical.
+- §0017 — commit message convention; operational commits are free-form.
+- §0018 — submodule decision for independently-versioned units.
 - Git documentation: `gitignore(5)` man page.

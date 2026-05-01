@@ -1,4 +1,4 @@
-# §0012 — Registrar operates as async auditor, not sync gatekeeper
+# §0011 — Registrar operates as async auditor, not sync gatekeeper
 
 - **Status:** accepted
 - **Date:** {date}
@@ -66,13 +66,13 @@ The audit model is not new; it mirrors real-world practice. University registrar
 
 ## What the Registrar audits and how corrections work
 
-On-demand audits cover form, contradictions, staleness, citation integrity, orphans, scope violations (§0011), federation-rule violations, unsafe references (§0014), unit↔ADR consistency (§0015), and git hygiene (§0018, informational). The full checklist lives in `../../agents/registrar/AGENTS.md`.
+On-demand audits cover form, contradictions, staleness, citation integrity, orphans, scope violations (§0019), federation-rule violations, unsafe references (§0013), unit↔ADR consistency (§0014), and git hygiene (§0017, informational). The full checklist lives in `../../agents/registrar/AGENTS.md`.
 
 Correction authority is **hybrid**:
 - **Procedural issues** (filename typos, malformed §-numbering, broken citation paths, bidirectional-link repair) — Registrar fixes directly.
 - **Substantive issues** (contradictions, scope violations, unsafe references) — Registrar surfaces via message and recommends; never silently fixes. Scope violations route to User; internal contradictions to Lead; ambiguous to both.
 
-The `proposed/` directory is retained as a **voluntary pre-review channel**: Lead may commit directly to `accepted/` or drop into `proposed/` for Registrar eyes first; Implementers use `proposed/` as required staging under §0013's draft-with-approval path.
+The `proposed/` directory is retained as a **voluntary pre-review channel**: Lead may commit directly to `accepted/` or drop into `proposed/` for Registrar eyes first; Implementers use `proposed/` as required staging under §0012's draft-with-approval path.
 
 ## Anti-patterns surfaced
 
@@ -94,8 +94,8 @@ Reconsider this ADR if:
 - `../../docs/foundations/06-registrar-pattern.md` — full intellectual history of the procedural/substantive split, with a section on why the audit mode preserves it.
 - `../../agents/registrar/AGENTS.md` — the Registrar's complete operational reference: audit checklist, correction procedures, and `:silcrow-update` orchestration.
 - §0008 (superseded) — the synchronous-gatekeeper original whose principle this ADR preserves.
-- §0013 — Implementer drafting-with-approval path uses `proposed/` as required staging.
-- §0014 — unsafe-reference audit item.
-- §0015 — unit↔ADR consistency audit item.
-- §0016 — `:silcrow-update` audit-ADR pattern builds on this model.
-- §0018 — governance commit convention; Registrar audits for unpushed governance.
+- §0012 — Implementer drafting-with-approval path uses `proposed/` as required staging.
+- §0013 — unsafe-reference audit item.
+- §0014 — unit↔ADR consistency audit item.
+- §0015 — `:silcrow-update` audit-ADR pattern builds on this model.
+- §0017 — governance commit convention; Registrar audits for unpushed governance.

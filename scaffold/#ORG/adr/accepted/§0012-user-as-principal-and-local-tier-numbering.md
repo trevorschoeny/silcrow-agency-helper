@@ -1,4 +1,4 @@
-# §0013 — User as principal; local tier numbering; Implementer drafts-with-approval
+# §0012 — User as principal; local tier numbering; Implementer drafts-with-approval
 
 - **Status:** accepted
 - **Date:** {date}
@@ -20,13 +20,13 @@ because subsidiarity (lowest competent level) plus principal authority (the User
 
 ## Context and problem statement
 
-§0006 established the starter roster and tier model — User (tier 0), Lead (tier 1), Implementer (tier 2), plus an outside-hierarchy Registrar. That model was written assuming a single-unit organization. As agencies grow into trees of nested units (a sub-unit per product line, per research thread, per team, etc.; see §0015), three questions arise that §0006 did not answer cleanly:
+§0006 established the starter roster and tier model — User (tier 0), Lead (tier 1), Implementer (tier 2), plus an outside-hierarchy Registrar. That model was written assuming a single-unit organization. As agencies grow into trees of nested units (a sub-unit per product line, per research thread, per team, etc.; see §0014), three questions arise that §0006 did not answer cleanly:
 
 1. **Where does the User sit in a tree of units?** Literally reading §0006, the User is tier-0 of the agency. But in a nested-unit structure there are potentially many Leads — the root unit's Lead, plus a Lead in every sub-unit. Does the User sit above only the root unit's Lead? May a sub-unit's Lead message the User directly? Does the User bypass tiers?
 
 2. **What do tier numbers mean across units?** Is the root unit's Lead tier-1 and every sub-unit's Lead tier-2? That reading collapses the one-stratum rule §0006 relies on — a sub-unit Lead's work is full tier-1 work for their unit's scope, not tier-2 work under the root unit's scope.
 
-3. **May an Implementer author ADRs?** §0006 assigns ADR authoring to Lead-and-up by default, but the `:silcrow-update` flow, §0012's audit flow, and the general principle of subsidiarity all invite cases where an Implementer has hands-on knowledge that earns ADR treatment. Blocking Implementer authorship entirely loses that signal; leaving it fully open collapses the authority split.
+3. **May an Implementer author ADRs?** §0006 assigns ADR authoring to Lead-and-up by default, but the `:silcrow-update` flow, §0011's audit flow, and the general principle of subsidiarity all invite cases where an Implementer has hands-on knowledge that earns ADR treatment. Blocking Implementer authorship entirely loses that signal; leaving it fully open collapses the authority split.
 
 This ADR answers all three with three companion refinements.
 
@@ -90,16 +90,16 @@ For an agency with only a root unit (no sub-units), the hierarchy is User → Le
 
 ### Refinement 3 — Implementer drafts with Lead or User approval
 
-> *Implementers may draft ADRs when they recognize something ADR-worthy in their work — a pattern worth codifying, a convention they want to establish, a constraint they've hit that deserves record. They draft into `#ORG/adr/proposed/` and message their Lead (or User) for review. On approval, the ADR lands in `#ORG/adr/accepted/`. The Implementer drafts; the Lead (or User) authorizes.*
+> *Implementers may draft ADRs when they recognize something ADR-worthy in their work — a pattern worth codifying, a convention they want to establish, a constraint they've hit that deserves record. They draft into `#ORG@{unit_name}/adr/proposed/` and message their Lead (or User) for review. On approval, the ADR lands in `#ORG@{unit_name}/adr/accepted/`. The Implementer drafts; the Lead (or User) authorizes.*
 
 The authoring pattern mirrors how a junior associate drafts a memo and the senior partner signs off — the writing is the Implementer's; the authority is the Lead's/User's. Closing the channel entirely would lose hands-on signal; leaving it fully open would collapse the tier model. The draft-with-approval path threads the needle.
 
 Authorship authority by role (the same rule applies in every unit; the User is unique to the agency and lives at the root):
 
-- **Lead @ <unit>** — first-class. May draft, commit, and supersede ADRs directly in their unit's `#ORG/adr/accepted/`. No approval needed.
+- **Lead @ <unit>** — first-class. May draft, commit, and supersede ADRs directly in their unit's `#ORG@{unit_name}/adr/accepted/`. No approval needed.
 - **User** — first-class. May act as superior of any agent in any unit; authoring ADRs is within that scope.
 - **Implementer @ <unit>** — drafts only. Commits require their Lead's or the User's approval via the `proposed/` channel.
-- **Registrar @ <unit>** — no authoring; no substantive changes. Registrar flags; Lead or User acts (see §0012).
+- **Registrar @ <unit>** — no authoring; no substantive changes. Registrar flags; Lead or User acts (see §0011).
 
 ### Consequences
 
@@ -115,7 +115,7 @@ Authorship authority by role (the same rule applies in every unit; the User is u
 - **Treating the User as tier-0 only of the root unit.** In a tree of units this blocks direct User communication with agents in sub-units, which contradicts the principal framing — the User is principal of every unit.
 - **Assigning global tier numbers across units.** If you find yourself saying "a sub-unit's Lead is tier-2", the frame has slipped. Every unit's Lead is tier-1-of-their-unit, regardless of where their unit sits in the tree.
 - **Implementer commits-to-accepted without approval.** The draft-with-approval path is the authorized channel. Implementers committing directly to `accepted/` without Lead or User approval collapses the authority split.
-- **Lead bottleneck on Implementer drafts.** Lead should respond to Implementer drafts promptly. If Implementer drafts pile up unreviewed, the Lead is creating the very latency §0012 was built to remove.
+- **Lead bottleneck on Implementer drafts.** Lead should respond to Implementer drafts promptly. If Implementer drafts pile up unreviewed, the Lead is creating the very latency §0011 was built to remove.
 
 ## Review trigger
 
@@ -135,5 +135,5 @@ Reconsider this ADR if:
 - `../../agents/implementer/AGENTS.md` — Implementer's draft-with-approval path.
 - §0006 (intact) — the starter tier model this ADR extends.
 - §0010 — roster change protocol; applies to adding tiers or roles.
-- §0012 — Registrar as async auditor; related role-authority refinement.
-- §0015 — agency and unit structure; the multi-unit context this ADR was written to serve.
+- §0011 — Registrar as async auditor; related role-authority refinement.
+- §0014 — agency and unit structure; the multi-unit context this ADR was written to serve.

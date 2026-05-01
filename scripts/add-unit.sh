@@ -3,8 +3,8 @@
 # add-unit.sh — add a new unit to an existing agency or unit.
 #
 # Invoked by the silcrow:silcrow-add-unit skill. Creates the unit's directory,
-# populates its #ORG/ governance folder, and writes an establishing ADR into the
-# parent's #ORG/adr/accepted/.
+# populates its #ORG@<unit-name>/ governance folder, and writes an establishing
+# ADR into the parent's #ORG@<parent-unit-name>/adr/accepted/.
 #
 # The skill figures out all values through conversation; this script does the
 # mechanical work.
@@ -18,7 +18,7 @@
 #               [--skip-commit]
 #
 # Arguments:
-#   parent_path         Absolute path to the parent unit (must contain #ORG/).
+#   parent_path         Absolute path to the parent unit (must contain #ORG@*/).
 #   unit_name           Kebab-case unit name (without @ prefix); the directory
 #                       will be named @<unit_name>/.
 #   unit_purpose        One-sentence description of what the unit owns.
@@ -38,7 +38,7 @@
 #   0   Success.
 #   1   Plugin scaffold source not found.
 #   2   Argument error.
-#   3   Parent unit not found (no #ORG/ in parent_path).
+#   3   Parent unit not found (no #ORG@*/ in parent_path).
 #   4   Unit already exists at parent_path/@<unit_name>/.
 
 set -euo pipefail
@@ -136,14 +136,25 @@ IMPL_DIR="${POSITIONAL[5]}"
 IMPL_ROLE="${POSITIONAL[6]}"
 DATE="$(date -u +%Y-%m-%d)"
 
+# --- Helper: detect if a directory is a unit (has any #ORG@*/ subdir) --------
+
+has_org_marker() {
+    local dir="$1"
+    local d
+    for d in "$dir"/#ORG@*; do
+        [ -d "$d" ] && return 0
+    done
+    return 1
+}
+
 # --- Resolve AGENCY_DIR (auto-walk up if not supplied) -----------------------
 
 # The agency root is the outermost ancestor of PARENT_PATH that still contains
-# a #ORG/ directory. Walk up until the parent doesn't have one — the last
-# #ORG/-having directory is the agency's root unit.
+# a #ORG@*/ directory. Walk up until the parent isn't a unit — the last
+# unit-having directory is the agency's root unit.
 if [ -z "$AGENCY_DIR_ARG" ]; then
     walker="$PARENT_PATH"
-    while [ -d "$(dirname "$walker")/#ORG" ]; do
+    while has_org_marker "$(dirname "$walker")"; do
         walker="$(dirname "$walker")"
     done
     AGENCY_BASENAME="$(basename "$walker")"
@@ -210,10 +221,10 @@ if [ ! -f "$ESTABLISH_TEMPLATE" ]; then
     exit 1
 fi
 
-# --- Verify the parent has #ORG/ ---------------------------------------------
+# --- Verify the parent is a unit (has #ORG@<parent-name>/) -------------------
 
-if [ ! -d "$PARENT_PATH/#ORG" ]; then
-    echo "Error: parent path '$PARENT_PATH' does not contain #ORG/." >&2
+if ! has_org_marker "$PARENT_PATH"; then
+    echo "Error: parent path '$PARENT_PATH' does not contain a #ORG@*/ directory." >&2
     echo "Run :silcrow-init first to scaffold the agency, or navigate to an existing unit." >&2
     exit 3
 fi
@@ -230,9 +241,9 @@ fi
 
 # --- Determine the next §-number for the establishing ADR --------------------
 
-# Look at the parent's #ORG/adr/accepted/ and find the highest §NNNN.
+# Look at the parent's #ORG@<parent-name>/adr/accepted/ and find the highest §NNNN.
 # §-numbers live in filenames like §NNNN-title.md.
-ACCEPTED_DIR="$PARENT_PATH/#ORG/adr/accepted"
+ACCEPTED_DIR="$PARENT_PATH/#ORG@$PARENT_UNIT_NAME/adr/accepted"
 
 HIGHEST=0
 if [ -d "$ACCEPTED_DIR" ]; then
@@ -254,7 +265,7 @@ if [ -d "$ACCEPTED_DIR" ]; then
 fi
 
 # Also check superseded/ and rejected/ — §-numbers are never reused.
-for dir in "$PARENT_PATH/#ORG/adr/superseded" "$PARENT_PATH/#ORG/adr/rejected"; do
+for dir in "$PARENT_PATH/#ORG@$PARENT_UNIT_NAME/adr/superseded" "$PARENT_PATH/#ORG@$PARENT_UNIT_NAME/adr/rejected"; do
     if [ -d "$dir" ]; then
         for f in "$dir"/§*.md; do
             [ -f "$f" ] || continue
@@ -291,43 +302,44 @@ else
     mkdir -p "$UNIT_PATH"
 fi
 
-# --- Scaffold the unit's #ORG/ -----------------------------------------------
+# --- Scaffold the unit's #ORG@<unit-name>/ -----------------------------------
 
-# Per §0015's agent-identity convention, every agent's directory is named
+# Per §0014's agent-identity convention, every agent's directory is named
 # <role-dir>@<unit-name>/. At this unit, that means lead@$UNIT_NAME, etc.
 mkdir -p \
-    "$UNIT_PATH/#ORG/agents/$LEAD_DIR@$UNIT_NAME/inbox/archive" \
-    "$UNIT_PATH/#ORG/agents/$IMPL_DIR@$UNIT_NAME/inbox/archive" \
-    "$UNIT_PATH/#ORG/agents/registrar@$UNIT_NAME/inbox/archive" \
-    "$UNIT_PATH/#ORG/adr/accepted" \
-    "$UNIT_PATH/#ORG/adr/proposed" \
-    "$UNIT_PATH/#ORG/adr/superseded" \
-    "$UNIT_PATH/#ORG/adr/rejected" \
-    "$UNIT_PATH/#ORG/adr/anti-patterns" \
-    "$UNIT_PATH/#ORG/docs"
+    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$LEAD_DIR@$UNIT_NAME/inbox/archive" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$IMPL_DIR@$UNIT_NAME/inbox/archive" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/registrar@$UNIT_NAME/inbox/archive" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/accepted" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/proposed" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/superseded" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/rejected" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/anti-patterns" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/docs"
 
 touch \
-    "$UNIT_PATH/#ORG/agents/$LEAD_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
-    "$UNIT_PATH/#ORG/agents/$IMPL_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
-    "$UNIT_PATH/#ORG/agents/registrar@$UNIT_NAME/inbox/archive/.gitkeep" \
-    "$UNIT_PATH/#ORG/adr/accepted/.gitkeep" \
-    "$UNIT_PATH/#ORG/adr/proposed/.gitkeep" \
-    "$UNIT_PATH/#ORG/adr/superseded/.gitkeep" \
-    "$UNIT_PATH/#ORG/adr/rejected/.gitkeep" \
-    "$UNIT_PATH/#ORG/adr/anti-patterns/.gitkeep"
+    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$LEAD_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$IMPL_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/registrar@$UNIT_NAME/inbox/archive/.gitkeep" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/accepted/.gitkeep" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/proposed/.gitkeep" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/superseded/.gitkeep" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/rejected/.gitkeep" \
+    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/anti-patterns/.gitkeep"
 
 # --- Unit-level README files -------------------------------------------------
 
-cat > "$UNIT_PATH/#ORG/README.md" <<README
+cat > "$UNIT_PATH/#ORG@$UNIT_NAME/README.md" <<README
 # @$UNIT_NAME
 
 $UNIT_PURPOSE
 
 \`@$UNIT_NAME\` is a **unit** in the agency \`@$AGENCY_DIR\`'s tree, sitting as
 a child of \`@$PARENT_UNIT_NAME\`. Governance for this unit lives here
-(\`#ORG/\`); operational work lives alongside it in this unit's root directory.
+(\`#ORG@$UNIT_NAME/\`); operational work lives alongside it in this unit's
+root directory.
 
-Every unit in the agency is structurally identical (§0015) — the root unit and
+Every unit in the agency is structurally identical (§0014) — the root unit and
 every sub-unit follow the same conventions. \`@$UNIT_NAME\`'s position in the
 tree is what makes it a sub-unit; the rules are the same as anywhere else.
 
@@ -337,50 +349,52 @@ tree is what makes it a sub-unit; the rules are the same as anywhere else.
 
 \`@$UNIT_NAME\` is bound by every ancestor unit's ADRs:
 
-- The agency's root unit's \`#ORG/adr/accepted/\` (§0001 through whatever
-  the root has authored).
-- Any intermediate parent units' \`#ORG/adr/accepted/\` (when nested deeper
-  than one level).
+- The agency's root unit's \`#ORG@$AGENCY_DIR/adr/accepted/\` (§0001 through
+  whatever the root has authored).
+- Any intermediate parent units' \`#ORG@<parent-name>/adr/accepted/\` (when
+  nested deeper than one level).
 
-\`@$UNIT_NAME\`'s own \`#ORG/adr/accepted/\` holds only decisions specific to
-this unit, narrower than (or unrelated to) what the ancestors already cover.
+\`@$UNIT_NAME\`'s own \`#ORG@$UNIT_NAME/adr/accepted/\` holds only decisions
+specific to this unit, narrower than (or unrelated to) what the ancestors
+already cover.
 
 For foundational process docs — \`philosophy.md\`, \`decision-process.md\`,
 \`message-protocol.md\`, \`foundations/\`, the registrar checklists — see the
-agency's root unit's \`#ORG/docs/\`. Those docs live only at the root and are
-inherited by every unit. This unit does not duplicate that content.
+agency's root unit's \`#ORG@$AGENCY_DIR/docs/\`. Those docs live only at the
+root and are inherited by every unit. This unit does not duplicate that
+content.
 
 ---
 
 ## This unit's roles
 
-- **$LEAD_ROLE @ $UNIT_DISPLAY** (\`#ORG/agents/$LEAD_DIR@$UNIT_NAME/\`) —
-  tier-1 of \`@$UNIT_NAME\`; reports up the tree to the Lead of the parent
+- **$LEAD_ROLE @ $UNIT_DISPLAY** (\`#ORG@$UNIT_NAME/agents/$LEAD_DIR@$UNIT_NAME/\`)
+  — tier-1 of \`@$UNIT_NAME\`; reports up the tree to the Lead of the parent
   unit \`@$PARENT_UNIT_NAME\`.
-- **$IMPL_ROLE @ $UNIT_DISPLAY** (\`#ORG/agents/$IMPL_DIR@$UNIT_NAME/\`) —
-  tier-2 of \`@$UNIT_NAME\`; reports to $LEAD_ROLE @ $UNIT_DISPLAY.
-- **Registrar @ $UNIT_DISPLAY** (\`#ORG/agents/registrar@$UNIT_NAME/\`) —
-  audits \`@$UNIT_NAME\`'s record. Outside the unit's decision hierarchy.
+- **$IMPL_ROLE @ $UNIT_DISPLAY** (\`#ORG@$UNIT_NAME/agents/$IMPL_DIR@$UNIT_NAME/\`)
+  — tier-2 of \`@$UNIT_NAME\`; reports to $LEAD_ROLE @ $UNIT_DISPLAY.
+- **Registrar @ $UNIT_DISPLAY** (\`#ORG@$UNIT_NAME/agents/registrar@$UNIT_NAME/\`)
+  — audits \`@$UNIT_NAME\`'s record. Outside the unit's decision hierarchy.
 
 There is no User at this unit. There is one User across the agency, who is
 the principal of every unit and lives at the agency's root unit
-(\`@$AGENCY_DIR\`) (§0013).
+(\`@$AGENCY_DIR\`) (§0012).
 
 ---
 
 ## Establishing ADR
 
 \`@$UNIT_NAME\` was established by \`§$NEXT_SECTION\` in
-\`@$PARENT_UNIT_NAME\`'s \`#ORG/adr/accepted/\`. Read it for the unit's scope
-and original reasoning.
+\`@$PARENT_UNIT_NAME\`'s \`#ORG@$PARENT_UNIT_NAME/adr/accepted/\`. Read it for
+the unit's scope and original reasoning.
 README
 
-cat > "$UNIT_PATH/#ORG/docs/README.md" <<README
+cat > "$UNIT_PATH/#ORG@$UNIT_NAME/docs/README.md" <<README
 # @$UNIT_NAME docs
 
 \`@$UNIT_NAME\` inherits foundational documentation from the agency's root unit
-(\`@$AGENCY_DIR\`'s \`#ORG/docs/\`). Decision process, message protocol,
-philosophy, foundations, and registrar playbook all live there.
+(\`@$AGENCY_DIR\`'s \`#ORG@$AGENCY_DIR/docs/\`). Decision process, message
+protocol, philosophy, foundations, and registrar playbook all live there.
 
 This folder exists for documentation specific to \`@$UNIT_NAME\` — onboarding
 notes, process addenda, unit-internal references. It starts empty and fills
@@ -392,7 +406,7 @@ README
 # Each agent directory gets two files: AGENTS.md (canonical content, auto-loaded
 # by cross-tool agents) and CLAUDE.md (one-line `@AGENTS.md` pointer that Claude
 # Code auto-loads and imports). Every unit in the agency is structurally
-# identical (§0015), so we use the same templates as the root unit with this
+# identical (§0014), so we use the same templates as the root unit with this
 # unit's values substituted — no thin-preamble asymmetry between root and
 # sub-unit Leads/Implementers/Registrars.
 
@@ -433,13 +447,13 @@ subst() {
         "$src" > "$dst"
 }
 
-subst "$TEMPLATE_LEAD" "$UNIT_PATH/#ORG/agents/$LEAD_DIR@$UNIT_NAME/AGENTS.md"
-subst "$TEMPLATE_IMPL" "$UNIT_PATH/#ORG/agents/$IMPL_DIR@$UNIT_NAME/AGENTS.md"
-subst "$TEMPLATE_REG"  "$UNIT_PATH/#ORG/agents/registrar@$UNIT_NAME/AGENTS.md"
+subst "$TEMPLATE_LEAD" "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$LEAD_DIR@$UNIT_NAME/AGENTS.md"
+subst "$TEMPLATE_IMPL" "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$IMPL_DIR@$UNIT_NAME/AGENTS.md"
+subst "$TEMPLATE_REG"  "$UNIT_PATH/#ORG@$UNIT_NAME/agents/registrar@$UNIT_NAME/AGENTS.md"
 
 # Write CLAUDE.md pointers alongside each AGENTS.md so Claude Code auto-loads.
 for dir in "$LEAD_DIR@$UNIT_NAME" "$IMPL_DIR@$UNIT_NAME" "registrar@$UNIT_NAME"; do
-    printf '@AGENTS.md\n' > "$UNIT_PATH/#ORG/agents/$dir/CLAUDE.md"
+    printf '@AGENTS.md\n' > "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$dir/CLAUDE.md"
 done
 
 # --- Render the establishing ADR ---------------------------------------------
@@ -486,7 +500,7 @@ sed \
 # Set the status to 'accepted' at the top.
 # The template ships with "Status:** accepted" already — no change needed.
 
-# --- Update the ADR index (parent's #ORG/adr/README.md) ----------------------
+# --- Update the ADR index (parent's #ORG@<parent-name>/adr/README.md) --------
 
 # Add a row to the Accepted table. We do a simple sed insertion after the last
 # existing §-numbered row. This is best-effort; the Registrar's audit will
@@ -495,7 +509,7 @@ sed \
 # For reliability in this script, we simply append a single line to a known
 # location. If the table structure has drifted, the Lead can fix it later.
 
-INDEX="$PARENT_PATH/#ORG/adr/README.md"
+INDEX="$PARENT_PATH/#ORG@$PARENT_UNIT_NAME/adr/README.md"
 if [ -f "$INDEX" ]; then
     # Append a note at the end; Registrar can normalize on next audit.
     cat >> "$INDEX" <<INDEX_NOTE
@@ -504,7 +518,7 @@ if [ -f "$INDEX" ]; then
 INDEX_NOTE
 fi
 
-# --- Git commit (§0018 convention) -------------------------------------------
+# --- Git commit (§0017 convention) -------------------------------------------
 
 if [ "$SKIP_COMMIT" -eq 0 ]; then
     if (cd "$PARENT_PATH" && git rev-parse --is-inside-work-tree >/dev/null 2>&1); then

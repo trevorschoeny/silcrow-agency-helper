@@ -5,8 +5,8 @@
 - **Authors:** {authoring_lead_or_user} (via `silcrow:silcrow-add-unit`)
 - **Supersedes:** —
 - **Superseded by:** —
-- **Influences:** every subsequent operational artifact scoped to `@{unit_name}`; every ADR authored inside `@{unit_name}/#ORG/adr/`.
-- **Influenced by:** §0010 (roster change protocol), §0011 (agency scope), §0015 (agency and unit structure).
+- **Influences:** every subsequent operational artifact scoped to `@{unit_name}`; every ADR authored inside `@{unit_name}/#ORG@{unit_name}/adr/`.
+- **Influenced by:** §0010 (roster change protocol), §0019 (agency scope), §0014 (agency and unit structure).
 
 ## Y-statement
 
@@ -37,27 +37,27 @@ because **{driver — the area of concern has matured enough to warrant its own 
 
 ## Roster
 
-Every unit in the agency carries the same roles (§0015). `@{unit_name}` gets:
+Every unit in the agency carries the same roles (§0014). `@{unit_name}` gets:
 
 - **{Lead role name} @ {unit_display}** — tier-1 of `@{unit_name}`; reports up the tree to the {parent_lead_role} of `@{parent_unit_name}`.
 - **{Implementer role name} @ {unit_display}** — tier-2 of `@{unit_name}`; reports to {Lead role name} @ {unit_display}.
 - **Registrar @ {unit_display}** — audits `@{unit_name}`'s decision record. Outside the unit's decision hierarchy.
 
-There is no User at this unit. There is one User across the agency, who is principal of every unit and lives at the agency's root unit (§0013).
+There is no User at this unit. There is one User across the agency, who is principal of every unit and lives at the agency's root unit (§0012).
 
 ## Reports to
 
-- Every ancestor unit's ADRs bind `@{unit_name}` — `@{parent_unit_name}`'s `#ORG/adr/accepted/`, plus any further ancestors walking up to the agency's root.
-- `@{unit_name}`'s own decisions live in `@{parent_unit_name}/@{unit_name}/#ORG/adr/`.
-- Federation rule (§0015): `@{unit_name}` does not adjudicate peer or cousin units; they don't adjudicate `@{unit_name}`. Cross-unit issues route up the tree to the lowest common ancestor's Lead, or to {user_role}.
+- Every ancestor unit's ADRs bind `@{unit_name}` — `@{parent_unit_name}`'s `#ORG@{parent_unit_name}/adr/accepted/`, plus any further ancestors walking up to the agency's root.
+- `@{unit_name}`'s own decisions live in `@{parent_unit_name}/@{unit_name}/#ORG@{unit_name}/adr/`.
+- Federation rule (§0014): `@{unit_name}` does not adjudicate peer or cousin units; they don't adjudicate `@{unit_name}`. Cross-unit issues route up the tree to the lowest common ancestor's Lead, or to {user_role}.
 
 ## Directory structure
 
-When this ADR is accepted, the following directory is created nested inside `@{parent_unit_name}` (alongside that parent's `#ORG/`):
+When this ADR is accepted, the following directory is created nested inside `@{parent_unit_name}` (alongside that parent's `#ORG@{parent_unit_name}/`):
 
 ```
 {parent_path}/@{unit_name}/
-├── #ORG/
+├── #ORG@{unit_name}/
 │   ├── adr/
 │   │   ├── accepted/             ← empty; @{unit_name}'s ADRs land here
 │   │   ├── proposed/
@@ -68,12 +68,12 @@ When this ADR is accepted, the following directory is created nested inside `@{p
 │   │   ├── {implementer_dir}@{unit_name}/inbox/archive/
 │   │   └── registrar@{unit_name}/inbox/archive/
 │   ├── docs/
-│   │   └── README.md             ← points back to the agency's root #ORG/docs/
+│   │   └── README.md             ← points back to the agency's root #ORG@{agency_dir}/docs/
 │   └── README.md                 ← @{unit_name}'s governance overview
 └── (operational artifacts as @{unit_name} produces them)
 ```
 
-`@{unit_name}` inherits every ancestor unit's ADRs by reference — its own `#ORG/adr/accepted/` starts empty and fills only with decisions specific to `@{unit_name}`.
+`@{unit_name}` inherits every ancestor unit's ADRs by reference — its own `#ORG@{unit_name}/adr/accepted/` starts empty and fills only with decisions specific to `@{unit_name}`.
 
 ## Considered options
 
@@ -86,13 +86,13 @@ When this ADR is accepted, the following directory is created nested inside `@{p
 
 **Chosen option: (1) Establish `@{unit_name}` as a new sub-unit nested in `@{parent_unit_name}`**, because {primary_reason}.
 
-`@{unit_name}` will be scaffolded as {mode — directory | submodule} per §0019. {Rationale for mode.}
+`@{unit_name}` will be scaffolded as {mode — directory | submodule} per §0018. {Rationale for mode.}
 
 ### Consequences
 
 - **Positive:** Clearer ownership of {area_of_concern}; a dedicated record for `@{unit_name}`'s decisions.
 - **Positive:** Faster iteration within `@{unit_name}`; decisions don't bottleneck through `@{parent_unit_name}`'s Lead.
-- **Negative:** Additional governance overhead (another Registrar, another set of inboxes, another `#ORG/`).
+- **Negative:** Additional governance overhead (another Registrar, another set of inboxes, another `#ORG@<unit-name>/`).
 - **Negative:** Cross-unit coordination now has a boundary to cross when it didn't before.
 - **Neutral:** Registrar @ {unit_display} audits `@{unit_name}`'s record only; the parent unit's Registrar continues to audit the parent's record and any unit↔ADR consistency at that level.
 
@@ -108,10 +108,10 @@ Reconsider `@{unit_name}`'s establishment if:
 
 - `§0001` — the founding scaffold decision.
 - `§0010` — roster change protocol (adding a unit creates new agents and roles).
-- `§0011` — agency scope; `@{unit_name}` operates within agency scope.
-- `§0015` — agency and unit structure; this ADR implements the unit-addition pattern.
-- `§0019` — submodule decision (if `@{unit_name}` is a submodule).
-- `@{parent_unit_name}`'s `#ORG/README.md` — governance overview of the parent unit.
+- `§0019` — agency scope; `@{unit_name}` operates within agency scope.
+- `§0014` — agency and unit structure; this ADR implements the unit-addition pattern.
+- `§0018` — submodule decision (if `@{unit_name}` is a submodule).
+- `@{parent_unit_name}`'s `#ORG@{parent_unit_name}/README.md` — governance overview of the parent unit.
 - `silcrow:silcrow-add-unit` — the skill that orchestrated this establishment.
 
 ---
@@ -120,7 +120,7 @@ Reconsider `@{unit_name}`'s establishment if:
 This ADR template is rendered by the `silcrow:silcrow-add-unit` skill when
 adding a new unit to an agency or unit. Placeholders in curly braces are filled
 during the skill's conversation phase; the skill then writes the completed file
-to the parent's #ORG/adr/accepted/ with the next available §-number.
+to the parent's #ORG@<parent-unit-name>/adr/accepted/ with the next available §-number.
 
 If you're authoring a unit-establishing ADR manually (without the skill), copy
 this template to proposed/ or accepted/, assign a §-number, and fill in the

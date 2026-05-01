@@ -1,4 +1,4 @@
-# §0019 — Units with independent versioning needs are git submodules; all others are plain directories
+# §0018 — Units with independent versioning needs are git submodules; all others are plain directories
 
 - **Status:** accepted
 - **Date:** {date}
@@ -6,7 +6,7 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** how `:silcrow-add-unit` handles each new unit; when a unit's changes commit to the agency vs its own repo.
-- **Influenced by:** §0001, §0014, §0015, §0017, §0018
+- **Influenced by:** §0001, §0013, §0014, §0016, §0017
 
 ## Y-statement
 
@@ -16,11 +16,11 @@ we decided for **a per-unit choice at creation time** — the default is plain d
 and neglected global submodule-for-every-unit, global directory-for-every-unit, and git worktrees (which serve a different purpose),
 to achieve clean independence where it matters (units with their own release cycle) without dragging every unit through the submodule lifecycle complexity,
 accepting that the mixed mode means users have to hold both patterns in their head when working across units, and that submodule management adds cognitive load for the Lead,
-because the canon/operational split (§0014) applies to git the same way it applies to everything else — some units are canonically bound to the agency's lifecycle; others are operationally independent — and forcing everything into one mode wastes either independence or simplicity.
+because the canon/operational split (§0013) applies to git the same way it applies to everything else — some units are canonically bound to the agency's lifecycle; others are operationally independent — and forcing everything into one mode wastes either independence or simplicity.
 
 ## Context and problem statement
 
-When a user adds a unit to an agency via `:silcrow-add-unit` (§0015's unit-addition flow), the new unit becomes a directory inside the agency. That directory is tracked by git. The question is *how*:
+When a user adds a unit to an agency via `:silcrow-add-unit` (§0014's unit-addition flow), the new unit becomes a directory inside the agency. That directory is tracked by git. The question is *how*:
 
 - **Plain directory.** The agency has one git repo; the unit's files commit alongside the agency's. Everything versions together.
 - **Git submodule.** The unit has its own git repo, nested inside the agency via `git submodule add`. The unit has independent history, its own remote, and its own release lifecycle.
@@ -71,7 +71,7 @@ The default depends on context. If the user mentions an existing codebase URL du
 
 Identical to a plain directory unit. A submodule has:
 
-- `#ORG/` — its governance.
+- `#ORG@{unit_name}/` — its governance.
 - Sub-units (if any).
 - Operational artifacts.
 
@@ -121,8 +121,8 @@ Reconsider this ADR if:
 - `../../agents/registrar/AGENTS.md` — no special audit for submodule mode; normal unit↔ADR audit applies.
 - `../../agents/lead/AGENTS.md` — Lead's git notes include submodule management.
 - §0001 — founding scaffold decision.
-- §0014 — canon/operational split; submodule mode aligns with operationally-independent units.
-- §0015 — agency and unit structure; submodules share internal structure with plain-directory units.
-- §0017 — `.gitignore` default; applies to submodule roots as well.
-- §0018 — commit convention; submodule commits follow the same convention in both the submodule and the parent.
+- §0013 — canon/operational split; submodule mode aligns with operationally-independent units.
+- §0014 — agency and unit structure; submodules share internal structure with plain-directory units.
+- §0016 — `.gitignore` default; applies to submodule roots as well.
+- §0017 — commit convention; submodule commits follow the same convention in both the submodule and the parent.
 - Git documentation: `git-submodule(1)` man page; the Atlassian tutorial on submodules is a common secondary reference.

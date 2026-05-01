@@ -103,7 +103,7 @@ The scaffold rejects topic-based numbering for three reasons:
 2. **Multi-topic decisions.** Architectural decisions often span topics. "Use JWT for session identity" is both auth and identity and cross-cutting convention. A single topic forces a misleading categorization.
 3. **Sort order loses meaning.** With topic prefixes, §-numbers within each topic restart, and the global acceptance order is lost. History becomes harder to read.
 
-The scaffold compensates for the loss of topic-at-a-glance with the filename's short title: `§0014-use-structured-logging.md` tells you what it's about. The § gives stable identity; the kebab-title gives human-readable context.
+The scaffold compensates for the loss of topic-at-a-glance with the filename's short title: `§0013-use-structured-logging.md` tells you what it's about. The § gives stable identity; the kebab-title gives human-readable context.
 
 ## Debates and open questions
 

@@ -17,9 +17,9 @@ allowed-tools:
 
 # Agent Org Scaffold — Init
 
-Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0019) that capture the pattern's load-bearing decisions.
+Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0018) that capture the pattern's load-bearing decisions.
 
-An **agency** is the whole organizational tree. Its top-level node is the **root unit**, which shares the agency's name. The tree may stop there (a single root unit, one cohesive body of work) or extend into nested **sub-units** — each itself a full unit, recursively, with its own governance and agents (§0015). The scaffold supports both shapes.
+An **agency** is the whole organizational tree. Its top-level node is the **root unit**, which shares the agency's name. The tree may stop there (a single root unit, one cohesive body of work) or extend into nested **sub-units** — each itself a full unit, recursively, with its own governance and agents (§0014). The scaffold supports both shapes.
 
 ## One-shot skill
 
@@ -42,7 +42,7 @@ Before any output to the user:
 - Check for `.git/` at the destination. If present, git init will be skipped and existing history will be preserved.
 - Walk the destination (one level deep) to find any nested `.git/` directories — these are flagged for the user later but not acted on here.
 - Check CLAUDE.md or the environment for the user's name. If found, you'll substitute it into the locked intro; if not, you'll silently omit.
-- Note whether the destination directory's basename starts with `@`. That's the scaffold convention for units, and agencies are units (§0015). If it doesn't start with `@`, you'll offer a rename during conversation.
+- Note whether the destination directory's basename starts with `@`. That's the scaffold convention for units, and agencies are units (§0014). If it doesn't start with `@`, you'll offer a rename during conversation.
 
 No questions yet. No output. Just orient.
 
@@ -75,8 +75,8 @@ Now converse naturally. Based on what you peeked, do the following in whichever 
 - **Propose** single-unit vs multi-unit based on what you found. If multi-unit, suggest initial unit names and purposes.
 - **Note** if a `.git/` already exists at the destination (scaffold will skip `git init`). If nested `.git/` directories exist inside the destination, mention that you'll flag them for the Registrar at first audit.
 - **Check the directory-name convention.** If the current directory doesn't start with `@`, surface the convention and offer a rename:
-  > *By scaffold convention, agencies use the `@` prefix like units do (§0015). Your current directory is `foo/`. Should I rename it to `@foo/` before scaffolding?*
-  The user can accept the rename (do `git mv` or `mv` as appropriate) or proceed with the unprefixed name (the `#ORG/` marker identifies it as an agency either way).
+  > *By scaffold convention, agencies use the `@` prefix like units do (§0014). Your current directory is `foo/`. Should I rename it to `@foo/` before scaffolding?*
+  The user can accept the rename (do `git mv` or `mv` as appropriate) or proceed with the unprefixed name (the `#ORG@<unit-name>/` marker identifies it as an agency either way).
 - **Ask only what you can't infer.** No forms, no numbered phases. Conversational.
 
 ### What you need to gather
@@ -99,7 +99,7 @@ Now converse naturally. Based on what you peeked, do the following in whichever 
 - Unit purpose (one sentence).
 - Lead directory + display name for this unit (default inherits agency; may override).
 - Implementer directory + display name for this unit (default inherits agency; may override).
-- Mode: `directory` (default) or `submodule` (§0019 — for units with independent versioning).
+- Mode: `directory` (default) or `submodule` (§0018 — for units with independent versioning).
 - If submodule, submodule source (remote URL, local path, or blank for fresh init).
 
 ### Role rename guidance
@@ -137,7 +137,7 @@ Quote every argument so values with spaces pass through cleanly.
 
 The script:
 - Prints `✓ Scaffolded <agency_name> at <destination>` on success.
-- Exits 3 on conflict (existing `#ORG/` at destination). Relay the error; do not attempt recovery.
+- Exits 3 on conflict (existing `#ORG@<unit-name>/` at destination). Relay the error; do not attempt recovery.
 - Prints nested `.git/` warnings if any were detected. Pass these forward in your report.
 
 ### Units next (if multi-unit)
@@ -169,7 +169,7 @@ directory names (for references like "route through the agency Lead or User").
 
 `--agency-dir` and `--agency-name` are **optional** — by default the script
 walks up from the parent path to find the agency's root unit (the topmost
-`#ORG/` in the tree) and reads the agency name from there. Pass them
+`#ORG@<unit-name>/` in the tree) and reads the agency name from there. Pass them
 explicitly only if you need to override the auto-detection.
 
 `--unit-display` is also **optional** — if omitted, the script title-cases
@@ -177,9 +177,9 @@ explicitly only if you need to override the auto-detection.
 display form that differs from the auto-cased default.
 
 Each invocation:
-- Authors an establishing ADR in the agency's `#ORG/adr/accepted/`.
+- Authors an establishing ADR in the parent unit's `#ORG@<parent-unit-name>/adr/accepted/`.
 - Creates the unit directory (or `git submodule add` if submodule mode).
-- Scaffolds the unit's `#ORG/` with agents, ADR tree, docs, and README.
+- Scaffolds the unit's `#ORG@<unit-name>/` with agents, ADR tree, docs, and README.
 - Commits with `§NNNN: establish unit @<name>`.
 
 If any unit fails, relay the error and stop. Do not continue to further units until the user resolves the issue.
@@ -232,13 +232,13 @@ If nested `.git/` directories were detected during scaffold, include a short not
 
 Output this wording exactly, substituting agency name, user's name, role names, and §-numbers where needed.
 
-> *If you want to ground in the theory behind this scaffold before diving in, read `#ORG/docs/philosophy.md` first, then `#ORG/docs/decision-process.md` for how ADRs flow, and `#ORG/docs/message-protocol.md` for how agents talk to each other. `#ORG/docs/foundations/` has deeper reading on stratified cognition, subsidiarity, the actor model, ADRs as a tradition, legal-citation inheritance, the registrar pattern, and the canon/operational split — each one short, each one standalone.*
+> *If you want to ground in the theory behind this scaffold before diving in, read `#ORG@<agency-name>/docs/philosophy.md` first, then `#ORG@<agency-name>/docs/decision-process.md` for how ADRs flow, and `#ORG@<agency-name>/docs/message-protocol.md` for how agents talk to each other. `#ORG@<agency-name>/docs/foundations/` has deeper reading on stratified cognition, subsidiarity, the actor model, ADRs as a tradition, legal-citation inheritance, the registrar pattern, and the canon/operational split — each one short, each one standalone.*
 >
 > *Agents work together by sending messages to each other's inboxes — small markdown files dropped into the receiving agent's `inbox/` directory. Each agent already knows where its own inbox lives, who it takes messages from, who it sends messages to, and how to archive what it's read. You don't need to configure any of that — it's baked into every agent's `AGENTS.md`.*
 >
-> *When you're ready to start working, close this session. Open a new one inside `#ORG/agents/<lead-dir>/` — that's your agency's lead, and the first conversation you want is planning-level: expanding §0011 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
+> *When you're ready to start working, close this session. Open a new one inside `#ORG@<agency-name>/agents/<lead-dir>@<agency-name>/` — that's your agency's lead, and the first conversation you want is planning-level: expanding §0019 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
 >
-> *You can start a session with any agent the same way — open it inside that agent's directory. Unit-level agents live under `@<unit-name>/#ORG/agents/<role>/`. The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
+> *You can start a session with any agent the same way — open it inside that agent's directory. Unit-level agents live under `@<unit-name>/#ORG@<unit-name>/agents/<role>@<unit-name>/`. The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
 >
 > *You can run the `:silcrow-add-unit` skill at any time to add a new unit, or the `:silcrow-update` skill to bring this agency into alignment with the latest plugin updates. The registrar assists with both.*
 >

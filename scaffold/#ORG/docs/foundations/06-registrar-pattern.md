@@ -86,7 +86,7 @@ Real-world registrars operate in two modes, and both preserve the form/substance
 
 **Async auditor mode.** Submissions enter the record immediately; the registrar audits the record periodically and flags issues. A university registrar audits enrollment records at end of term. A court clerk audits the docket on a cadence. A corporate secretary audits the share register periodically against transaction records.
 
-The scaffold's original pattern (§0008) was sync-gate. The scaffold's current pattern (§0012) is async-auditor. **The form/substance separation is preserved in both.** What changes between modes is *when* the registrar acts — per-proposal vs on-demand — not *what* their authority covers.
+The scaffold's original pattern (§0008) was sync-gate. The scaffold's current pattern (§0011) is async-auditor. **The form/substance separation is preserved in both.** What changes between modes is *when* the registrar acts — per-proposal vs on-demand — not *what* their authority covers.
 
 Why the scaffold moved to async-auditor: sync gating produced workflow latency, evaporated the author's context (by the time a decision came back from validation, the "why" had faded from working memory), and made the registrar a soft bottleneck even when fast. The async mode removes all three costs while keeping the centuries-tested separation intact. The Registrar's authority remains strictly procedural; the cadence of its exercise is different.
 
@@ -135,12 +135,12 @@ The Registrar's authority in this scaffold is strictly procedural:
 - **Audit execution.** On-demand audit against the checklist (see `../../agents/registrar/AGENTS.md`).
 - **Update-workflow orchestration.** The `:silcrow-update` skill's diff, report, per-item review, and audit-ADR authoring.
 
-Per §0012, the Registrar operates as **async auditor**: Lead and User commit ADRs directly to `accepted/` when confident; Implementers draft into `proposed/` for Lead approval; the Registrar audits the record on demand and corrects procedural issues or surfaces substantive ones. No per-proposal gating.
+Per §0011, the Registrar operates as **async auditor**: Lead and User commit ADRs directly to `accepted/` when confident; Implementers draft into `proposed/` for Lead approval; the Registrar audits the record on demand and corrects procedural issues or surfaces substantive ones. No per-proposal gating.
 
 The Registrar does **not**:
 
 - Evaluate whether a decision is correct.
-- Gate acceptance (Lead has first-class authority; §0012 superseded §0008's sync-gate mode).
+- Gate acceptance (Lead has first-class authority; §0011 superseded §0008's sync-gate mode).
 - Adjudicate conflicts between ADRs (that is for the decision-makers).
 - Silently fix substantive issues (they surface them via message and let the authors decide).
 

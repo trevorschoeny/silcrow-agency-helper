@@ -17,7 +17,7 @@ Subfolders:
 | `anti-patterns/` | Standalone anti-pattern records (prefix `ap-`, separate numbering) |
 | `_templates/` | The MADR-full, MADR-minimal, anti-pattern, and establish-unit templates |
 
-The `proposed/` directory is voluntary for Leads (who may commit directly to `accepted/` per §0012) and required for Implementers (who draft into `proposed/` awaiting approval per §0013).
+The `proposed/` directory is voluntary for Leads (who may commit directly to `accepted/` per §0011) and required for Implementers (who draft into `proposed/` awaiting approval per §0012).
 
 ## Organizing within `accepted/` — up to the agency
 
@@ -42,26 +42,26 @@ If the agency decides to introduce a particular subfolder scheme, **that decisio
 | §0007 | [{lead_role} writes briefs, not specs](accepted/§0007-briefs-not-specs.md) | accepted | {date} |
 | §0009 | [Anti-patterns are first-class records](accepted/§0009-anti-patterns-as-first-class-records.md) | accepted | {date} |
 | §0010 | [Roster change protocol](accepted/§0010-roster-change-protocol.md) | accepted | {date} |
-| §0011 | [Agency scope](accepted/§0011-agency-scope.md) — *seed, expected to be superseded early* | accepted | {date} |
-| §0012 | [Registrar operates as async auditor, not sync gatekeeper](accepted/§0012-registrar-as-async-auditor.md) | accepted | {date} |
-| §0013 | [User as principal; local tier numbering; Implementer drafts-with-approval](accepted/§0013-user-as-principal-and-local-tier-numbering.md) | accepted | {date} |
-| §0014 | [Canonical and operational artifacts: direction of constraint, promotion rule, reference rule](accepted/§0014-canonical-and-operational-artifacts.md) | accepted | {date} |
-| §0015 | [Agency and unit structure; `#ORG/` and `@<unit>/` conventions](accepted/§0015-agency-and-unit-structure.md) | accepted | {date} |
-| §0016 | [Update audits produce per-session audit ADRs](accepted/§0016-update-audits-produce-audit-adrs.md) | accepted | {date} |
-| §0017 | [Agency default `.gitignore` — OS, editor, and secrets patterns only](accepted/§0017-default-gitignore.md) | accepted | {date} |
-| §0018 | [Governance commits cite the governing §NNNN; operational commits are free-form](accepted/§0018-governance-commits-cite-section-numbers.md) | accepted | {date} |
-| §0019 | [Units with independent versioning needs are git submodules](accepted/§0019-submodules-for-independently-versioned-units.md) | accepted | {date} |
+| §0011 | [Registrar operates as async auditor, not sync gatekeeper](accepted/§0011-registrar-as-async-auditor.md) | accepted | {date} |
+| §0012 | [User as principal; local tier numbering; Implementer drafts-with-approval](accepted/§0012-user-as-principal-and-local-tier-numbering.md) | accepted | {date} |
+| §0013 | [Canonical and operational artifacts: direction of constraint, promotion rule, reference rule](accepted/§0013-canonical-and-operational-artifacts.md) | accepted | {date} |
+| §0014 | [Agency and unit structure; `#ORG@<unit>/` and `@<unit>/` conventions](accepted/§0014-agency-and-unit-structure.md) | accepted | {date} |
+| §0015 | [Update audits produce per-session audit ADRs](accepted/§0015-update-audits-produce-audit-adrs.md) | accepted | {date} |
+| §0016 | [Agency default `.gitignore` — OS, editor, and secrets patterns only](accepted/§0016-default-gitignore.md) | accepted | {date} |
+| §0017 | [Governance commits cite the governing §NNNN; operational commits are free-form](accepted/§0017-governance-commits-cite-section-numbers.md) | accepted | {date} |
+| §0018 | [Units with independent versioning needs are git submodules](accepted/§0018-submodules-for-independently-versioned-units.md) | accepted | {date} |
+| §0019 | [Agency scope](accepted/§0019-agency-scope.md) — *seed, expected to be superseded early; intentional first lesson in the supersession discipline* | accepted | {date} |
 
-**About the founding set.** §0001 records the decision to adopt this scaffold. §0002–§0019 are **constitutional decisions inherited from the scaffold** via §0001 — they capture the load-bearing choices that define how this agency runs. Each names its alternatives and cites its foundations so it can be evaluated or superseded on its own merits, like any other ADR.
+**About the founding set.** §0001 records the decision to adopt this scaffold. §0002–§0018 are **constitutional decisions inherited from the scaffold** via §0001 — they capture the load-bearing choices that define how this agency runs. Each names its alternatives and cites its foundations so it can be evaluated or superseded on its own merits, like any other ADR.
 
-- §0011 is explicitly a seed — the scaffold invites the User and Lead to supersede it with a richer scope statement as an early collaborative task.
-- §0012–§0019 evolve earlier decisions or extend them: §0012 supersedes §0008 (Registrar operating mode); §0013 extends §0006 (tier model + authorship); §0014 establishes the canon/operational split that the rest of the agency's work flows within; §0015 codifies the `#ORG/` and `@<unit>/` conventions; §0016–§0019 cover updates, gitignore, commit conventions, and submodules.
+- §0019 is explicitly a seed — the scaffold invites the User and Lead to supersede it with a richer scope statement as an early collaborative task.
+- §0011–§0018 evolve earlier decisions or extend them: §0011 supersedes §0008 (Registrar operating mode); §0012 extends §0006 (tier model + authorship); §0013 establishes the canon/operational split that the rest of the agency's work flows within; §0014 codifies the `#ORG@<unit-name>/` and `@<unit-name>/` conventions; §0015–§0018 cover updates, gitignore, commit conventions, and submodules.
 
 ## Superseded decisions
 
 | § | Title | Superseded by | Date |
 |---|---|---|---|
-| §0008 | [Registrar authority is procedural, not substantive](superseded/§0008-registrar-procedural-authority.md) | §0012 | {date} |
+| §0008 | [Registrar authority is procedural, not substantive](superseded/§0008-registrar-procedural-authority.md) | §0011 | {date} |
 
 ## Rejected proposals
 

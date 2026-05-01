@@ -65,12 +65,12 @@ The scaffold applies actor-model discipline to an *organization of agents*, not 
 
 | Actor-model concept | Scaffold implementation |
 |---|---|
-| Actor | Agent (`#ORG/agents/{role}/`) |
+| Actor | Agent (`#ORG@<unit-name>/agents/<role>@<unit-name>/`) |
 | Private state | Agent's own directory |
-| Mailbox | `#ORG/agents/{role}/inbox/` |
-| Message history | `#ORG/agents/{role}/inbox/archive/` |
+| Mailbox | `#ORG@<unit-name>/agents/<role>@<unit-name>/inbox/` |
+| Message history | `#ORG@<unit-name>/agents/<role>@<unit-name>/inbox/archive/` |
 | Asynchronous message | File deposit into another agent's inbox |
-| Shared ledger | The ADR tree (`#ORG/adr/accepted/`, `#ORG/adr/superseded/`, `#ORG/adr/rejected/`) |
+| Shared ledger | The ADR tree (`#ORG@<unit-name>/adr/accepted/`, `#ORG@<unit-name>/adr/superseded/`, `#ORG@<unit-name>/adr/rejected/`) |
 | Supervision | Higher-tier agent watching lower-tier work |
 | "Let it crash" | Fast, honest signaling when stuck — don't silently muddle through |
 

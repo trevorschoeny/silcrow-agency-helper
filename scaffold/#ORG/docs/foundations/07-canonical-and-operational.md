@@ -4,7 +4,7 @@
 
 **Useful organizations produce two kinds of artifacts, and the constraint between them flows one direction only.** Canonical artifacts — the rules that bind — are stable, citable, and immutable except by supersession. Operational artifacts — the work that happens under those rules — are mutable, working, and evolving. The canonical binds the operational; the operational never binds the canonical. That one-way constraint is what lets the canonical stay stable and the operational stay free to iterate.
 
-This scaffold takes the distinction directly: ADRs are canonical; plans, briefs, implementations, research reports, schedules, codebases, and all other working material are operational. The distinction is recorded explicitly in §0014.
+This scaffold takes the distinction directly: ADRs are canonical; plans, briefs, implementations, research reports, schedules, codebases, and all other working material are operational. The distinction is recorded explicitly in §0013.
 
 ## Where the pattern appears
 
@@ -39,9 +39,9 @@ The canon/operational split is a direct expression. Canon is the stable frame �
 
 Elinor Ostrom's *Governing the Commons* (1990) and later work on polycentric governance identified the design principles that successful long-lived institutions share. Her Design Principle #7 — *Recognition of rights to organize* — assumes that a local self-governing group operates **under an external legal framework**. The canon is outside the operational group; ops live inside it.
 
-This is important because the canon doesn't have to come from within the operational group. For the scaffold, the plugin's shipped ADRs (§0001–§0019) are "external canon" — decisions inherited from outside the agency at scaffold time. The agency then makes its own ADRs (internal canon) that layer on top. Both kinds are canonical; both bind operational work; both operate under the same discipline.
+This is important because the canon doesn't have to come from within the operational group. For the scaffold, the plugin's shipped ADRs (§0001–§0018) are "external canon" — decisions inherited from outside the agency at scaffold time. The agency then makes its own ADRs (internal canon) that layer on top. Both kinds are canonical; both bind operational work; both operate under the same discipline.
 
-Ostrom's broader point is that well-designed institutions have multiple centers of authority at different scales. The agency/unit structure in the scaffold (§0015) directly expresses this: the agency has canon; each unit has its own canon that further narrows within agency canon (but cannot contradict it). Polycentric, canon-leading-canon, with operational work at every level.
+Ostrom's broader point is that well-designed institutions have multiple centers of authority at different scales. The agency/unit structure in the scaffold (§0014) directly expresses this: the agency has canon; each unit has its own canon that further narrows within agency canon (but cannot contradict it). Polycentric, canon-leading-canon, with operational work at every level.
 
 ### Architecture decision records — Nygard
 
@@ -65,13 +65,13 @@ The canon/operational split is not a decorative taxonomy. It does three load-bea
 
 Without the split, ADRs drift. Authors start referencing operational artifacts as if they were canon ("we will X according to `plans/foo.md`"), and the ADR's meaning becomes dependent on the plan's current state. When the plan changes, the ADR silently changes too — not by supersession but by back-reference. The immutability discipline (§0004) is defeated without anyone noticing.
 
-The reference rule in §0014 directly protects against this. The delete test and contradiction test catch unsafe references before they're committed. Authors who internalize the rule learn to embed decision content inside the ADR and use external references only for orientation, provenance, or compliance measurement.
+The reference rule in §0013 directly protects against this. The delete test and contradiction test catch unsafe references before they're committed. Authors who internalize the rule learn to embed decision content inside the ADR and use external references only for orientation, provenance, or compliance measurement.
 
 ### 2. It keeps operational work free
 
 Without the split, plans start feeling like ADRs. Authors write them with MADR structure, treat them as if immutable, resist revising them even when execution teaches better. The ADR discipline — designed for decisions that bind future work — gets misapplied to plans that should iterate freely. Overhead exceeds value.
 
-The promotion rule in §0014 directly protects against this. An operational choice becomes canonical only when it binds future work beyond the current execution. Not when it's large. Not when it's important. *When it's binding.* A 12-phase refactor plan isn't an ADR; it's a plan. The phased-refactor *principle* might be an ADR, if it's a rule the team will apply to future refactors. The distinction lets plans be plans.
+The promotion rule in §0013 directly protects against this. An operational choice becomes canonical only when it binds future work beyond the current execution. Not when it's large. Not when it's important. *When it's binding.* A 12-phase refactor plan isn't an ADR; it's a plan. The phased-refactor *principle* might be an ADR, if it's a rule the team will apply to future refactors. The distinction lets plans be plans.
 
 ### 3. It makes promotions and demotions visible
 
@@ -81,12 +81,12 @@ Compare the alternative: a single category where everything is "documentation" a
 
 ## How the split shows up in the scaffold
 
-- **ADRs (`#ORG/adr/accepted/`) are canonical.** Immutable, citable, supersedable only by deliberate process.
-- **Plans, briefs, implementations, research, schedules, codebases are operational.** Iterate freely; live wherever is natural (alongside `#ORG/`, in external repos, in connectors).
+- **ADRs (`#ORG@<unit-name>/adr/accepted/`) are canonical.** Immutable, citable, supersedable only by deliberate process.
+- **Plans, briefs, implementations, research, schedules, codebases are operational.** Iterate freely; live wherever is natural (alongside `#ORG@<unit-name>/`, in external repos, in connectors).
 - **The reference rule governs how ADRs mention operational artifacts.** Safe references survive the artifact changing; unsafe references make the ADR depend on the artifact's current state.
 - **The promotion rule governs when an operational choice becomes canonical.** Binding future work is the test.
-- **The Registrar audits for unsafe references as part of its checklist** (§0012). The form/substance separation applies here too — the Registrar flags unsafe references, but remediation (rewriting the ADR) is the Lead's job.
-- **The `#ORG/` structural marker (§0015) physically separates canonical content from operational content.** Everything inside `#ORG/` is governance; everything outside is operational.
+- **The Registrar audits for unsafe references as part of its checklist** (§0011). The form/substance separation applies here too — the Registrar flags unsafe references, but remediation (rewriting the ADR) is the Lead's job.
+- **The `#ORG@<unit-name>/` structural marker (§0014) physically separates canonical content from operational content.** Everything inside `#ORG@<unit-name>/` is governance; everything outside is operational.
 
 ## Common failure modes
 

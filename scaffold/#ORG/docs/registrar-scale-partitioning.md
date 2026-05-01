@@ -11,7 +11,7 @@ The core Registrar reference is `../agents/registrar/AGENTS.md`; this file is sc
 If an agent's `inbox/archive/` grows past ~200 files, partition by year-quarter:
 
 ```
-#ORG/agents/{role}/inbox/archive/
+#ORG@{unit_name}/agents/{role}@{unit_name}/inbox/archive/
 ├── 2026-Q1/
 ├── 2026-Q2/
 └── ...
@@ -24,13 +24,13 @@ Never delete archived messages.
 §-numbering is agency-global (or unit-global within a unit). Do **not** restart per partition. When `accepted/` grows past a few hundred files, introduce topic subfolders:
 
 ```
-#ORG/adr/accepted/
-├── arch/§0014-...
+#ORG@{unit_name}/adr/accepted/
+├── arch/§0013-...
 ├── data/§0088-...
 └── ops/§0101-...
 ```
 
-§-numbers stay globally unique. Topic folders are an organizational aid. Citations remain `§0014`; readers use the index to locate.
+§-numbers stay globally unique. Topic folders are an organizational aid. Citations remain `§0013`; readers use the index to locate.
 
 ## Additional Registrars
 

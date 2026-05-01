@@ -5,9 +5,10 @@
 # Invoked by the silcrow:silcrow-init skill. Handles file copy, token
 # substitution, git initialization, and initial commit.
 #
-# Agency = top-level unit, following the #ORG/ + @<unit>/ convention (§0015).
-# This script scaffolds the agency itself. Sub-units are added separately via
-# scripts/add-unit.sh, orchestrated by the :silcrow-add-unit skill.
+# Agency = root unit + nested sub-units, following the #ORG@<unit-name>/ +
+# @<unit>/ convention (§0014). This script scaffolds the agency's root unit.
+# Sub-units are added separately via scripts/add-unit.sh, orchestrated by the
+# :silcrow-add-unit skill.
 #
 # Usage:
 #   scaffold.sh <destination> <agency_name> <agency_description> \
@@ -18,7 +19,7 @@
 # Arguments:
 #   destination         Absolute path to the agency's root directory.
 #                       The script creates/expects this directory and places
-#                       #ORG/ inside it.
+#                       #ORG@<agency-name>/ inside it.
 #   agency_name         Display name for the agency (e.g. "Acme Co").
 #   agency_description  One-paragraph description of the agency's purpose.
 #   user_dir            Directory name for the User (e.g. "trevor").
@@ -37,7 +38,7 @@
 #   0   Success.
 #   1   Scaffold source not found (plugin misconfiguration).
 #   2   Argument error.
-#   3   Destination conflict (existing #ORG/ or scaffold residue).
+#   3   Destination conflict (existing #ORG@*/ or scaffold residue).
 
 set -euo pipefail
 
@@ -118,16 +119,26 @@ fi
 
 # --- Pre-flight conflict check -----------------------------------------------
 
-# Refuse to overwrite an existing scaffold. The #ORG/ marker identifies a unit;
-# if it already exists at the destination, this is already-scaffolded territory.
-if [ -e "$DST/#ORG" ]; then
-    echo "Error: destination already contains #ORG/." >&2
-    echo "This directory appears to be a scaffolded agency or unit already." >&2
-    echo "Refusing to overwrite. Remove #ORG/ first or choose a different destination." >&2
+# Refuse to overwrite an existing scaffold. Per §0014, any #ORG@<unit-name>/
+# directory marks a unit; if one exists at the destination, this is
+# already-scaffolded territory.
+EXISTING_MARKER="$(find "$DST" -maxdepth 1 -type d -name '#ORG@*' 2>/dev/null | head -1 || true)"
+if [ -n "$EXISTING_MARKER" ]; then
+    echo "Error: destination already contains $(basename "$EXISTING_MARKER")." >&2
+    echo "This directory appears to be a scaffolded unit already." >&2
+    echo "Refusing to overwrite. Choose a different destination." >&2
     exit 3
 fi
 
-# Also refuse if legacy flat layout is present (pre-#ORG/ scaffolds).
+# Also refuse if a pre-0.9.0 single #ORG/ marker (without unit suffix) is
+# present — that's a 0.7.0/0.8.0 scaffold needing migration via :silcrow-update.
+if [ -d "$DST/#ORG" ]; then
+    echo "Error: destination contains a legacy #ORG/ directory (pre-0.9.0 scaffold)." >&2
+    echo "Run :silcrow-update on that agency to migrate to #ORG@<unit-name>/." >&2
+    exit 3
+fi
+
+# Also refuse if older-still flat layout is present (pre-#ORG/ scaffolds).
 for path in adr agents docs proposed; do
     if [ -d "$DST/$path" ]; then
         echo "Error: destination contains legacy scaffold directory '$path/'." >&2
@@ -156,17 +167,17 @@ fi
 # --- Create the destination tree ---------------------------------------------
 
 mkdir -p \
-    "$DST/#ORG/agents/$USER_DIR@$AGENCY_DIR/inbox/archive" \
-    "$DST/#ORG/agents/$LEAD_DIR@$AGENCY_DIR/inbox/archive" \
-    "$DST/#ORG/agents/$IMPL_DIR@$AGENCY_DIR/inbox/archive" \
-    "$DST/#ORG/agents/registrar@$AGENCY_DIR/inbox/archive" \
-    "$DST/#ORG/adr/_templates" \
-    "$DST/#ORG/adr/accepted" \
-    "$DST/#ORG/adr/proposed" \
-    "$DST/#ORG/adr/superseded" \
-    "$DST/#ORG/adr/rejected" \
-    "$DST/#ORG/adr/anti-patterns" \
-    "$DST/#ORG/docs/foundations"
+    "$DST/#ORG@$AGENCY_DIR/agents/$USER_DIR@$AGENCY_DIR/inbox/archive" \
+    "$DST/#ORG@$AGENCY_DIR/agents/$LEAD_DIR@$AGENCY_DIR/inbox/archive" \
+    "$DST/#ORG@$AGENCY_DIR/agents/$IMPL_DIR@$AGENCY_DIR/inbox/archive" \
+    "$DST/#ORG@$AGENCY_DIR/agents/registrar@$AGENCY_DIR/inbox/archive" \
+    "$DST/#ORG@$AGENCY_DIR/adr/_templates" \
+    "$DST/#ORG@$AGENCY_DIR/adr/accepted" \
+    "$DST/#ORG@$AGENCY_DIR/adr/proposed" \
+    "$DST/#ORG@$AGENCY_DIR/adr/superseded" \
+    "$DST/#ORG@$AGENCY_DIR/adr/rejected" \
+    "$DST/#ORG@$AGENCY_DIR/adr/anti-patterns" \
+    "$DST/#ORG@$AGENCY_DIR/docs/foundations"
 
 # --- Substitution helper -----------------------------------------------------
 
@@ -174,7 +185,7 @@ mkdir -p \
 # Uses | as the sed delimiter so values containing / don't break it.
 # Escapes any | characters in values to avoid delimiter confusion.
 #
-# Agent identity follows the role@unit-name convention (§0015). At the agency
+# Agent identity follows the role@unit-name convention (§0014). At the agency
 # level, {unit_name} = AGENCY_DIR and {unit_display} = AGENCY_NAME because the
 # root unit shares the agency's name. add-unit.sh overrides these for sub-units.
 subst() {
@@ -202,20 +213,20 @@ subst() {
 # --- Empty placeholder files (.gitkeep) --------------------------------------
 
 touch \
-    "$DST/#ORG/agents/$USER_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG/agents/$LEAD_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG/agents/$IMPL_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG/agents/registrar@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG/adr/proposed/.gitkeep" \
-    "$DST/#ORG/adr/superseded/.gitkeep" \
-    "$DST/#ORG/adr/rejected/.gitkeep"
+    "$DST/#ORG@$AGENCY_DIR/agents/$USER_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/#ORG@$AGENCY_DIR/agents/$LEAD_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/#ORG@$AGENCY_DIR/agents/$IMPL_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/#ORG@$AGENCY_DIR/agents/registrar@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/#ORG@$AGENCY_DIR/adr/proposed/.gitkeep" \
+    "$DST/#ORG@$AGENCY_DIR/adr/superseded/.gitkeep" \
+    "$DST/#ORG@$AGENCY_DIR/adr/rejected/.gitkeep"
 
 # --- Copy and substitute files -----------------------------------------------
 
 # Top-level governance README
-subst "$SRC/README.md" "$DST/#ORG/README.md"
+subst "$SRC/README.md" "$DST/#ORG@$AGENCY_DIR/README.md"
 
-# Agent instructions. Per §0015's agent-identity convention, every agent's
+# Agent instructions. Per §0014's agent-identity convention, every agent's
 # directory is named <role-dir>@<unit-name>/. At the agency level the unit-name
 # is the agency's slug (AGENCY_DIR), so directories look like trevor@acme/,
 # lead@acme/, etc. The Registrar role-dir is fixed as "registrar".
@@ -223,42 +234,42 @@ subst "$SRC/README.md" "$DST/#ORG/README.md"
 # Each agent directory gets two files: AGENTS.md (the canonical instructions,
 # auto-loaded by Codex/Cursor/Copilot/etc.) and CLAUDE.md (a one-line pointer,
 # `@AGENTS.md`, that Claude Code auto-loads and recursively imports).
-subst "$SRC/agents/user/AGENTS.md"         "$DST/#ORG/agents/$USER_DIR@$AGENCY_DIR/AGENTS.md"
-subst "$SRC/agents/lead/AGENTS.md"         "$DST/#ORG/agents/$LEAD_DIR@$AGENCY_DIR/AGENTS.md"
-subst "$SRC/agents/implementer/AGENTS.md"  "$DST/#ORG/agents/$IMPL_DIR@$AGENCY_DIR/AGENTS.md"
-subst "$SRC/agents/registrar/AGENTS.md"    "$DST/#ORG/agents/registrar@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/agents/user/AGENTS.md"         "$DST/#ORG@$AGENCY_DIR/agents/$USER_DIR@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/agents/lead/AGENTS.md"         "$DST/#ORG@$AGENCY_DIR/agents/$LEAD_DIR@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/agents/implementer/AGENTS.md"  "$DST/#ORG@$AGENCY_DIR/agents/$IMPL_DIR@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/agents/registrar/AGENTS.md"    "$DST/#ORG@$AGENCY_DIR/agents/registrar@$AGENCY_DIR/AGENTS.md"
 
 for dir in "$USER_DIR@$AGENCY_DIR" "$LEAD_DIR@$AGENCY_DIR" "$IMPL_DIR@$AGENCY_DIR" "registrar@$AGENCY_DIR"; do
-    printf '@AGENTS.md\n' > "$DST/#ORG/agents/$dir/CLAUDE.md"
+    printf '@AGENTS.md\n' > "$DST/#ORG@$AGENCY_DIR/agents/$dir/CLAUDE.md"
 done
 
 # ADR tree: README, templates, accepted, superseded, anti-patterns
-subst "$SRC/adr/README.md"                       "$DST/#ORG/adr/README.md"
-subst "$SRC/adr/anti-patterns/README.md"         "$DST/#ORG/adr/anti-patterns/README.md"
+subst "$SRC/adr/README.md"                       "$DST/#ORG@$AGENCY_DIR/adr/README.md"
+subst "$SRC/adr/anti-patterns/README.md"         "$DST/#ORG@$AGENCY_DIR/adr/anti-patterns/README.md"
 
 for f in "$SRC/adr/_templates"/*.md; do
-    subst "$f" "$DST/#ORG/adr/_templates/$(basename "$f")"
+    subst "$f" "$DST/#ORG@$AGENCY_DIR/adr/_templates/$(basename "$f")"
 done
 
 for f in "$SRC/adr/accepted"/*.md; do
-    subst "$f" "$DST/#ORG/adr/accepted/$(basename "$f")"
+    subst "$f" "$DST/#ORG@$AGENCY_DIR/adr/accepted/$(basename "$f")"
 done
 
 for f in "$SRC/adr/superseded"/*.md; do
     # Only copy if present (scaffold may ship superseded/§0008 or none).
-    [ -f "$f" ] && subst "$f" "$DST/#ORG/adr/superseded/$(basename "$f")"
+    [ -f "$f" ] && subst "$f" "$DST/#ORG@$AGENCY_DIR/adr/superseded/$(basename "$f")"
 done
 
 # Docs
 for f in "$SRC/docs"/*.md; do
-    subst "$f" "$DST/#ORG/docs/$(basename "$f")"
+    subst "$f" "$DST/#ORG@$AGENCY_DIR/docs/$(basename "$f")"
 done
 
 for f in "$SRC/docs/foundations"/*.md; do
-    subst "$f" "$DST/#ORG/docs/foundations/$(basename "$f")"
+    subst "$f" "$DST/#ORG@$AGENCY_DIR/docs/foundations/$(basename "$f")"
 done
 
-# --- Git initialization (§0017, §0018) ---------------------------------------
+# --- Git initialization (§0016, §0017) ---------------------------------------
 
 if [ "$SKIP_GIT" -eq 0 ]; then
     # Only run git init if the destination isn't already inside a repo.
@@ -267,7 +278,7 @@ if [ "$SKIP_GIT" -eq 0 ]; then
         (cd "$DST" && git init --quiet)
     fi
 
-    # Write default .gitignore per §0017, only if one doesn't already exist.
+    # Write default .gitignore per §0016, only if one doesn't already exist.
     if [ ! -f "$DST/.gitignore" ]; then
         cat > "$DST/.gitignore" <<'GITIGNORE'
 # OS
@@ -292,7 +303,7 @@ credentials.json
 GITIGNORE
     fi
 
-    # Initial commit (§0018 — governance commits cite §NNNN).
+    # Initial commit (§0017 — governance commits cite §NNNN).
     # Only commit if we're in a repo we just initialized (no existing HEAD) OR
     # if there are staged changes. We avoid committing if the surrounding repo
     # already has history — the user can make their own initial commit then.
