@@ -47,7 +47,7 @@ That's it. No diffing. No reporting. No file operations. The Registrar is the en
 Before any output:
 
 - `pwd` to find the current working directory.
-- Walk upward to find the nearest `#ORG/`. That's the agency (or a unit — `:silcrow-update` works at any level; the Registrar for that scope handles it).
+- Walk upward to find the nearest `#ORG/`. That's the unit this audit will scope to — the root unit if invoked at the agency's top, or a sub-unit if invoked deeper. `:silcrow-update` works at any level; the Registrar for that scope handles it.
 - If no `#ORG/` is found, stop. Tell the user: *"I don't see an agency here (no `#ORG/` in the current or parent directories). Run `:silcrow-init` to scaffold one, or navigate to an existing agency's directory."*
 - Find the Registrar's inbox: `<found_org_parent>/#ORG/agents/registrar/inbox/`. Verify it exists.
 
@@ -133,6 +133,6 @@ Output a short message to the user:
 
 - **Be thin.** This skill does nothing except drop the trigger message. No diffing, reporting, file operations, ADR authoring. All of that is the Registrar's role.
 - **Refuse to proceed without `#ORG/`.** If the CWD is not inside a scaffolded agency, redirect to `:silcrow-init`.
-- **Write to the correct inbox.** If the skill is invoked inside a unit (not the agency), the audit scope is that unit. Write to that unit's Registrar inbox. The Registrar for that scope handles their scope only (§0015 federation rule).
+- **Write to the correct inbox.** The audit scope is whichever unit's `#ORG/` was found by walking up — the root unit if invoked at the agency's top, or a sub-unit if invoked deeper in the tree. Write to that unit's Registrar inbox; the Registrar for that scope handles their scope only (§0015 federation rule).
 - **Never edit `#ORG/` content directly.** This skill only writes one message file into an inbox. All substantive work happens through the Registrar.
 - **The message triggers the workflow.** The Registrar's `AGENTS.md` describes what happens after. You don't orchestrate — you initiate.

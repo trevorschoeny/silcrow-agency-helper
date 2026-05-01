@@ -6,9 +6,9 @@
 
 ## What this is
 
-This directory (`#ORG/`) is the **governance folder** for the agency, per §0015. It contains only governance artifacts — decisions, agent instructions, foundational docs. Operational work — codebases, plans, research, schedules, deliverables — lives alongside `#ORG/` at the agency root (or in sub-units, if this agency has any).
+This directory (`#ORG/`) is the **governance folder** for the root unit of this agency, per §0015. It contains only governance artifacts — decisions, agent instructions, foundational docs. Operational work — codebases, plans, research, schedules, deliverables — lives alongside `#ORG/`, either at this unit's root or inside any sub-unit's directory.
 
-The agency is organized as a **hierarchical agent organization** with built-in decision tracking (ADRs), actor-model message passing between agents, a registrar that audits the record, and a clean separation between canonical and operational artifacts. The structure was initialized by the `silcrow:silcrow-init` skill on {date}.
+The agency is the entire organizational tree. Its topmost node is the **root unit** (this directory's parent, sharing the agency's name). Every unit — root or sub-unit — is structurally identical: its own `#ORG/`, its own agents, its own operational work, with sub-units arbitrarily nested below. The agency is organized as a **hierarchical agent organization** with built-in decision tracking (ADRs), actor-model message passing between agents, a registrar that audits the record, and a clean separation between canonical and operational artifacts. The structure was initialized by the `silcrow:silcrow-init` skill on {date}.
 
 The shape of the agency is opinionated and comes from a composition of seven independently-validated disciplines:
 
@@ -32,7 +32,7 @@ A new reader — human or agent — should read these in order:
 2. **`#ORG/docs/philosophy.md`** — the intellectual foundation for every part of the structure.
 3. **`#ORG/docs/decision-process.md`** — how ADRs are proposed, accepted, superseded.
 4. **`#ORG/docs/message-protocol.md`** — how agents communicate.
-5. **`#ORG/agents/<your-role>/AGENTS.md`** — if you are occupying a role, your specific duties.
+5. **`#ORG/agents/<your-role>@<unit>/AGENTS.md`** — if you are occupying a role, your specific duties.
 6. **`#ORG/adr/accepted/§0006-starter-roster-and-tier-model.md`** and **`§0013-user-as-principal-and-local-tier-numbering.md`** — the tier model and its multi-unit refinements.
 7. **`#ORG/adr/accepted/§0015-agency-and-unit-structure.md`** — agency/unit vocabulary and structural conventions.
 
@@ -48,10 +48,10 @@ For deeper dives on any of the seven disciplines, `docs/foundations/` has per-th
 #ORG/
 ├── README.md                      ← you are here
 ├── agents/
-│   ├── {user_dir}/                ← principal (transcends tiers)
-│   ├── {lead_dir}/                ← tier 1: architecture, briefs, reviews
-│   ├── {implementer_dir}/         ← tier 2: planning and execution
-│   └── registrar/                 ← outside hierarchy: record integrity (async auditor)
+│   ├── {user_dir}@{agency_dir}/         ← principal (transcends tiers)
+│   ├── {lead_dir}@{agency_dir}/         ← tier-1: architecture, briefs, reviews
+│   ├── {implementer_dir}@{agency_dir}/  ← tier-2: planning and execution
+│   └── registrar@{agency_dir}/          ← outside hierarchy: record integrity (async auditor)
 │
 ├── adr/                           ← architecture decision records
 │   ├── README.md                  ← index of all decisions
@@ -69,17 +69,17 @@ For deeper dives on any of the seven disciplines, `docs/foundations/` has per-th
     └── foundations/               ← deep dives on each of the seven disciplines
 ```
 
-### Alongside `#ORG/` at the agency root
+### Alongside `#ORG/` at the root unit's directory
 
 ```
-@{agency-dir-name}/                ← the agency (as a unit)
+@{agency-dir-name}/                ← root unit (shares the agency's name)
 ├── #ORG/                          ← governance (this folder)
-├── @<unit>/                       ← sub-units, if any (each with its own #ORG/)
+├── @<sub-unit>/                   ← sub-units, if any (each with its own #ORG/)
 │   └── ...
 └── (operational artifacts)        ← your codebase, plans, research, etc.
 ```
 
-Operational artifacts live wherever is natural — at the agency root, inside unit directories, or externally (connected repos, shared drives, etc.). `#ORG/` contains only governance.
+Operational artifacts live wherever is natural — alongside any unit's `#ORG/`, inside sub-unit directories, or externally (connected repos, shared drives, etc.). `#ORG/` contains only governance.
 
 ---
 
@@ -87,13 +87,13 @@ Operational artifacts live wherever is natural — at the agency root, inside un
 
 - **Decisions are immutable** (§0004). Accepted ADRs are never edited. They are superseded by new ADRs; both remain in the record.
 - **§-numbers are permanent** (§0003). Every accepted ADR gets a §-number. Numbers are sequential, monotonic, and never reused.
-- **Messages are first-class** (§0005). Communication between agents goes through inboxes (`#ORG/agents/<role>/inbox/`) and is archived on read (`inbox/archive/`). No out-of-band communication.
+- **Messages are first-class** (§0005). Communication between agents goes through inboxes (`#ORG/agents/<role>@<unit>/inbox/`) and is archived on read (`inbox/archive/`). No out-of-band communication.
 - **The {lead_role} writes briefs, not specs** (§0007). What and why, not how. The {implementer_role} retains agency over execution.
 - **The Registrar owns form, not substance** (§0012). They audit the record on demand, correct procedural issues, and surface substantive ones. They do not gate every commit.
 - **Subsidiarity**. Decisions are made at the lowest tier capable of making them well.
 - **Canon vs operational** (§0014). ADRs are canonical (immutable, citable); plans/briefs/implementations are operational (mutable). Canon binds operational; never the reverse.
 - **The User is the principal** (§0013). Not a tier, but the one the agents serve. May act as the superior of any tier at any time.
-- **Units are units** (§0015). Multi-unit agencies use `@<unit>/` directories, each with its own `#ORG/`. The pattern is recursive; the rules are identical at every depth.
+- **Every unit is a unit** (§0015). The agency is the whole tree; the root unit is its topmost node; sub-units live nested inside their parent. Every unit — root or sub — has its own `#ORG/` and follows the same rules. The pattern is recursive; the rules are identical at every depth.
 
 ---
 

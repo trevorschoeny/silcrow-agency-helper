@@ -98,15 +98,29 @@ Invoke `scripts/add-unit.sh` with positional arguments:
     "<implementer_dir>" \
     "<implementer_role>" \
     --user-role "<agency_user_role>" \
-    --parent-lead-role "<agency_lead_role>" \
+    --user-dir "<agency_user_dir>" \
+    --parent-lead-role "<parent_lead_role>" \
+    [--unit-display "<unit_display>"] \
+    [--agency-dir "<agency_dir>"] \
+    [--agency-name "<agency_name>"] \
     [--mode directory|submodule] \
     [--submodule-source <url_or_path>]
 ```
 
-To find the agency's user role and lead role: read the parent's `#ORG/README.md`
-or inspect `#ORG/agents/` directory names and the matching `AGENTS.md`
-role names. These values feed into the unit's establishing ADR so references
-like "route through the agency Director or Trevor" render with the real names.
+To find the agency's user role/directory and the parent unit's lead role: read
+the parent's `#ORG/README.md` or inspect `#ORG/agents/` directory names and the
+matching `AGENTS.md` role names. These values feed into the unit's establishing
+ADR so references like "route through the parent Lead or Trevor" render with
+the real names.
+
+`--agency-dir` and `--agency-name` are **optional** — the script walks up the
+tree from `<parent_path>` to find the agency's root unit (the topmost `#ORG/`)
+and reads the agency name from there. Pass them explicitly only when you need
+to override the auto-detection.
+
+`--unit-display` is also **optional** — if omitted, the script title-cases
+`<unit_name>` (e.g. `pebble-core` → `Pebble Core`). Pass it when you want a
+different display form.
 
 `<parent_path>` is the directory that contains the target `#ORG/` (the one the skill found in Phase 1). Usually that's the agency root, but for sub-units of a unit it's the unit's root.
 

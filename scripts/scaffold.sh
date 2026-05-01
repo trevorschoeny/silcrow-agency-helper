@@ -91,6 +91,12 @@ IMPL_DIR="${POSITIONAL[7]}"
 IMPL_ROLE="${POSITIONAL[8]}"
 DATE="$(date -u +%Y-%m-%d)"
 
+# The agency is the root unit. Compute its slug from the destination basename
+# (stripping any leading @). At the agency level, {unit_name} = AGENCY_DIR
+# and {unit_display} = AGENCY_NAME, since the root unit shares the agency's name.
+DST_BASENAME="$(basename "$DST")"
+AGENCY_DIR="${DST_BASENAME#@}"
+
 # --- Locate the plugin's scaffold source -------------------------------------
 
 # Prefer CLAUDE_PLUGIN_ROOT (set by Claude Code when the plugin is installed).
@@ -150,10 +156,10 @@ fi
 # --- Create the destination tree ---------------------------------------------
 
 mkdir -p \
-    "$DST/#ORG/agents/$USER_DIR/inbox/archive" \
-    "$DST/#ORG/agents/$LEAD_DIR/inbox/archive" \
-    "$DST/#ORG/agents/$IMPL_DIR/inbox/archive" \
-    "$DST/#ORG/agents/registrar/inbox/archive" \
+    "$DST/#ORG/agents/$USER_DIR@$AGENCY_DIR/inbox/archive" \
+    "$DST/#ORG/agents/$LEAD_DIR@$AGENCY_DIR/inbox/archive" \
+    "$DST/#ORG/agents/$IMPL_DIR@$AGENCY_DIR/inbox/archive" \
+    "$DST/#ORG/agents/registrar@$AGENCY_DIR/inbox/archive" \
     "$DST/#ORG/adr/_templates" \
     "$DST/#ORG/adr/accepted" \
     "$DST/#ORG/adr/proposed" \
@@ -164,9 +170,13 @@ mkdir -p \
 
 # --- Substitution helper -----------------------------------------------------
 
-# Writes a copy of src to dst with the nine placeholders replaced.
+# Writes a copy of src to dst with placeholders replaced.
 # Uses | as the sed delimiter so values containing / don't break it.
 # Escapes any | characters in values to avoid delimiter confusion.
+#
+# Agent identity follows the role@unit-name convention (§0015). At the agency
+# level, {unit_name} = AGENCY_DIR and {unit_display} = AGENCY_NAME because the
+# root unit shares the agency's name. add-unit.sh overrides these for sub-units.
 subst() {
     local src="$1"
     local dst="$2"
@@ -176,6 +186,9 @@ subst() {
     sed \
         -e "s|{agency_name}|$an_esc|g" \
         -e "s|{agency_description}|$ad_esc|g" \
+        -e "s|{agency_dir}|$AGENCY_DIR|g" \
+        -e "s|{unit_name}|$AGENCY_DIR|g" \
+        -e "s|{unit_display}|$an_esc|g" \
         -e "s|{user_dir}|$USER_DIR|g" \
         -e "s|{user_role}|$USER_ROLE|g" \
         -e "s|{lead_dir}|$LEAD_DIR|g" \
@@ -189,10 +202,10 @@ subst() {
 # --- Empty placeholder files (.gitkeep) --------------------------------------
 
 touch \
-    "$DST/#ORG/agents/$USER_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG/agents/$LEAD_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG/agents/$IMPL_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG/agents/registrar/inbox/archive/.gitkeep" \
+    "$DST/#ORG/agents/$USER_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/#ORG/agents/$LEAD_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/#ORG/agents/$IMPL_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/#ORG/agents/registrar@$AGENCY_DIR/inbox/archive/.gitkeep" \
     "$DST/#ORG/adr/proposed/.gitkeep" \
     "$DST/#ORG/adr/superseded/.gitkeep" \
     "$DST/#ORG/adr/rejected/.gitkeep"
@@ -202,18 +215,20 @@ touch \
 # Top-level governance README
 subst "$SRC/README.md" "$DST/#ORG/README.md"
 
-# Agent instructions (with role-directory remapping for user/lead/impl;
-# registrar is always "registrar").
+# Agent instructions. Per §0015's agent-identity convention, every agent's
+# directory is named <role-dir>@<unit-name>/. At the agency level the unit-name
+# is the agency's slug (AGENCY_DIR), so directories look like trevor@acme/,
+# lead@acme/, etc. The Registrar role-dir is fixed as "registrar".
 #
 # Each agent directory gets two files: AGENTS.md (the canonical instructions,
 # auto-loaded by Codex/Cursor/Copilot/etc.) and CLAUDE.md (a one-line pointer,
 # `@AGENTS.md`, that Claude Code auto-loads and recursively imports).
-subst "$SRC/agents/user/AGENTS.md"         "$DST/#ORG/agents/$USER_DIR/AGENTS.md"
-subst "$SRC/agents/lead/AGENTS.md"         "$DST/#ORG/agents/$LEAD_DIR/AGENTS.md"
-subst "$SRC/agents/implementer/AGENTS.md"  "$DST/#ORG/agents/$IMPL_DIR/AGENTS.md"
-subst "$SRC/agents/registrar/AGENTS.md"    "$DST/#ORG/agents/registrar/AGENTS.md"
+subst "$SRC/agents/user/AGENTS.md"         "$DST/#ORG/agents/$USER_DIR@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/agents/lead/AGENTS.md"         "$DST/#ORG/agents/$LEAD_DIR@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/agents/implementer/AGENTS.md"  "$DST/#ORG/agents/$IMPL_DIR@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/agents/registrar/AGENTS.md"    "$DST/#ORG/agents/registrar@$AGENCY_DIR/AGENTS.md"
 
-for dir in "$USER_DIR" "$LEAD_DIR" "$IMPL_DIR" "registrar"; do
+for dir in "$USER_DIR@$AGENCY_DIR" "$LEAD_DIR@$AGENCY_DIR" "$IMPL_DIR@$AGENCY_DIR" "registrar@$AGENCY_DIR"; do
     printf '@AGENTS.md\n' > "$DST/#ORG/agents/$dir/CLAUDE.md"
 done
 

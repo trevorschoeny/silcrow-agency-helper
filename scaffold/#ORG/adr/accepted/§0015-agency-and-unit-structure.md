@@ -10,13 +10,13 @@
 
 ## Y-statement
 
-In the context of **agencies that range from single-unit to multi-unit with arbitrary nesting**,
+In the context of **agencies whose tree of units may range from a single root unit to arbitrarily-nested multi-unit structures**,
 facing the need for a consistent, recursive structural convention that keeps governance cleanly separated from operational work and makes units identifiable by tooling,
-we decided for **a three-part convention** — the top level is an **agency**; any subdivision with its own governance is a **unit** (recursive); governance lives in `#ORG/` and nowhere else; units are named `@<kebab-case>/` and sit as siblings of `#ORG/` —
+we decided for **a three-part convention** — the whole structure is the **agency** and its top-level node is the **root unit**, with every subdivision recursively also a unit; governance lives in `#ORG/` and nowhere else; units are named `@<kebab-case>/` and sit as siblings of their parent unit's `#ORG/` —
 and neglected a flat `adr/agents/docs/` layout, a `governance/` folder name, nesting units inside `#ORG/`, and using no unit prefix,
 to achieve a structure that's immediately recognizable (ASCII sort puts `#ORG/` first, `@<units>/` second, operational content last), programmatically identifiable (presence of `#ORG/` = unit), and recursively identical at every depth,
 accepting that the `#` and `@` characters look unusual in paths and require the user to learn a small convention,
-because the separation between governance and operational work (per §0014) deserves a visible structural boundary, and the recursive pattern is necessary for agencies that grow from one unit to many without renaming everything.
+because the separation between governance and operational work (per §0014) deserves a visible structural boundary, and the recursive pattern is necessary for agencies that grow from a single root unit into a tree of sub-units without renaming everything.
 
 ## Context and problem statement
 
@@ -33,17 +33,20 @@ This ADR answers all four questions with a single coherent convention.
 
 - **The canon/operational split (§0014) should be visible in the filesystem.** Governance and operational content should not be mixed in the same folder; their separation is load-bearing.
 - **Units should be identifiable programmatically, not by convention alone.** A marker that tooling can detect is more reliable than "we name them like this".
-- **The pattern should recurse.** The agency is itself a unit (the root unit); sub-units are units; sub-sub-units are units. Same rules at every depth.
+- **The pattern should recurse.** The root unit, sub-units, and sub-sub-units are all just units. Same rules at every depth — no special-casing the root.
 - **Sort order should be sensible.** A directory listing at any level should surface the most structural content first (governance), then units, then operational material.
 - **Shell-friendly.** Directory names must work across bash/zsh/fish and common file managers without quoting heroics.
 
 ## Vocabulary
 
-- **Agency** — the whole scaffolded thing. The top-level, root-most unit. Named by the user at onboarding.
-- **Unit** — any structured subdivision with its own governance, agents, and operational work. Recursive: a unit can contain units, which can contain units. The agency itself is a unit (the root unit); "agency" is reserved for the top-level.
-- **`#ORG/`** — the governance folder of any unit (agency or sub-unit). Contains only governance artifacts.
+- **Agency** — the whole organizational tree. Named by the user at onboarding. The agency name labels the entire tree; the root unit shares this name (e.g., agency `acme` ↔ root unit at `@acme/`).
+- **Root unit** — the topmost unit in the agency's tree. Same kind as any unit; the only thing distinguishing it is its position (no parent above it).
+- **Unit** — any node in the agency's tree. Has its own governance (`#ORG/`), agents, and operational work. Recursive: a unit may contain sub-units, which may contain sub-units, with no depth limit. Every unit is structurally identical regardless of depth.
+- **Sub-unit** — any non-root unit. A sub-unit lives physically nested inside its parent unit's directory (as a sibling of the parent's `#ORG/`).
+- **Agent identity** — `<role>@<unit-name>` (slug, e.g. `lead@acme`) or `<Role> @ <Unit Name>` (prose, e.g. "Lead @ Acme"). Every agent reference everywhere uses its full name; bare role names are ambiguous in any tree with more than one unit.
+- **`#ORG/`** — the governance folder of any unit. Contains only governance artifacts.
 - **Operational artifact** — anything that isn't governance (§0014 governs the distinction).
-- **Scaffold namespace** — directory names that begin with `#` or `@` are scaffold-managed structural folders. `#` is reserved for governance (`#ORG/`). `@` is reserved for units (`@<kebab-case-name>/`) — including the agency itself, since the agency is a unit. Everything else is user-owned operational content.
+- **Scaffold namespace** — directory names that begin with `#` or `@` are scaffold-managed structural folders. `#` is reserved for governance (`#ORG/`). `@` is reserved for units (`@<kebab-case-name>/`) — including the root unit. Everything else is user-owned operational content.
 
 ## Considered options and decision
 
@@ -96,7 +99,7 @@ No new vocabulary is needed as depth increases.
 
 - **`#ORG/`** — `#` sorts to ASCII 35 (before digits, letters, and common filename characters), ensuring it lists first at any depth. Uppercase `ORG` matches the `README.md`/`LICENSE` convention for scaffold-managed structural folders. `#` is shell-safe in directory names.
 - **`@<kebab-case-name>/`** — `@` sorts to ASCII 64 (between `#` and letters), so units list below `#ORG/` and above operational content. Lowercase kebab-case is shell-friendly and path-safe; the scaffold suggests it but accepts whatever the user provides.
-- **The agency directory uses the `@` prefix.** Since the agency is the root unit, it follows the same convention — `@<agency-name>/` by default. At init, the scaffold offers a rename if the current directory doesn't start with `@`; users can accept or decline (the `#ORG/` marker identifies it either way).
+- **The root unit's directory uses the `@` prefix**, the same as any unit — `@<agency-name>/` by default. There is no exception for the root. At init, the scaffold offers a rename if the current directory doesn't start with `@`; users can accept or decline (the `#ORG/` marker identifies it either way).
 
 Directory listings at any unit's root land in a clean three-tier order: `#ORG/` → `@<units>/` → operational content. Deterministic across shells, file managers, and ASCII-ordering tooling.
 

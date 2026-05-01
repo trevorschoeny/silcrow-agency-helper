@@ -1,6 +1,6 @@
 # Registrar — audit checklist
 
-Read this file **when you're invoked to audit the record** (by User, Lead, or via the `:silcrow-update` skill). Don't load it preemptively in other sessions — the core audit stance and categories are in `../agents/registrar/AGENTS.md`; this file is the detailed walk-through for active audit sessions.
+Read this file **when you're invoked to audit the record** (by User, Lead, or via the `:silcrow-update` skill). Don't load it preemptively in other sessions — the core audit stance and categories are in `../agents/{registrar_dir}@{unit_name}/AGENTS.md`; this file is the detailed walk-through for active audit sessions.
 
 ---
 
@@ -43,13 +43,13 @@ Read this file **when you're invoked to audit the record** (by User, Lead, or vi
 
 ## G. Scope (§0011)
 
-- [ ] Every accepted ADR falls within agency scope as stated in §0011 (or the current scope ADR). Scope violations — surface to {user_role}.
-- [ ] In multi-unit agencies: unit ADRs don't exceed their unit scope or agency scope.
+- [ ] Every accepted ADR falls within this unit's scope as stated in §0011 (or the current scope ADR). Scope violations — surface to {user_role}.
+- [ ] In agencies with multiple units: a unit's ADRs don't exceed that unit's scope or any ancestor unit's scope. (Each unit's ADRs are bound by every ancestor's ADRs walking up to the root.)
 
 ## H. Federation (§0015)
 
-- [ ] No agency-level ADR attempts to adjudicate unit-internal matters.
-- [ ] No unit-level ADR policies another unit.
+- [ ] No ancestor unit's ADR attempts to adjudicate matters that should be local to a descendant unit.
+- [ ] No unit's ADR attempts to set policy for a peer or cousin unit (one outside its own subtree).
 
 ## I. Unsafe references (§0014)
 

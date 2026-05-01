@@ -36,7 +36,7 @@ Every accepted ADR receives a §-number. Numbers are:
 - **Sequential** — assigned in the order the Registrar accepts them.
 - **Monotonic** — never go backward.
 - **Never reused** — not even for rejected or withdrawn proposals.
-- **Globally unique within the agency** — no per-topic sub-numbering. (Each unit has its own §-numbering within its own `#ORG/adr/`; per §0015 units are separate record scopes.)
+- **Unique within the unit's record** — no per-topic sub-numbering. Per §0015, every unit (including the root) is its own §-numbering scope: each unit's `#ORG/adr/` carries its own monotonic sequence, and there is no separate registry above or beside the units that assigns §-numbers across the tree.
 
 The §-number is assigned by the Registrar at acceptance time, or by a Lead/User committing directly to `accepted/`. The filename embeds the number and is permanent once assigned. Status changes move the file between folders (`accepted/`, `superseded/`, `rejected/`); the filename does not change.
 
@@ -50,7 +50,7 @@ The §-number is assigned by the Registrar at acceptance time, or by a Lead/User
 
 ### Identity vs. navigation
 
-The §-numbering discipline above governs ADR *identity* and is scaffold-prescribed. How ADRs are *organized* within `accepted/` — whether to introduce topic subfolders — is a **local decision**. See `../adr/README.md` and the "Partitioning at scale" section of `../agents/registrar/AGENTS.md` for the mechanical procedure.
+The §-numbering discipline above governs ADR *identity* and is scaffold-prescribed. How ADRs are *organized* within `accepted/` — whether to introduce topic subfolders — is a **local decision**. See `../adr/README.md` and the "Partitioning at scale" section of `../agents/{registrar_dir}@{unit_name}/AGENTS.md` for the mechanical procedure.
 
 ---
 
@@ -267,7 +267,7 @@ Skills don't create a different kind of ADR — they produce the same MADR-with-
 
 ### Greenfield decision (Lead direct-commit, §0012)
 
-The {lead_role} drafts in `#ORG/agents/{lead_dir}/draft-logging-adr.md`, assigns the next §-number by checking `accepted/` (e.g. §0020), moves the file to `#ORG/adr/accepted/§0020-use-structured-logging.md`, sets `Status: accepted`, and commits `§0020: use structured logging`. Either Lead or Registrar updates the index — the Registrar will fix it at next audit if the Lead doesn't.
+The {lead_role} drafts in `#ORG/agents/{lead_dir}@{unit_name}/draft-logging-adr.md`, assigns the next §-number by checking `accepted/` (e.g. §0020), moves the file to `#ORG/adr/accepted/§0020-use-structured-logging.md`, sets `Status: accepted`, and commits `§0020: use structured logging`. Either Lead or Registrar updates the index — the Registrar will fix it at next audit if the Lead doesn't.
 
 ### Implementer draft with approval (§0013)
 
@@ -295,7 +295,7 @@ The discipline — preserve the original, don't edit — is about learning, not 
 
 - `philosophy.md` — why this process works the way it does.
 - `message-protocol.md` — the message format used for proposals, briefs, and acknowledgments.
-- `../agents/registrar/AGENTS.md` — the Registrar's side of every operation above.
+- `../agents/{registrar_dir}@{unit_name}/AGENTS.md` — the Registrar's side of every operation above.
 - `foundations/04-architecture-decision-records.md` — deep dive on ADRs.
 - `foundations/05-legal-citation-tradition.md` — deep dive on §-numbering.
 - `foundations/07-canonical-and-operational.md` — canon/operational split.

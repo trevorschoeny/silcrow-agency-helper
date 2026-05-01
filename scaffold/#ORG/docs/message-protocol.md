@@ -10,15 +10,15 @@ The *why* is in `philosophy.md` and `foundations/03-actor-model.md`. This doc is
 
 Every agent has:
 
-- A **private directory** — `#ORG/agents/{role}/`. Nothing in another agent's directory is citable or reviewable by anyone else. This is the actor's private state. You can draft, iterate, fail, and recover here without exposing half-formed thinking.
-- An **inbox** — `#ORG/agents/{role}/inbox/`. Other agents deposit messages here. This is your mailbox.
-- An **archive** — `#ORG/agents/{role}/inbox/archive/`. When you read a message, you move it here. Archives are **never deleted** (§0005). They are the historical record of every communication this agent received.
+- A **private directory** — `#ORG/agents/<role>@<unit-name>/`. Nothing in another agent's directory is citable or reviewable by anyone else. This is the actor's private state. You can draft, iterate, fail, and recover here without exposing half-formed thinking.
+- An **inbox** — `#ORG/agents/<role>@<unit-name>/inbox/`. Other agents deposit messages here. This is your mailbox.
+- An **archive** — `#ORG/agents/<role>@<unit-name>/inbox/archive/`. When you read a message, you move it here. Archives are **never deleted** (§0005). They are the historical record of every communication this agent received.
 
 No agent reads another agent's directory or inbox without going through a message. No agent mutates another agent's archive. No agent deletes messages. These rules are load-bearing — they are what makes the system reconstructible.
 
-### Multi-unit agencies
+### Agencies with multiple units
 
-In multi-unit agencies (§0015), the same rules apply at every level. The agency has its own `#ORG/agents/{role}/inbox/`; each unit has its own `@<unit>/#ORG/agents/{role}/inbox/`. Messages stay scoped to their unit unless explicitly addressed cross-unit. Cross-unit messages typically go through a Lead as the routing point — Unit A's Lead messages the Agency Lead, who messages Unit B's Lead.
+In agencies that span multiple units (§0015), the same rules apply recursively at every depth. Every unit — root and sub-units alike — has its own `#ORG/agents/<role>@<unit-name>/inbox/` for each role on its roster. Messages stay scoped to their unit unless explicitly addressed cross-unit. Cross-unit messages typically go through a Lead as the routing point — a sub-unit's Lead messages the Lead of its parent unit, who in turn messages a peer's Lead (or escalates to the {user_role}).
 
 ---
 
@@ -26,7 +26,7 @@ In multi-unit agencies (§0015), the same rules apply at every level. The agency
 
 To send a message to another agent:
 
-1. Draft the message in your own directory (e.g., `#ORG/agents/{lead_dir}/draft-brief-2026-04-19.md`). You iterate privately.
+1. Draft the message in your own directory (e.g., `#ORG/agents/{lead_dir}@{unit_name}/draft-brief-2026-04-19.md`). You iterate privately.
 2. When ready, copy the file into the recipient's inbox with the canonical filename (see §3). Use `Write` (or equivalent); do not edit in-place in someone else's directory.
 3. Delete or keep the draft in your own directory, as you prefer. Drafts are not part of the permanent record.
 
@@ -42,17 +42,17 @@ Messages in inboxes follow this filename pattern:
 YYYY-MM-DD-{sender}-{short-kebab-subject}.md
 ```
 
-Examples:
+Examples (assume an agency whose root unit is `acme`):
 
-- `2026-04-19-lead-brief-implement-structured-logging.md`
-- `2026-04-21-implementer-plan-for-structured-logging.md`
-- `2026-04-21-registrar-ack-§0020.md`
-- `2026-04-22-user-approve-§0088.md`
+- `2026-04-19-lead@acme-brief-implement-structured-logging.md`
+- `2026-04-21-implementer@acme-plan-for-structured-logging.md`
+- `2026-04-21-registrar@acme-ack-§0020.md`
+- `2026-04-22-{user_dir}-approve-§0088.md`
 
 Rules:
 
 - **Date is the date of deposit**, not the date of drafting.
-- **Sender** is the directory name of the sending agent (e.g., `lead`, `implementer`, `registrar`, `{user_dir}`).
+- **Sender** is the slug of the sending agent — the same `<role>@<unit-name>` form as their directory name (e.g., `lead@acme`, `implementer@acme`, `registrar@acme`). The `{user_dir}` is the principal's slug; it has no `@<unit>` suffix because the principal sits above all units.
 - **Subject** is short kebab-case, descriptive but not exhaustive. The body has the full subject line.
 - **No collisions.** If two messages would share a filename in the same inbox, add a disambiguating suffix: `-01`, `-02`, etc.
 
@@ -144,11 +144,11 @@ From the Registrar to the submitter when a proposal is accepted or rejected. Nam
 
 ### Audit report
 
-From the Registrar to the {user_role} and/or {lead_role} after an audit run (invoked by the `:silcrow-update` skill, by the User/Lead directly, or on the Registrar's own cadence). Categorizes findings: procedural corrections made, substantive issues for Lead, substantive issues for User. See `../agents/registrar/AGENTS.md` for the full format.
+From the Registrar to the {user_role} and/or {lead_role} after an audit run (invoked by the `:silcrow-update` skill, by the User/Lead directly, or on the Registrar's own cadence). Categorizes findings: procedural corrections made, substantive issues for Lead, substantive issues for User. See `../agents/{registrar_dir}@{unit_name}/AGENTS.md` for the full format.
 
 ### Update request
 
-Dropped into the Registrar's inbox by the `:silcrow-update` skill. Contains the plugin's canonical source path and a request to run a dynamic diff. See `../agents/registrar/AGENTS.md` for the Registrar's response workflow.
+Dropped into the Registrar's inbox by the `:silcrow-update` skill. Contains the plugin's canonical source path and a request to run a dynamic diff. See `../agents/{registrar_dir}@{unit_name}/AGENTS.md` for the Registrar's response workflow.
 
 ### Others
 
@@ -164,7 +164,7 @@ Everything you reference in a message should be cited by a stable, resolvable po
 - `#ORG/adr/superseded/§0012-shared-cache.md` — a superseded ADR.
 - `ap-007` — a standalone anti-pattern record.
 - `#ORG/docs/philosophy.md#subsidiarity` — a section within a document.
-- `#ORG/agents/{lead_dir}/inbox/archive/2026-04-19-implementer-plan-for-logging.md` — a specific prior message.
+- `#ORG/agents/{lead_dir}@{unit_name}/inbox/archive/2026-04-19-implementer-plan-for-logging.md` — a specific prior message.
 - `@pebble-core/#ORG/adr/accepted/§0005-...` — an ADR in a unit (if your agency has units).
 
 Avoid:
@@ -224,7 +224,7 @@ Over time, `inbox/archive/` accumulates. Here's what it gives you:
 - **Continuity across agent turnover.** If an agent is replaced, the replacement reads the archive to reconstruct context.
 - **Auditability.** A skeptical reader can trace any decision back through the messages that produced it.
 
-If the archive ever gets large enough to cause navigation pain, the Registrar can partition it by date (e.g., `archive/2026-Q2/`), but **never delete**. See `../agents/registrar/AGENTS.md` ("Partitioning at scale") for notes.
+If the archive ever gets large enough to cause navigation pain, the Registrar can partition it by date (e.g., `archive/2026-Q2/`), but **never delete**. See `../agents/{registrar_dir}@{unit_name}/AGENTS.md` ("Partitioning at scale") for notes.
 
 ---
 
@@ -233,6 +233,6 @@ If the archive ever gets large enough to cause navigation pain, the Registrar ca
 - `philosophy.md` — especially the actor-model and registrar-pattern sections.
 - `foundations/03-actor-model.md` — the full intellectual basis for this protocol.
 - `decision-process.md` — proposals and acknowledgments are both message kinds in that flow.
-- `../agents/registrar/AGENTS.md` — how the Registrar processes incoming messages.
-- `../agents/` — the agency-level roster; each role has its own `inbox/` and `AGENTS.md`.
+- `../agents/{registrar_dir}@{unit_name}/AGENTS.md` — how the Registrar processes incoming messages.
+- `../agents/` — this unit's agent roster; each role has its own directory (named `<role>@<unit-name>/`), with its own `inbox/` and `AGENTS.md`.
 - `../adr/accepted/§0005-communication-via-inboxes.md` — the canonical decision behind this protocol.

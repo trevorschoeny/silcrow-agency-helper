@@ -19,7 +19,7 @@ allowed-tools:
 
 Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0019) that capture the pattern's load-bearing decisions.
 
-An **agency** may be a single unit (one cohesive body of work) or multi-unit (the agency oversees several semi-independent units, each with its own governance and agents). The scaffold supports both.
+An **agency** is the whole organizational tree. Its top-level node is the **root unit**, which shares the agency's name. The tree may stop there (a single root unit, one cohesive body of work) or extend into nested **sub-units** — each itself a full unit, recursively, with its own governance and agents (§0015). The scaffold supports both shapes.
 
 ## One-shot skill
 
@@ -56,9 +56,9 @@ Output this text exactly. The only substitution is the user's name — inserted 
 >
 > *Every agency has a hierarchy: a user (you{, <name>} — the human) sets strategic direction and works with the lead to brainstorm and strategize; the lead translates that into briefs; the implementer does the work. A registrar keeps the decision record clean. That's the default shape.*
 >
-> *Some agencies are a single unit — one cohesive body of work. Others have multiple units — the agency oversees several semi-independent functions, each with its own governance and agent team, each still answering to the agency's decisions. Units can be departments, teams, product lines, research threads, codebases — any partition of the work that's independent enough to deserve its own decision record and agent team.*
+> *An agency is the whole tree of work. Its topmost node is the **root unit** (which shares the agency's name); below the root, an agency can stay as a single unit — one cohesive body of work — or branch into **sub-units**, each itself a full unit with its own governance and agent team. Every unit, root or sub, has the same shape. Units can be departments, teams, product lines, research threads, codebases — any partition of the work that's independent enough to deserve its own decision record and agent team.*
 >
-> *Two rules matter: **units answer to the agency** (agency-level decisions bind all units), and **units don't police each other** (no cross-unit oversight).*
+> *Two rules matter: **sub-units answer to their parent unit** (decisions at any unit bind that unit and everything below it), and **sibling units don't police each other** (no cross-branch oversight).*
 
 Output this, then drop out of scripted mode.
 
@@ -142,7 +142,7 @@ The script:
 
 ### Units next (if multi-unit)
 
-For each declared unit, invoke `scripts/add-unit.sh`:
+For each declared unit, invoke `scripts/add-unit.sh`. The first positional argument is the parent unit's path — at init time, that's the agency root (`<destination>`):
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh" \
@@ -154,14 +154,27 @@ For each declared unit, invoke `scripts/add-unit.sh`:
     "<unit_implementer_dir>" \
     "<unit_implementer_role>" \
     --user-role "<user_role>" \
+    --user-dir "<user_dir>" \
     --parent-lead-role "<lead_role>" \
+    [--unit-display "<unit_display>"] \
+    [--agency-dir "<agency_dir>"] \
+    [--agency-name "<agency_name>"] \
     [--mode directory|submodule] \
     [--submodule-source <url_or_path>]
 ```
 
-Pass `--user-role` and `--parent-lead-role` so the unit's establishing ADR uses
-the agency's actual role names in its body (for references like "route through
-the agency Lead or User").
+Pass `--user-role`, `--user-dir`, and `--parent-lead-role` so the unit's
+establishing ADR and templates render with the agency's actual role and
+directory names (for references like "route through the agency Lead or User").
+
+`--agency-dir` and `--agency-name` are **optional** — by default the script
+walks up from the parent path to find the agency's root unit (the topmost
+`#ORG/` in the tree) and reads the agency name from there. Pass them
+explicitly only if you need to override the auto-detection.
+
+`--unit-display` is also **optional** — if omitted, the script title-cases
+`<unit_name>` (e.g. `pebble-core` → `Pebble Core`). Pass it when you want a
+display form that differs from the auto-cased default.
 
 Each invocation:
 - Authors an establishing ADR in the agency's `#ORG/adr/accepted/`.

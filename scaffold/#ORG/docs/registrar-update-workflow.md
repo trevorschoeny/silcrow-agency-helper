@@ -1,6 +1,6 @@
 # Registrar — `:silcrow-update` workflow
 
-This is the Registrar's most elaborate workflow. Read this file **only when a message from the `:silcrow-update` skill lands in your inbox**; don't preemptively load it. The core operational reference is `../agents/registrar/AGENTS.md`; this file is the detailed procedure for one specific trigger.
+This is the Registrar's most elaborate workflow. Read this file **only when a message from the `:silcrow-update` skill lands in your inbox**; don't preemptively load it. The core operational reference is `../agents/{registrar_dir}@{unit_name}/AGENTS.md`; this file is the detailed procedure for one specific trigger.
 
 ---
 
@@ -31,7 +31,7 @@ Before diffing, read all past audit ADRs in `#ORG/adr/accepted/`. They'll have t
 Walk both trees:
 
 - Plugin source: `${CLAUDE_PLUGIN_ROOT}/scaffold/#ORG/...`
-- Agency: the current `#ORG/` (and any units, if auditing from the agency level).
+- Agency: the `#ORG/` of the unit you are operating in, plus the `#ORG/` of every sub-unit nested below it (the audit's reach is the subtree rooted at your unit; if you are the root unit's Registrar, that's the whole agency).
 
 Classify each file:
 

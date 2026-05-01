@@ -49,6 +49,13 @@ MODE="directory"
 SUBMODULE_SOURCE=""
 SKIP_COMMIT=0
 USER_ROLE_ARG="User"
+USER_DIR_ARG="user"
+PARENT_LEAD_ROLE_ARG="Lead"
+AGENCY_DIR_ARG=""
+AGENCY_NAME_ARG=""
+PARENT_UNIT_NAME_ARG=""
+PARENT_UNIT_DISPLAY_ARG=""
+UNIT_DISPLAY_ARG=""
 POSITIONAL=()
 
 while [ "$#" -gt 0 ]; do
@@ -69,8 +76,32 @@ while [ "$#" -gt 0 ]; do
             USER_ROLE_ARG="$2"
             shift 2
             ;;
+        --user-dir)
+            USER_DIR_ARG="$2"
+            shift 2
+            ;;
         --parent-lead-role)
             PARENT_LEAD_ROLE_ARG="$2"
+            shift 2
+            ;;
+        --agency-dir)
+            AGENCY_DIR_ARG="$2"
+            shift 2
+            ;;
+        --agency-name)
+            AGENCY_NAME_ARG="$2"
+            shift 2
+            ;;
+        --parent-unit-name)
+            PARENT_UNIT_NAME_ARG="$2"
+            shift 2
+            ;;
+        --parent-unit-display)
+            PARENT_UNIT_DISPLAY_ARG="$2"
+            shift 2
+            ;;
+        --unit-display)
+            UNIT_DISPLAY_ARG="$2"
             shift 2
             ;;
         -*)
@@ -104,6 +135,55 @@ LEAD_ROLE="${POSITIONAL[4]}"
 IMPL_DIR="${POSITIONAL[5]}"
 IMPL_ROLE="${POSITIONAL[6]}"
 DATE="$(date -u +%Y-%m-%d)"
+
+# --- Resolve AGENCY_DIR (auto-walk up if not supplied) -----------------------
+
+# The agency root is the outermost ancestor of PARENT_PATH that still contains
+# a #ORG/ directory. Walk up until the parent doesn't have one — the last
+# #ORG/-having directory is the agency's root unit.
+if [ -z "$AGENCY_DIR_ARG" ]; then
+    walker="$PARENT_PATH"
+    while [ -d "$(dirname "$walker")/#ORG" ]; do
+        walker="$(dirname "$walker")"
+    done
+    AGENCY_BASENAME="$(basename "$walker")"
+    AGENCY_DIR="${AGENCY_BASENAME#@}"
+else
+    AGENCY_DIR="$AGENCY_DIR_ARG"
+fi
+AGENCY_NAME="${AGENCY_NAME_ARG:-$AGENCY_DIR}"
+
+# --- Compute UNIT_DISPLAY (default: title-case the kebab unit_name) ----------
+
+# Bash 3-compatible title-case helper.
+to_title_case() {
+    local kebab="$1"
+    local result=""
+    local IFS='-'
+    read -ra parts <<< "$kebab"
+    for word in "${parts[@]}"; do
+        local first="${word:0:1}"
+        local rest="${word:1}"
+        local first_up
+        first_up=$(echo "$first" | tr '[:lower:]' '[:upper:]')
+        result+="$first_up$rest "
+    done
+    echo "${result% }"
+}
+
+UNIT_DISPLAY="${UNIT_DISPLAY_ARG:-$(to_title_case "$UNIT_NAME")}"
+
+# --- Compute parent unit's slug + display (default: derive from PARENT_PATH) -
+
+# If the skill passed --parent-unit-name explicitly, use it. Otherwise infer
+# from the basename of PARENT_PATH (strip leading @). Same for display.
+if [ -n "$PARENT_UNIT_NAME_ARG" ]; then
+    PARENT_UNIT_NAME="$PARENT_UNIT_NAME_ARG"
+else
+    PARENT_BASENAME="$(basename "$PARENT_PATH")"
+    PARENT_UNIT_NAME="${PARENT_BASENAME#@}"
+fi
+PARENT_UNIT_DISPLAY="${PARENT_UNIT_DISPLAY_ARG:-$(to_title_case "$PARENT_UNIT_NAME")}"
 
 # Validate MODE
 case "$MODE" in
@@ -213,10 +293,12 @@ fi
 
 # --- Scaffold the unit's #ORG/ -----------------------------------------------
 
+# Per §0015's agent-identity convention, every agent's directory is named
+# <role-dir>@<unit-name>/. At this unit, that means lead@$UNIT_NAME, etc.
 mkdir -p \
-    "$UNIT_PATH/#ORG/agents/$LEAD_DIR/inbox/archive" \
-    "$UNIT_PATH/#ORG/agents/$IMPL_DIR/inbox/archive" \
-    "$UNIT_PATH/#ORG/agents/registrar/inbox/archive" \
+    "$UNIT_PATH/#ORG/agents/$LEAD_DIR@$UNIT_NAME/inbox/archive" \
+    "$UNIT_PATH/#ORG/agents/$IMPL_DIR@$UNIT_NAME/inbox/archive" \
+    "$UNIT_PATH/#ORG/agents/registrar@$UNIT_NAME/inbox/archive" \
     "$UNIT_PATH/#ORG/adr/accepted" \
     "$UNIT_PATH/#ORG/adr/proposed" \
     "$UNIT_PATH/#ORG/adr/superseded" \
@@ -225,9 +307,9 @@ mkdir -p \
     "$UNIT_PATH/#ORG/docs"
 
 touch \
-    "$UNIT_PATH/#ORG/agents/$LEAD_DIR/inbox/archive/.gitkeep" \
-    "$UNIT_PATH/#ORG/agents/$IMPL_DIR/inbox/archive/.gitkeep" \
-    "$UNIT_PATH/#ORG/agents/registrar/inbox/archive/.gitkeep" \
+    "$UNIT_PATH/#ORG/agents/$LEAD_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
+    "$UNIT_PATH/#ORG/agents/$IMPL_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
+    "$UNIT_PATH/#ORG/agents/registrar@$UNIT_NAME/inbox/archive/.gitkeep" \
     "$UNIT_PATH/#ORG/adr/accepted/.gitkeep" \
     "$UNIT_PATH/#ORG/adr/proposed/.gitkeep" \
     "$UNIT_PATH/#ORG/adr/superseded/.gitkeep" \
@@ -241,179 +323,122 @@ cat > "$UNIT_PATH/#ORG/README.md" <<README
 
 $UNIT_PURPOSE
 
-This is a **unit** within its parent agency. Governance for this unit lives here
-(\`#ORG/\`); operational work lives alongside it in the unit's root directory.
+\`@$UNIT_NAME\` is a **unit** in the agency \`@$AGENCY_DIR\`'s tree, sitting as
+a child of \`@$PARENT_UNIT_NAME\`. Governance for this unit lives here
+(\`#ORG/\`); operational work lives alongside it in this unit's root directory.
+
+Every unit in the agency is structurally identical (§0015) — the root unit and
+every sub-unit follow the same conventions. \`@$UNIT_NAME\`'s position in the
+tree is what makes it a sub-unit; the rules are the same as anywhere else.
 
 ---
 
-## Inheritance from the agency
+## Inheritance up the tree
 
-This unit is bound by all agency-level ADRs (§0001 through the current agency
-record). You can find them in the parent's \`#ORG/adr/accepted/\`. This unit's
-own \`#ORG/adr/accepted/\` holds only decisions specific to this unit.
+\`@$UNIT_NAME\` is bound by every ancestor unit's ADRs:
 
-For agency-level process (\`philosophy.md\`, \`decision-process.md\`,
-\`message-protocol.md\`, foundations), see the agency's
-\`#ORG/docs/\`. This unit does not duplicate that content.
+- The agency's root unit's \`#ORG/adr/accepted/\` (§0001 through whatever
+  the root has authored).
+- Any intermediate parent units' \`#ORG/adr/accepted/\` (when nested deeper
+  than one level).
+
+\`@$UNIT_NAME\`'s own \`#ORG/adr/accepted/\` holds only decisions specific to
+this unit, narrower than (or unrelated to) what the ancestors already cover.
+
+For foundational process docs — \`philosophy.md\`, \`decision-process.md\`,
+\`message-protocol.md\`, \`foundations/\`, the registrar checklists — see the
+agency's root unit's \`#ORG/docs/\`. Those docs live only at the root and are
+inherited by every unit. This unit does not duplicate that content.
 
 ---
 
 ## This unit's roles
 
-- **$LEAD_ROLE** (\`#ORG/agents/$LEAD_DIR/\`) — tier-1 of @$UNIT_NAME;
-  reports upward to the agency Lead.
-- **$IMPL_ROLE** (\`#ORG/agents/$IMPL_DIR/\`) — tier-2 of @$UNIT_NAME.
-- **Registrar** (\`#ORG/agents/registrar/\`) — audits this unit's record.
+- **$LEAD_ROLE @ $UNIT_DISPLAY** (\`#ORG/agents/$LEAD_DIR@$UNIT_NAME/\`) —
+  tier-1 of \`@$UNIT_NAME\`; reports up the tree to the Lead of the parent
+  unit \`@$PARENT_UNIT_NAME\`.
+- **$IMPL_ROLE @ $UNIT_DISPLAY** (\`#ORG/agents/$IMPL_DIR@$UNIT_NAME/\`) —
+  tier-2 of \`@$UNIT_NAME\`; reports to $LEAD_ROLE @ $UNIT_DISPLAY.
+- **Registrar @ $UNIT_DISPLAY** (\`#ORG/agents/registrar@$UNIT_NAME/\`) —
+  audits \`@$UNIT_NAME\`'s record. Outside the unit's decision hierarchy.
 
-No User at unit level — the User is an agency-level role (§0013).
+There is no User at this unit. There is one User across the agency, who is
+the principal of every unit and lives at the agency's root unit
+(\`@$AGENCY_DIR\`) (§0013).
 
 ---
 
 ## Establishing ADR
 
-This unit was established by \`§$NEXT_SECTION\` in the parent's
-\`#ORG/adr/accepted/\`. Read it for the unit's scope and original reasoning.
+\`@$UNIT_NAME\` was established by \`§$NEXT_SECTION\` in
+\`@$PARENT_UNIT_NAME\`'s \`#ORG/adr/accepted/\`. Read it for the unit's scope
+and original reasoning.
 README
 
 cat > "$UNIT_PATH/#ORG/docs/README.md" <<README
-# $UNIT_NAME docs
+# @$UNIT_NAME docs
 
-This unit inherits agency-level documentation from the agency's \`#ORG/docs/\`.
-Decision process, message protocol, philosophy, foundations, and registrar
-playbook all live there.
+\`@$UNIT_NAME\` inherits foundational documentation from the agency's root unit
+(\`@$AGENCY_DIR\`'s \`#ORG/docs/\`). Decision process, message protocol,
+philosophy, foundations, and registrar playbook all live there.
 
-This folder exists for unit-specific documentation — onboarding notes, process
-addenda, unit-internal references. It starts empty and fills only with content
-genuinely specific to this unit.
+This folder exists for documentation specific to \`@$UNIT_NAME\` — onboarding
+notes, process addenda, unit-internal references. It starts empty and fills
+only with content genuinely specific to this unit.
 README
 
 # --- Unit-level agent instructions -------------------------------------------
 
 # Each agent directory gets two files: AGENTS.md (canonical content, auto-loaded
 # by cross-tool agents) and CLAUDE.md (one-line `@AGENTS.md` pointer that Claude
-# Code auto-loads and imports). The AGENTS.md preamble is unit-specific; the
-# agency's AGENTS.md carries the full role definition.
+# Code auto-loads and imports). Every unit in the agency is structurally
+# identical (§0015), so we use the same templates as the root unit with this
+# unit's values substituted — no thin-preamble asymmetry between root and
+# sub-unit Leads/Implementers/Registrars.
 
-cat > "$UNIT_PATH/#ORG/agents/$LEAD_DIR/AGENTS.md" <<INSTR
-# $LEAD_ROLE (unit: @$UNIT_NAME) — instructions
+# Locate the templates (shared with scaffold.sh).
+TEMPLATE_LEAD="$PLUGIN_ROOT/scaffold/#ORG/agents/lead/AGENTS.md"
+TEMPLATE_IMPL="$PLUGIN_ROOT/scaffold/#ORG/agents/implementer/AGENTS.md"
+TEMPLATE_REG="$PLUGIN_ROOT/scaffold/#ORG/agents/registrar/AGENTS.md"
 
-## Role identity
+for tmpl in "$TEMPLATE_LEAD" "$TEMPLATE_IMPL" "$TEMPLATE_REG"; do
+    if [ ! -f "$tmpl" ]; then
+        echo "Error: agent template not found at $tmpl" >&2
+        echo "The plugin may not be installed correctly." >&2
+        exit 1
+    fi
+done
 
-You are the $LEAD_ROLE for unit **@$UNIT_NAME**. The unit's purpose:
-*$UNIT_PURPOSE*
+# Substitute placeholders into a template file. Same placeholder set as
+# scaffold.sh's subst(), but with this unit's values rather than the agency
+# root's. The User template is not installed at sub-units (one User per agency,
+# at the root only).
+subst() {
+    local src="$1"
+    local dst="$2"
+    local an_esc="${AGENCY_NAME//|/\\|}"
+    local ud_esc="${UNIT_DISPLAY//|/\\|}"
+    sed \
+        -e "s|{agency_name}|$an_esc|g" \
+        -e "s|{agency_dir}|$AGENCY_DIR|g" \
+        -e "s|{unit_name}|$UNIT_NAME|g" \
+        -e "s|{unit_display}|$ud_esc|g" \
+        -e "s|{user_dir}|$USER_DIR_ARG|g" \
+        -e "s|{user_role}|$USER_ROLE_ARG|g" \
+        -e "s|{lead_dir}|$LEAD_DIR|g" \
+        -e "s|{lead_role}|$LEAD_ROLE|g" \
+        -e "s|{implementer_dir}|$IMPL_DIR|g" \
+        -e "s|{implementer_role}|$IMPL_ROLE|g" \
+        -e "s|{date}|$DATE|g" \
+        "$src" > "$dst"
+}
 
-You are **tier-1 of this unit** (§0013). You report upward to the agency's Lead
-and inherit agency-level ADRs (§0001 through the current agency record).
-
-## Read these first
-
-- The agency's Lead AGENTS.md (walk up to the agency's root and look in
-  \`#ORG/agents/<lead-dir>/AGENTS.md\`).
-- The agency's §0013 for the multi-unit tier model.
-- The agency's §0015 for unit structure and federation rules.
-- This unit's establishing ADR (§NNNN) in the parent's
-  \`#ORG/adr/accepted/\` for scope and reasoning behind this unit.
-
-## How you differ from the agency Lead
-
-- **Scope:** your authority covers @$UNIT_NAME only. Cross-unit decisions route
-  through the agency Lead.
-- **Reporting chain:** agency Lead upward; this unit's $IMPL_ROLE and this
-  unit's Registrar alongside.
-- **ADR scope:** ADRs you author live in \`#ORG/adr/accepted/\` (this unit's).
-  Agency-level ADRs bind this unit automatically.
-- **Federation (§0015):** you do not police peer units; peer units do not police
-  this one.
-
-## Inbox
-
-Messages arrive in \`#ORG/agents/$LEAD_DIR/inbox/\` (this unit's).
-Archive on read to \`#ORG/agents/$LEAD_DIR/inbox/archive/\`.
-
----
-
-*For the full role definition — authorship authority, working pattern, canon/ops
-discipline, git notes — refer to the agency's Lead AGENTS.md. The shape is
-identical; only the scope is unit-level.*
-INSTR
-
-cat > "$UNIT_PATH/#ORG/agents/$IMPL_DIR/AGENTS.md" <<INSTR
-# $IMPL_ROLE (unit: @$UNIT_NAME) — instructions
-
-## Role identity
-
-You are the $IMPL_ROLE for unit **@$UNIT_NAME**. The unit's purpose:
-*$UNIT_PURPOSE*
-
-You are **tier-2 of this unit** (§0013). You report to the unit's $LEAD_ROLE.
-
-## Read these first
-
-- The agency's Implementer AGENTS.md for the full role definition (walk up
-  to the agency's \`#ORG/agents/<implementer-dir>/AGENTS.md\`).
-- The agency's §0013 for the tier model and your draft-with-approval path.
-- The agency's §0014 for the canon/operational split.
-- This unit's establishing ADR for scope and reasoning.
-
-## How you differ from the agency Implementer
-
-- **Scope:** your work covers @$UNIT_NAME only.
-- **Approval route:** drafts go to \`#ORG/adr/proposed/\` (this unit's), and
-  approval comes from this unit's $LEAD_ROLE or from the User.
-
-## Inbox
-
-Messages arrive in \`#ORG/agents/$IMPL_DIR/inbox/\` (this unit's).
-Archive on read to \`#ORG/agents/$IMPL_DIR/inbox/archive/\`.
-
----
-
-*For the full role definition — working pattern, canon/ops promotion, raising
-anti-patterns — refer to the agency's Implementer AGENTS.md. Shape identical;
-scope is unit-level.*
-INSTR
-
-cat > "$UNIT_PATH/#ORG/agents/registrar/AGENTS.md" <<INSTR
-# Registrar (unit: @$UNIT_NAME) — instructions
-
-## Role identity
-
-You are the Registrar for unit **@$UNIT_NAME**. You audit this unit's record
-(the contents of \`#ORG/\` at this unit). Your authority is procedural only,
-per §0012.
-
-## Read these first
-
-- The agency's Registrar AGENTS.md (walk up to the agency's
-  \`#ORG/agents/registrar/AGENTS.md\`) for the full audit checklist,
-  hybrid correction authority, and \`:silcrow-update\` workflow orchestration.
-- §0012 (async auditor mode).
-- §0015 (federation rule — you do not audit peer units).
-- This unit's establishing ADR for scope.
-
-## How you differ from the agency Registrar
-
-- **Scope:** you audit @$UNIT_NAME's \`#ORG/\` only. The agency Registrar audits
-  the agency's \`#ORG/\` and unit↔ADR consistency at the agency level. You audit
-  the internal integrity of this unit's record.
-- **Federation (§0015):** if you notice issues in peer units, surface them to
-  the agency Lead (not to the peer unit's Registrar directly, and not by
-  auditing the peer unit's record).
-
-## Inbox
-
-Messages arrive in \`#ORG/agents/registrar/inbox/\` (this unit's).
-Archive on read to \`#ORG/agents/registrar/inbox/archive/\`.
-
----
-
-*For the full role definition — audit checklist, correction authority,
-\`:silcrow-update\` orchestration, git responsibilities — refer to the agency's
-Registrar AGENTS.md. Shape identical; scope is unit-level.*
-INSTR
+subst "$TEMPLATE_LEAD" "$UNIT_PATH/#ORG/agents/$LEAD_DIR@$UNIT_NAME/AGENTS.md"
+subst "$TEMPLATE_IMPL" "$UNIT_PATH/#ORG/agents/$IMPL_DIR@$UNIT_NAME/AGENTS.md"
+subst "$TEMPLATE_REG"  "$UNIT_PATH/#ORG/agents/registrar@$UNIT_NAME/AGENTS.md"
 
 # Write CLAUDE.md pointers alongside each AGENTS.md so Claude Code auto-loads.
-for dir in "$LEAD_DIR" "$IMPL_DIR" "registrar"; do
+for dir in "$LEAD_DIR@$UNIT_NAME" "$IMPL_DIR@$UNIT_NAME" "registrar@$UNIT_NAME"; do
     printf '@AGENTS.md\n' > "$UNIT_PATH/#ORG/agents/$dir/CLAUDE.md"
 done
 
@@ -429,12 +454,16 @@ ADR_FILE="$ACCEPTED_DIR/§$NEXT_SECTION-establish-unit-$UNIT_NAME.md"
 # Escape | for sed delimiter safety.
 un_esc="${UNIT_NAME//|/\\|}"
 up_esc="${UNIT_PURPOSE//|/\\|}"
+ud_esc="${UNIT_DISPLAY//|/\\|}"
+pud_esc="${PARENT_UNIT_DISPLAY//|/\\|}"
+an_esc="${AGENCY_NAME//|/\\|}"
 
 PARENT_LEAD_ROLE="${PARENT_LEAD_ROLE_ARG:-Lead}"
 
 sed \
     -e "s|§NNNN|§$NEXT_SECTION|g" \
     -e "s|{unit_name}|$un_esc|g" \
+    -e "s|{unit_display}|$ud_esc|g" \
     -e "s|{date}|$DATE|g" \
     -e "s|{one_sentence_purpose}|$up_esc|g" \
     -e "s|{user_role}|$USER_ROLE_ARG|g" \
@@ -445,8 +474,12 @@ sed \
     -e "s|{Lead role name}|$LEAD_ROLE|g" \
     -e "s|{Implementer role name}|$IMPL_ROLE|g" \
     -e "s|{parent_lead_role}|$PARENT_LEAD_ROLE|g" \
+    -e "s|{parent_unit_name}|$PARENT_UNIT_NAME|g" \
+    -e "s|{parent_unit_display}|$pud_esc|g" \
+    -e "s|{agency_dir}|$AGENCY_DIR|g" \
+    -e "s|{agency_name}|$an_esc|g" \
     -e "s|{mode — directory \| submodule}|$MODE|g" \
-    -e "s|{parent_path}|parent|g" \
+    -e "s|{parent_path}|@$PARENT_UNIT_NAME|g" \
     -e "s|{authoring_lead_or_user}|Lead or User|g" \
     "$ESTABLISH_TEMPLATE" > "$ADR_FILE"
 

@@ -28,7 +28,7 @@ Jaques identified eight strata, each with a characteristic time horizon: Stratum
 
 Two operational rules come out of Jaques' research:
 
-**The one-stratum rule.** Each boss should sit exactly one stratum above their reports. More creates micromanagement (the boss is doing the same kind of work). Less creates burnout (the boss can't provide the cognitive scaffolding the report needs). The scaffold places {lead_role} exactly one tier above {implementer_role} (per §0006, extended by §0013 for multi-unit agencies: tier numbers are local per unit — every Lead is tier-1-of-their-unit, every Implementer is tier-2-of-their-unit).
+**The one-stratum rule.** Each boss should sit exactly one stratum above their reports. More creates micromanagement (the boss is doing the same kind of work). Less creates burnout (the boss can't provide the cognitive scaffolding the report needs). The scaffold places {lead_role} exactly one tier above {implementer_role} (per §0006, extended by §0013 for agencies with sub-units: tier numbers are local per unit — every Lead is tier-1-of-their-unit, every Implementer is tier-2-of-their-unit, regardless of where their unit sits in the tree).
 
 **Capacity matches stratum.** An agent is fit for a role not by general "smarts" but by whether their cognitive capacity matches the time horizon of the work. This is the correct framing when evaluating whether an agent should stay in role, be promoted, or hand work off.
 
@@ -52,7 +52,7 @@ Two companion ideas travel with subsidiarity:
 
 **Proportionality.** Article 5(4) of the TEU states that "the content and form of Union action shall not exceed what is necessary to achieve the objectives of the Treaties." Intervention from above goes no further than necessary. Higher tiers do not take over; they provide the minimum correction needed to restore trajectory.
 
-**What this means for the scaffold.** The {implementer_role} makes implementation decisions. The {lead_role} does not override unless the implementation crosses into architectural territory. The {lead_role} makes architectural decisions. {user_role} does not override unless architecture crosses into strategic territory. When unsure whether a decision belongs to a higher tier, the default is to let the lower tier decide and observe the result. The Registrar sits outside this hierarchy because their authority is over *form*, not *substantive decisions*. In multi-unit agencies (§0015), subsidiarity scales — unit-level decisions stay at the unit unless they cross into agency scope; agency-level decisions don't intervene in unit implementation.
+**What this means for the scaffold.** The {implementer_role} makes implementation decisions. The {lead_role} does not override unless the implementation crosses into architectural territory. The {lead_role} makes architectural decisions. {user_role} does not override unless architecture crosses into strategic territory. When unsure whether a decision belongs to a higher tier, the default is to let the lower tier decide and observe the result. The Registrar sits outside this hierarchy because their authority is over *form*, not *substantive decisions*. In agencies with multiple units (§0015), subsidiarity scales along the tree: decisions made at deeper units stay there unless they cross into a broader scope, and decisions made at higher units (especially the root) propagate down to bind their sub-units. A unit's Lead doesn't intervene in a sub-unit's implementation; a sub-unit's Lead doesn't author decisions that bind peers or ancestors.
 
 **Where to read more.** *Quadragesimo Anno* (1931), available at vatican.va. Article 5 TEU, via EUR-Lex. The Stanford Encyclopedia of Philosophy entry on subsidiarity is a strong secondary source. `#ORG/docs/foundations/02-subsidiarity.md`.
 
@@ -66,7 +66,7 @@ The actor model was introduced in Hewitt, Bishop, and Steiger's paper "A Univers
 
 An actor has three properties: a **private mailbox**, **private state**, and the ability to **send messages** to other actors. Actors do not share memory. All coordination between them is via messages. Three consequences matter for this scaffold:
 
-**Private state enables honest thinking.** An actor reasoning in its own address space does not have to defend half-formed thoughts. It iterates privately, then sends a finished message. This is the discipline the scaffold imposes by giving each agent a private directory (`#ORG/agents/{role}/`) that no other agent reads. Drafts, failures, and exploratory thinking live there, never forced into a shared artifact prematurely.
+**Private state enables honest thinking.** An actor reasoning in its own address space does not have to defend half-formed thoughts. It iterates privately, then sends a finished message. This is the discipline the scaffold imposes by giving each agent a private directory (`#ORG/agents/<role>@<unit-name>/`) that no other agent reads. Drafts, failures, and exploratory thinking live there, never forced into a shared artifact prematurely.
 
 **Messages create auditable history.** Every interaction is a discrete, persistent artifact. Over time, the archive of messages is a complete record of how the system coordinated. Debugging reduces to replaying messages — you can reconstruct, from the archive alone, why a given state exists. The scaffold applies this directly: messages deposited in an agent's inbox, archived on read, never deleted.
 
@@ -138,7 +138,7 @@ The separation between form and substance is load-bearing. When form and substan
 
 Either way, separation fails. Independent, dedicated registrars — with procedural authority only — avoid both failure modes.
 
-The pattern scales by **fan-out, not strata**. As records proliferate, you add more registrars handling partitioned scopes — not a hierarchy of registrars making substantive calls. In multi-unit agencies (§0015), each unit has its own Registrar auditing its own unit's record. No "Chief Registrar" adjudicates across units; they federate.
+The pattern scales by **fan-out, not strata**. As records proliferate, you add more registrars handling partitioned scopes — not a hierarchy of registrars making substantive calls. In agencies with multiple units (§0015), every unit — root and sub-units alike — has its own Registrar auditing its own unit's record. No "Chief Registrar" adjudicates across units; they federate.
 
 **Sync gate vs async auditor.** This scaffold's Registrar operates as an **async auditor** (§0012) — not gatekeeping every ADR before it lands in `accepted/` but auditing the record on demand, correcting procedural issues directly, and surfacing substantive ones for the Lead or User. The form/substance separation is preserved by role design, not by serial validation. Historical real-world registrars operate the same way — court clerks file documents as they arrive and audit the docket periodically; university registrars process registrations in real-time and audit enrollment records on a cadence.
 
