@@ -283,20 +283,19 @@ subst "$SRC/OPS/README.md" "$DST/@$AGENCY_DIR/OPS@$AGENCY_DIR/README.md"
 
 # --- Git initialization (§0016, §0017) ---------------------------------------
 #
-# All git operations target the AGENCY_PATH (the agency's own directory).
-# Never touch $DST: it's a parent directory that may contain other unrelated
-# projects. The agency is its own self-contained git repo.
+# The agency is always its own self-contained git repo. All git operations
+# target AGENCY_PATH only — the parent directory ($DST) is never touched.
+# We do not inspect the parent's git state; whatever exists above the agency
+# is outside the scaffold's concern.
 
 if [ "$SKIP_GIT" -eq 0 ]; then
-    # Only run git init if the agency isn't already inside an existing repo
-    # (e.g., the user is scaffolding the agency inside a project they already
-    # have under version control — let that outer repo track the agency).
-    if ! (cd "$AGENCY_PATH" && git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-        (cd "$AGENCY_PATH" && git init --quiet)
-    fi
+    # Initialize the agency as its own git repo. `git init` is idempotent
+    # in an already-initialized directory; if a .git/ already exists inside
+    # AGENCY_PATH (extremely unlikely on a fresh scaffold), it's a no-op.
+    (cd "$AGENCY_PATH" && git init --quiet)
 
-    # Write default .gitignore per §0016, only if the agency doesn't already
-    # have one (a parent repo's .gitignore is left alone).
+    # Write the default .gitignore per §0016. Only write if not already
+    # present (the user might have authored their own).
     if [ ! -f "$AGENCY_PATH/.gitignore" ]; then
         cat > "$AGENCY_PATH/.gitignore" <<'GITIGNORE'
 # OS
@@ -321,16 +320,13 @@ credentials.json
 GITIGNORE
     fi
 
-    # Initial commit (§0017 — governance commits cite §NNNN).
-    # Only commit if the agency is in a fresh repo (no HEAD yet). If it's
-    # already inside a parent repo with history, the user can stage and
-    # commit themselves; we don't commit the parent's content.
-    if (cd "$AGENCY_PATH" && git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-        if ! (cd "$AGENCY_PATH" && git rev-parse --verify HEAD >/dev/null 2>&1); then
-            (cd "$AGENCY_PATH" && \
-                git add . && \
-                git commit --quiet -m "Initialize agency @$AGENCY_NAME (§0001)")
-        fi
+    # Initial commit (§0017 — governance commits cite §NNNN). Only commit
+    # if the agency repo doesn't have a HEAD yet (i.e., we just initialized
+    # it). Idempotent on re-runs.
+    if ! (cd "$AGENCY_PATH" && git rev-parse --verify HEAD >/dev/null 2>&1); then
+        (cd "$AGENCY_PATH" && \
+            git add . && \
+            git commit --quiet -m "Initialize agency @$AGENCY_NAME (§0001)")
     fi
 fi
 

@@ -7,9 +7,6 @@ allowed-tools:
   - Glob
   - Grep
   - Bash(ls:*)
-  - Bash(test:*)
-  - Bash(mv:*)
-  - Bash(git:*)
   - Bash(${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh:*)
   - Bash(${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh:*)
   - AskUserQuestion
@@ -38,12 +35,10 @@ The skill follows a six-phase flow: **silent peek → locked intro → natural c
 Before any output to the user:
 
 - `ls` the current working directory (CWD).
-- Look for obvious project markers: README, package.json, pyproject.toml, Cargo.toml, etc. Use these to orient.
-- Check whether the CWD is inside an existing git repo (`git rev-parse --is-inside-work-tree`). If yes, the new agency will inherit that repo (scaffold will skip `git init`); mention this during conversation. If no, the agency will become its own self-contained git repo.
+- Look for obvious project markers in the CWD itself (README, package.json, pyproject.toml, Cargo.toml, etc.). Use these to orient or suggest an agency name.
 - Check CLAUDE.md or the environment for the user's name. If found, you'll substitute it into the locked intro; if not, you'll silently omit.
-- **Walk up from the CWD looking for an `@<...>/` ancestor.** If found, the user is already inside an existing unit/agency; in Phase 3 you'll redirect them to `:silcrow-add-unit` rather than creating a new agency on top of an existing one.
 
-The default scaffolding location is the CWD. The script creates `@<agency-dir>/` (the agency's own directory) inside the CWD; the CWD's own name is irrelevant. The agency's git repo, `.gitignore`, and initial commit all live inside `@<agency-dir>/` — never in the CWD itself, which may be a shared parent containing unrelated projects. The user can ask for a different parent location during conversation, but most users will scaffold "right here."
+That's the entire peek. **The skill operates strictly inside the CWD. It never walks up the filesystem, never looks at sibling directories, never inspects anything outside the CWD.** The script creates `@<agency-dir>/` inside the CWD — purely additive — and is responsible for every filesystem operation including git initialization. Your job is to converse, gather inputs, and invoke the script.
 
 No questions yet. No output. Just orient.
 
@@ -72,12 +67,16 @@ Now converse naturally. Based on what you peeked, do the following in whichever 
 ### What to suggest/confirm
 
 - **Tell the user where the agency will go.** Default: "I'll create the agency right here in `<cwd>` — it'll live at `<cwd>/@<slug>/`." Show the path concretely so the user can redirect if they want it somewhere else.
-- **Suggest** an agency name if the directory or project files imply one (e.g., a `wedding-planning/` CWD suggests agency name "Wedding"). Show the slug you'd derive ("Wedding" → `@wedding/`) and let the user adjust either the display name or the slug.
+- **Suggest** an agency name if the CWD's contents imply one (e.g., a CWD containing wedding-related files suggests agency name "Wedding"). Show the slug you'd derive ("Wedding" → `@wedding/`) and let the user adjust either the display name or the slug.
 - **Confirm** the user's name if you couldn't detect it.
-- **Propose** single-unit vs multi-unit based on what you found. If multi-unit, suggest initial unit names and purposes.
-- **Note** if the CWD is already inside a git repo (the agency will inherit; scaffold will skip `git init`). Otherwise, the agency becomes its own self-contained git repo at `<cwd>/@<slug>/`.
-- **If you detected an `@<...>/` ancestor in Phase 1**, redirect: *"You're already inside an agency at `<ancestor>`. Did you mean to add a sub-unit (`:silcrow-add-unit`) instead of creating a new agency on top of it?"* Do not proceed unless the user confirms they want a separate agency anyway.
+- **Propose** single-unit vs multi-unit based on the CWD context. If multi-unit, suggest initial unit names and purposes.
 - **Ask only what you can't infer.** No forms, no numbered phases. Conversational.
+
+### What you must not do
+
+- **Do not rename, move, or delete anything.** The script handles all filesystem work. Never run `mv`, `git mv`, or any operation that mutates paths outside what the script does internally.
+- **Do not walk up the filesystem.** Don't look at the CWD's parent, ancestors, or siblings. Whatever exists outside the CWD is none of init's business.
+- **Do not check git state above the CWD.** The script will git-init the agency directory itself; that's its job. You don't need to know anything about git context outside the CWD.
 
 ### What you need to gather
 
@@ -133,7 +132,7 @@ Invoke `scripts/scaffold.sh` with nine positional arguments. The first argument 
     [--agency-dir "<slug>"]
 ```
 
-If the parent directory already contains a git repo (the user is scaffolding inside an existing repo), the script detects that and skips `git init` gracefully. If the user declined git entirely, pass `--skip-git`.
+If the user declined git entirely, pass `--skip-git`.
 
 Quote every argument so values with spaces pass through cleanly.
 
@@ -141,7 +140,7 @@ The script:
 - Prints `✓ Scaffolded <agency_name> at <parent_directory>/@<agency-dir>` on success.
 - Creates `<parent_directory>/@<agency-dir>/` containing the unit's flat layout (CANON@, OPS@, REFERENCE@, agent dirs, README) per §0014.
 - The agency dir slug defaults to `<agency_name>` slugified (lowercase, spaces → hyphens, slug-safe per §0014); pass `--agency-dir <slug>` to override.
-- Initializes git **inside the agency directory** (`<parent_directory>/@<agency-dir>/`), not in the parent — the parent may be a shared directory containing unrelated projects, and we never touch it. Skips `git init` if the agency directory is already inside an existing git repo.
+- Initializes git **inside the agency directory** as its own self-contained repo, with a default `.gitignore` and an initial commit (§0001). The parent directory is never touched — no `.git/`, no `.gitignore`, no rename, no commit.
 - Exits 3 if `<parent_directory>/@<agency-dir>/` is already a scaffolded unit (CANON@ exists inside). Unrelated `@*/` siblings in the parent directory are not conflicts. Relay the error if it fires.
 
 ### Units next (if multi-unit)
