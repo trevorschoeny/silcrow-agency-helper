@@ -183,9 +183,9 @@ Reconsider this ADR if:
 
 ## References
 
-- `../../REFERENCE@<unit-name>/philosophy.md` — canon/operational framing underlying this structure (root unit only; sub-units walk up).
-- `../../registrar@<unit-name>/AGENTS.md` — audit procedure for unit↔ADR consistency.
-- `../../REFERENCE@<unit-name>/foundations/07-canonical-and-operational.md` — intellectual history.
+- `../../REFERENCE@{unit_name}/philosophy.md` — canon/operational framing underlying this structure (root unit only; sub-units walk up).
+- `../../registrar@{unit_name}/AGENTS.md` — audit procedure for unit↔ADR consistency.
+- `../../REFERENCE@{unit_name}/foundations/07-canonical-and-operational.md` — intellectual history.
 - `../_templates/establish-unit.md` — the ADR template used when adding a new unit.
 - §0001 — the founding decision this structure implements.
 - §0005 — inboxes live at `@<unit-name>/<role>@<unit-name>/inbox/` per this structure.

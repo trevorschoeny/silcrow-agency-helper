@@ -16,7 +16,7 @@
 
 ## Considered options
 
-1. **Prose in a README catalog.** A `agents/README.md` file holds the roster table and the change procedure; both are mutably edited when the roster changes.
+1. **Prose in a README catalog.** A roster table inside the unit's `CANON@{unit_name}/README.md` (or a parallel mutable doc) holds the agents and the change procedure; both are mutably edited when the roster changes.
 2. **Procedure as an ADR, changes as individual ADRs (chosen).** The procedure is recorded here; each addition, retirement, or rename is its own future ADR. The roster is derivable from accepted ADRs plus the directory tree.
 3. **Informal / ad hoc.** No formal governance; agents are added and removed by whoever has access, roster drift is unrecorded.
 4. **Supersede §0006 on every change.** Every roster change supersedes the tier-model ADR, producing a full re-review of the structure each time.
@@ -37,10 +37,10 @@ Individual roster changes — add an agent, retire an agent, rename a role — e
 4. **Approve.** {user_role} approves (or rejects). Roster changes are tier-0 decisions — {user_role} owns the roster as a strategic/HR concern.
 5. **Execute.** On acceptance, the Registrar:
    - Assigns the next §-number and files the ADR in `CANON@{unit_name}/accepted/`.
-   - Performs any required directory-level actions:
-     - **Add:** creates `agents/<role>/inbox/archive/` with a `.gitkeep`.
-     - **Retire:** moves the retired agent's directory to `agents/_retired/<role>/` (creating `agents/_retired/` on first use). Inbox archives are preserved.
-     - **Rename:** renames the directory to match the new role's `<role>` slug. Cross-references in prose are the change-author's responsibility; the Registrar verifies they resolve before accepting.
+   - Performs any required directory-level actions, per §0014's flat layout (agents live as `<role>@{unit_name}/` siblings of CANON, OPS, REFERENCE inside `@{unit_name}/`):
+     - **Add:** creates `<role>@{unit_name}/inbox/archive/` with a `.gitkeep`, plus an `AGENTS.md` for the new role and a `CLAUDE.md` containing `@AGENTS.md` per the agency's existing agent dirs.
+     - **Retire:** moves the retired agent's directory `<role>@{unit_name}/` to `@{unit_name}/.archive/<YYYY-MM-DD>/<role>@{unit_name}/` (creating `.archive/<YYYY-MM-DD>/` on first use that day). Inbox archives are preserved verbatim. The hidden `.archive/` location matches the convention used by `:silcrow-update` for archived removals (see `REFERENCE@{agency_dir}/registrar-update-workflow.md` §7).
+     - **Rename:** renames `<old-role>@{unit_name}/` to `<new-role>@{unit_name}/` (the unit suffix stays the same; only the role-prefix changes). Cross-references in prose are the change-author's responsibility; the Registrar verifies they resolve before accepting.
    - Updates bidirectional citations per the standard lifecycle.
 
 ### Consequences
@@ -48,7 +48,7 @@ Individual roster changes — add an agent, retire an agent, rename a role — e
 - **Positive:** Every roster change has a dated, reasoned, citable record. "Why is Implementer-2 in the roster?" resolves to a specific ADR.
 - **Positive:** No separate catalog to maintain or drift from the ADR record.
 - **Positive:** The procedure itself is supersedable — if the project's governance evolves (e.g., {user_role} delegates implementer-level additions to {lead_role}), that's a clean supersession of this ADR.
-- **Positive:** Retirement is never destructive. `agents/_retired/` preserves history.
+- **Positive:** Retirement is never destructive. `@{unit_name}/.archive/<YYYY-MM-DD>/` preserves the retired agent's directory and inbox history verbatim.
 - **Neutral:** Small, uncontentious changes (rename one role, add one peer {implementer_role}) take an extra minute to write as an ADR. This is what the discipline is for; the cost is bounded.
 - **Negative:** Agents used to casually editing a roster table may experience friction. This is the discipline working as intended.
 

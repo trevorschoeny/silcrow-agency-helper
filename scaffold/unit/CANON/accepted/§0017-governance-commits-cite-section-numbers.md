@@ -12,7 +12,7 @@
 
 In the context of **an agency whose governance lives in version control alongside operational work**,
 facing the tension between commit-log discipline (valuable for governance traceability) and commit-log freedom (valuable for whatever the unit is actually producing),
-we decided for **a two-tier convention split along the canon/operational line** — governance-touching commits cite the governing §NNNN (`§0013: add canon/operational foundation doc` or `Move agents/ → @{unit_name}/ (per §0013)`); operational commits are free-form —
+we decided for **a two-tier convention split along the canon/operational line** — governance-touching commits cite the governing §NNNN (`§0013: add canon/operational foundation doc` or `Update Registrar audit checklist (per §0011)`); operational commits are free-form —
 and neglected imposing §NNNN citations on all commits, requiring no convention at all, and enforcing the convention via pre-commit hooks,
 to achieve `git log --grep='§0013'` as "everything that happened because of §0013" while letting operational commits match whatever style the work calls for,
 accepting that the convention is followed by habit rather than enforced, and that some commits straddle governance and operational changes,
@@ -49,7 +49,7 @@ Without a convention, `git log` becomes either over-formal (every commit cites s
 
 - **Governance-touching commits** — any commit that creates, accepts, supersedes, or edits an ADR, agent instruction, foundation doc, or governance README — use the form `§NNNN: <short imperative>`.
   - When the commit *is* the ADR itself (e.g., creating §0013): `§0013: canon/operational split and reference rule`.
-  - When the commit implements or follows from an ADR: `<change description> (per §NNNN)`. Example: `Move agents/ → @{unit_name}/ (per §0014)`.
+  - When the commit implements or follows from an ADR: `<change description> (per §NNNN)`. Example: `Update lead AGENTS.md inbox conventions (per §0005)`.
   - When a commit touches multiple ADRs: list them. Example: `§0011, §0012: registrar and tier refinements`.
 - **Operational commits** — anything outside `@{unit_name}/`, or anything inside `@{unit_name}/` that's purely mechanical with no ADR bearing (e.g., an inbox archive commit) — are free-form. The Lead names them however they want. The scaffold does not prescribe a format for operational work.
 - **Update audits** — the `:silcrow-update` skill's one-commit-per-invocation uses the form `§NNNN: update audit — accepted A, rejected B, deferred C` (with the audit ADR's §-number; see §0015).

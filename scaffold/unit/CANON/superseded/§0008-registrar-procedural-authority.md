@@ -1,19 +1,19 @@
 # §0008 — Registrar authority is procedural, not substantive
 
-- **Status:** superseded-by-§0020
+- **Status:** superseded-by-§0011
 - **Date:** {date}
 - **Authors:** scaffold initialization (inherited via §0001)
 - **Supersedes:** —
-- **Superseded by:** §0020
+- **Superseded by:** §0011
 - **Influences:** every future Registrar action; all record-integrity enforcement.
 - **Influenced by:** §0001, §0004
 
-> **Retrospective note (on supersession by §0020):** The core principle this ADR
+> **Retrospective note (on supersession by §0011):** The core principle this ADR
 > established — the Registrar's authority is procedural, not substantive — is
-> preserved in §0020. What §0020 changes is the *operating mode*: from
+> preserved in §0011. What §0011 changes is the *operating mode*: from
 > synchronous gatekeeping of every proposal to asynchronous on-demand auditing.
 > The separation of form and substance that made this ADR load-bearing is
-> retained in §0020; the per-proposal workflow latency is not. Read both
+> retained in §0011; the per-proposal workflow latency is not. Read both
 > together for the full history.
 
 ## Why-statement

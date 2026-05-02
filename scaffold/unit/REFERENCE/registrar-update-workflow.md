@@ -49,7 +49,7 @@ For equality checks, hash files; for content differences, read them. Whichever i
 For each non-match, write a single sentence capturing what it is and why it matters. Examples:
 
 - *"New ADR: Registrar operates as async auditor, not sync gatekeeper."*
-- *"Your customized lead instructions have a stale path reference (`agents/` → `@{unit_name}/`)."*
+- *"Your customized lead instructions reference an inbox path that has drifted from §0014's flat layout."*
 - *"Agency has `docs/old-process.md` that the plugin no longer ships — likely safe to archive."*
 - *"Plugin ships a new foundation doc (07-canonical-and-operational.md); your agency doesn't have one."*
 
@@ -166,7 +166,7 @@ Accepted:
   - §00YY: <descriptor>
 
 File-level changes:
-  - Moved agents/ → @{unit_name}/
+  - Moved customized agent dirs into §0014's flat layout
   - Updated lead/AGENTS.md (sections 2-4)
   - Archived docs/old-process.md
 

@@ -50,7 +50,7 @@ git clone https://github.com/trevorschoeny/silcrow-agency-helper
 
 ### `:silcrow-init` — create an agency
 
-Run in the directory you want to scaffold the agency inside. The skill peeks silently, delivers a short intro, and then converses naturally to gather agency name, description, your role details, any role renames, and any sub-units to seed alongside the root unit. It runs `scripts/scaffold.sh` to create the root unit's `@<agency-name>/` directory inside the destination, initializes git with a minimal `.gitignore`, and commits. If sub-units were named, it then runs `scripts/add-unit.sh` once per sub-unit.
+Run in the directory you want to scaffold the agency inside. The skill peeks silently, delivers a short intro, and then converses naturally to gather agency name, description, your role details, any role renames, and any sub-units to seed alongside the root unit. It runs `scripts/scaffold.sh` to create the root unit's `@<agency-name>/` directory inside the current working directory, initializes git with a minimal `.gitignore`, and commits. If sub-units were named, it then runs `scripts/add-unit.sh` once per sub-unit.
 
 The generated agency ships a **founding record of 20 ADRs** (§0001 + 19 constitutional decisions §0002–§0020, with §0008 superseded by §0011). Each ADR cites a foundation doc; each can be superseded like any other.
 

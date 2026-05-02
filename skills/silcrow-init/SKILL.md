@@ -24,25 +24,19 @@ If the user asks to "re-run" `:silcrow-init` on an existing agency, stop and exp
 
 The skill follows a six-phase flow: **silent peek → locked intro → natural conversation → run scaffold script → report → locked next-steps**. Two bundled bash scripts do the mechanical work: `scripts/scaffold.sh` for the agency, and `scripts/add-unit.sh` for each additional unit (if any). Your job is to gather the inputs conversationally and invoke the scripts.
 
+The scaffold script always creates the agency directory inside the current working directory. There is no destination argument — the script operates in `$PWD` and that is the only place an agency can be created. If the user wants the agency somewhere else, that's their decision to make by `cd`-ing there before invoking the skill; it is not a parameter you negotiate.
+
 ---
 
 ## Phase 1 — Peek silently
 
 Before any output to the user:
 
-- Check CLAUDE.md or the environment for the user's name. If found, you'll substitute it into the locked intro; if not, you'll silently omit.
+- Check the user's global CLAUDE.md (`~/.claude/CLAUDE.md`) or the session env for the user's name. If found, you'll substitute it into the locked intro; if not, you'll silently omit.
 
-That's the entire peek.
+That's the entire peek. Do not read any file in the current working directory; do not list its contents; do not check git state. The script handles every filesystem operation, including git initialization inside the agency directory.
 
-**The agency-vs-CWD relationship — read this carefully:**
-
-- The agency starts at `@<slug>/` — that is the top-level node, the root unit.
-- The agency lives **inside** the CWD, at `<cwd>/@<slug>/`.
-- The CWD is **not** part of the agency. It's merely a parent container the scaffold creates the agency inside. The CWD's name, contents, sibling directories, ancestors, and any git state outside the agency are all irrelevant to this skill.
-
-**You do not inspect the CWD.** You do not `ls` it, do not read its files, do not take note of its name, do not infer anything from its contents. Your only concern is setting up the agency by gathering inputs from the user and invoking the script. The script handles every filesystem operation, including git.
-
-No questions yet. No output. Just orient.
+No questions yet. No output.
 
 ---
 
@@ -56,7 +50,7 @@ Output this text exactly. The only substitution is the user's name — inserted 
 >
 > *An agency is the whole tree of work. Its topmost node is the **root unit** (which shares the agency's name); below the root, an agency can stay as a single unit — one cohesive body of work — or branch into **sub-units**, each itself a full unit with its own governance and agent team. Every unit, root or sub, has the same shape. Units can be departments, teams, product lines, research threads, codebases — any partition of the work that's independent enough to deserve its own decision record and agent team.*
 >
-> *The agency starts at its root unit's directory. I'll create that directory inside whatever directory we're in right now — the directory we're in is just a container, not part of the agency itself.*
+> *I'll create the agency directory here, in this directory.*
 >
 > *Two rules matter: **sub-units answer to their parent unit** (decisions at any unit bind that unit and everything below it), and **sibling units don't police each other** (no cross-branch oversight).*
 
@@ -66,51 +60,23 @@ Output this, then drop out of scripted mode.
 
 ## Phase 3 — Natural conversation
 
-Now converse naturally. Do the following in whichever order feels natural:
+Now converse naturally. Be conversational, not formulaic. No forms, no numbered phases. Gather what the script needs in whatever order feels natural — the order below lists the script's positional and option arguments, not the conversation's required sequence.
 
-### Path placement is fixed — do not negotiate it
-
-**The agency is always created at `<CWD>/@<slug>/`. The CWD is the parent. Always.**
-
-- You do not propose alternative parent directories. Not as a sibling of the CWD, not in the CWD's parent, not in the user's home directory, nowhere else.
-- You do not reason about whether the CWD is "the right place" or whether its name "matches" the agency. The CWD is the right place because the user invoked the skill there. That is the entire criterion.
-- You do not say things like "I can't rename the CWD, so let me put it elsewhere." There is nothing to rename and nothing to put elsewhere. The agency goes inside the CWD as `@<slug>/`. End of question.
-- You do not ask the user to confirm the location. State it as fact: *"The agency will be created at `<CWD>/@<slug>/`."* Then proceed.
-
-If — and only if — the user explicitly asks to put the agency in a different parent directory, you accept that override. But you never offer the option, never suggest it, never imply that the CWD might not be where they want it.
-
-### What to gather
-
-- **Agency name.** Ask the user. Don't suggest one. Once they answer, show the slug you'd derive (e.g., "Wedding" → `@wedding/`) and let them adjust either the display name or the slug.
-- **The user's name** if you couldn't detect it from CLAUDE.md / env. Confirm.
-- **Single-unit or multi-unit.** Ask. If multi-unit, gather unit names and purposes from the user. Don't infer.
-- **Role customization** if the user wants different display or directory names for User/Lead/Implementer.
-
-Be conversational, not formulaic. No forms, no numbered phases.
-
-### What you must not do
-
-- **Do not inspect the CWD.** Don't `ls` it, don't read any file in it, don't take note of its name. The CWD's contents and name are irrelevant to setting up the agency.
-- **Do not walk up the filesystem.** Don't look at the CWD's parent, ancestors, or siblings. Whatever exists outside the CWD is also irrelevant.
-- **Do not infer anything from context around the agency.** Don't suggest an agency name from CWD contents, don't guess unit structure from project markers, don't assume role names. Ask the user.
-- **Do not rename, move, or delete anything.** The script handles all filesystem work. Never run `mv`, `git mv`, or any operation that mutates paths outside what the script does internally.
-- **Do not check git state.** The script git-inits the agency directory itself; that's its job. You don't need to know anything about git context anywhere on the filesystem.
-- **Do not propose alternative scaffolding locations.** See "Path placement is fixed" above.
-
-### What you need to gather
+### Information to gather
 
 **Agency-level (for `scripts/scaffold.sh`):**
 
-- Where the agency goes (default: CWD; user can specify a different parent directory).
-- Agency name (display form, e.g. "Acme Co" or "Wedding").
+- Agency name (display form, e.g. "Acme Co" or "Wedding"). Ask the user; don't suggest one.
 - Agency directory slug (default: derived from the agency name — lowercase, spaces → hyphens, slug-safe). Show the user the proposed slug; they can override if they want a different one (e.g., display "Acme Corporation" with dir `@acme/`).
 - Agency description (one sentence, one paragraph — whatever feels right).
+- The user's name if you couldn't detect it from the global CLAUDE.md / env. Confirm.
 - User directory name (kebab-case, lowercase; default `user` or the user's first name).
 - User display name (title-case, e.g. "Trevor" or "User").
 - Lead directory name (default `lead`).
 - Lead display name (default `Lead`; user may rename to Director, Architect, Editor, etc.).
 - Implementer directory name (default `implementer`).
 - Implementer display name (default `Implementer`; may rename to Specialist, Engineer, Associate, etc.).
+- Single-unit or multi-unit. Ask. If multi-unit, gather unit names and purposes.
 
 **Per unit (only if multi-unit; `scripts/add-unit.sh` invoked for each):**
 
@@ -135,11 +101,10 @@ No "shall I run it?" confirmation. If the answers are well-formed, proceed to Ph
 
 ### Agency first
 
-Invoke `scripts/scaffold.sh` with nine positional arguments. The first argument is the parent directory the agency will live inside — typically the user's CWD. Pass `--agency-dir <slug>` if the user picked a slug different from the auto-derived one.
+Invoke `scripts/scaffold.sh` with eight positional arguments. The script always creates the agency directory inside the current working directory; there is no parent-directory argument. Pass `--agency-dir <slug>` if the user picked a slug different from the auto-derived one.
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh" \
-    "<parent_directory>" \
     "<agency_name>" \
     "<agency_description>" \
     "<user_dir>" \
@@ -151,24 +116,22 @@ Invoke `scripts/scaffold.sh` with nine positional arguments. The first argument 
     [--agency-dir "<slug>"]
 ```
 
-If the user declined git entirely, pass `--skip-git`.
-
 Quote every argument so values with spaces pass through cleanly.
 
 The script:
-- Prints `✓ Scaffolded <agency_name> at <parent_directory>/@<agency-dir>` on success.
-- Creates `<parent_directory>/@<agency-dir>/` containing the unit's flat layout (CANON@, OPS@, REFERENCE@, agent dirs, README) per §0014.
+- Prints `✓ Scaffolded <agency_name> at <cwd>/@<agency-dir>` on success.
+- Creates `@<agency-dir>/` inside the current working directory, containing the unit's flat layout (CANON@, OPS@, REFERENCE@, agent dirs, README) per §0014.
 - The agency dir slug defaults to `<agency_name>` slugified (lowercase, spaces → hyphens, slug-safe per §0014); pass `--agency-dir <slug>` to override.
-- Initializes git **inside the agency directory** as its own self-contained repo, with a default `.gitignore` and an initial commit (§0001). The parent directory is never touched — no `.git/`, no `.gitignore`, no rename, no commit.
-- Exits 3 if `<parent_directory>/@<agency-dir>/` is already a scaffolded unit (CANON@ exists inside). Unrelated `@*/` siblings in the parent directory are not conflicts. Relay the error if it fires.
+- Initializes git **inside the agency directory** as its own self-contained repo, with a default `.gitignore` and an initial commit (§0001). The CWD itself is never touched — no `.git/`, no `.gitignore`, no rename, no commit.
+- Exits 3 if `<cwd>/@<agency-dir>/` is already a scaffolded unit (CANON@ exists inside). Unrelated `@*/` siblings in the CWD are not conflicts. Relay the error if it fires.
 
 ### Units next (if multi-unit)
 
-For each declared unit, invoke `scripts/add-unit.sh`. The first positional argument is the parent unit's path — at init time, that's the agency root unit `<parent_directory>/@<agency-dir>/`:
+For each declared unit, invoke `scripts/add-unit.sh`. The first positional argument is the parent unit's path — at init time, that's the agency root unit `<cwd>/@<agency-dir>/`:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh" \
-    "<parent_directory>/@<agency-dir>" \
+    "<cwd>/@<agency-dir>" \
     "<unit_name>" \
     "<unit_purpose>" \
     "<unit_lead_dir>" \
@@ -185,7 +148,7 @@ For each declared unit, invoke `scripts/add-unit.sh`. The first positional argum
     [--submodule-source <url_or_path>]
 ```
 
-The first argument is the **parent unit's directory** — its basename starts with `@`. The new sub-unit will be created nested inside it as a sibling of the parent's agents, CANON, OPS, etc.
+The first argument is the **parent unit's directory** — its basename starts with `@`. The new sub-unit will be created nested inside it as a sibling of the parent's agents, CANON, OPS, etc. The scaffold script's success line gave you the absolute agency path; substitute that here.
 
 Pass `--user-role`, `--user-dir`, and `--parent-lead-role` so the unit's
 establishing ADR and templates render with the agency's actual role and
@@ -212,7 +175,7 @@ If any unit fails, relay the error and stop. Do not continue to further units un
 
 ## Phase 5 — Ontology report
 
-After all scripts complete, output a structured block describing what was built. Pattern:
+After all scripts complete, output a structured block describing what was built. The "Agency lives at:" line uses the absolute path the scaffold script printed in its success line. Pattern:
 
 ### Single-unit — example
 
