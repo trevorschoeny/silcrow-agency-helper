@@ -5,9 +5,9 @@
 # Invoked by the silcrow:silcrow-init skill. Handles file copy, token
 # substitution, git initialization, and initial commit.
 #
-# Agency = root unit + nested sub-units, following the #ORG@<unit-name>/ +
-# @<unit>/ convention (§0014). This script scaffolds the agency's root unit.
-# Sub-units are added separately via scripts/add-unit.sh, orchestrated by the
+# Agency = root unit + nested sub-units, following the flat @<unit-name>/
+# convention (§0014). This script scaffolds the agency's root unit. Sub-units
+# are added separately via scripts/add-unit.sh, orchestrated by the
 # :silcrow-add-unit skill.
 #
 # Usage:
@@ -19,7 +19,7 @@
 # Arguments:
 #   destination         Absolute path to the agency's root directory.
 #                       The script creates/expects this directory and places
-#                       #ORG@<agency-name>/ inside it.
+#                       @<agency-name>/ inside it.
 #   agency_name         Display name for the agency (e.g. "Acme Co").
 #   agency_description  One-paragraph description of the agency's purpose.
 #   user_dir            Directory name for the User (e.g. "trevor").
@@ -38,7 +38,7 @@
 #   0   Success.
 #   1   Scaffold source not found (plugin misconfiguration).
 #   2   Argument error.
-#   3   Destination conflict (existing #ORG@*/ or scaffold residue).
+#   3   Destination conflict (existing @*/ or scaffold residue).
 
 set -euo pipefail
 
@@ -109,7 +109,7 @@ else
     PLUGIN_ROOT="$( dirname "$SCRIPT_DIR" )"
 fi
 
-SRC="$PLUGIN_ROOT/scaffold/#ORG"
+SRC="$PLUGIN_ROOT/scaffold/unit"
 
 if [ ! -d "$SRC" ]; then
     echo "Error: scaffold source not found at $SRC" >&2
@@ -119,22 +119,34 @@ fi
 
 # --- Pre-flight conflict check -----------------------------------------------
 
-# Refuse to overwrite an existing scaffold. Per §0014, any #ORG@<unit-name>/
+# Refuse to overwrite an existing scaffold. Per §0014, any @<unit-name>/
 # directory marks a unit; if one exists at the destination, this is
 # already-scaffolded territory.
-EXISTING_MARKER="$(find "$DST" -maxdepth 1 -type d -name '#ORG@*' 2>/dev/null | head -1 || true)"
-if [ -n "$EXISTING_MARKER" ]; then
-    echo "Error: destination already contains $(basename "$EXISTING_MARKER")." >&2
+EXISTING_UNIT_MARKER="$(find "$DST" -maxdepth 1 -type d -name '@*' 2>/dev/null | head -1 || true)"
+if [ -n "$EXISTING_UNIT_MARKER" ]; then
+    echo "Error: destination already contains $(basename "$EXISTING_UNIT_MARKER")." >&2
     echo "This directory appears to be a scaffolded unit already." >&2
     echo "Refusing to overwrite. Choose a different destination." >&2
     exit 3
 fi
 
-# Also refuse if a pre-0.9.0 single #ORG/ marker (without unit suffix) is
-# present — that's a 0.7.0/0.8.0 scaffold needing migration via :silcrow-update.
+# Also refuse if a pre-0.11 #ORG@<unit>/ governance wrapper is present —
+# that's a 0.9.x/0.10.x scaffold using the old wrapper-folder layout. The
+# user needs to migrate via re-init (drop their old agency or move ADRs into
+# a fresh 0.11 scaffold). Automatic structural migration isn't supported.
+LEGACY_ORG_MARKER="$(find "$DST" -maxdepth 1 -type d -name '#ORG@*' 2>/dev/null | head -1 || true)"
+if [ -n "$LEGACY_ORG_MARKER" ]; then
+    echo "Error: destination contains $(basename "$LEGACY_ORG_MARKER") (pre-0.11 scaffold)." >&2
+    echo "Silcrow 0.11 introduced a flat structure (§0014); the #ORG@<unit-name>/ wrapper is gone." >&2
+    echo "To migrate, scaffold a fresh 0.11 agency in a new directory and copy your accepted/" >&2
+    echo "ADRs into the new agency's CANON@<unit-name>/accepted/. The legacy agency stays untouched." >&2
+    exit 3
+fi
+
+# Also refuse if a pre-0.9.0 single #ORG/ marker (without unit suffix) is present.
 if [ -d "$DST/#ORG" ]; then
     echo "Error: destination contains a legacy #ORG/ directory (pre-0.9.0 scaffold)." >&2
-    echo "Run :silcrow-update on that agency to migrate to #ORG@<unit-name>/." >&2
+    echo "Migrate by scaffolding fresh in a new directory and copying any preserved content." >&2
     exit 3
 fi
 
@@ -142,7 +154,7 @@ fi
 for path in adr agents docs proposed; do
     if [ -d "$DST/$path" ]; then
         echo "Error: destination contains legacy scaffold directory '$path/'." >&2
-        echo "This looks like an older-style scaffold that needs migration via :silcrow-update." >&2
+        echo "This looks like an older-style scaffold; scaffold fresh in a new directory." >&2
         echo "Refusing to overwrite." >&2
         exit 3
     fi
@@ -165,19 +177,24 @@ if [ -d "$DST" ]; then
 fi
 
 # --- Create the destination tree ---------------------------------------------
+#
+# Per §0014's flat layout: agents, CANON, OPS, REFERENCE all sit as direct
+# children of @<unit-name>/, each carrying the @<unit-name> suffix. Subfolders
+# (accepted/, foundations/, inbox/, etc.) do not carry the suffix.
 
 mkdir -p \
-    "$DST/#ORG@$AGENCY_DIR/agents/$USER_DIR@$AGENCY_DIR/inbox/archive" \
-    "$DST/#ORG@$AGENCY_DIR/agents/$LEAD_DIR@$AGENCY_DIR/inbox/archive" \
-    "$DST/#ORG@$AGENCY_DIR/agents/$IMPL_DIR@$AGENCY_DIR/inbox/archive" \
-    "$DST/#ORG@$AGENCY_DIR/agents/registrar@$AGENCY_DIR/inbox/archive" \
-    "$DST/#ORG@$AGENCY_DIR/adr/_templates" \
-    "$DST/#ORG@$AGENCY_DIR/adr/accepted" \
-    "$DST/#ORG@$AGENCY_DIR/adr/proposed" \
-    "$DST/#ORG@$AGENCY_DIR/adr/superseded" \
-    "$DST/#ORG@$AGENCY_DIR/adr/rejected" \
-    "$DST/#ORG@$AGENCY_DIR/adr/anti-patterns" \
-    "$DST/#ORG@$AGENCY_DIR/docs/foundations"
+    "$DST/@$AGENCY_DIR/$USER_DIR@$AGENCY_DIR/inbox/archive" \
+    "$DST/@$AGENCY_DIR/$LEAD_DIR@$AGENCY_DIR/inbox/archive" \
+    "$DST/@$AGENCY_DIR/$IMPL_DIR@$AGENCY_DIR/inbox/archive" \
+    "$DST/@$AGENCY_DIR/registrar@$AGENCY_DIR/inbox/archive" \
+    "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/_templates" \
+    "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/accepted" \
+    "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/proposed" \
+    "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/superseded" \
+    "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/rejected" \
+    "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/anti-patterns" \
+    "$DST/@$AGENCY_DIR/OPS@$AGENCY_DIR" \
+    "$DST/@$AGENCY_DIR/REFERENCE@$AGENCY_DIR/foundations"
 
 # --- Substitution helper -----------------------------------------------------
 
@@ -213,18 +230,18 @@ subst() {
 # --- Empty placeholder files (.gitkeep) --------------------------------------
 
 touch \
-    "$DST/#ORG@$AGENCY_DIR/agents/$USER_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG@$AGENCY_DIR/agents/$LEAD_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG@$AGENCY_DIR/agents/$IMPL_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG@$AGENCY_DIR/agents/registrar@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$DST/#ORG@$AGENCY_DIR/adr/proposed/.gitkeep" \
-    "$DST/#ORG@$AGENCY_DIR/adr/superseded/.gitkeep" \
-    "$DST/#ORG@$AGENCY_DIR/adr/rejected/.gitkeep"
+    "$DST/@$AGENCY_DIR/$USER_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/@$AGENCY_DIR/$LEAD_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/@$AGENCY_DIR/$IMPL_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/@$AGENCY_DIR/registrar@$AGENCY_DIR/inbox/archive/.gitkeep" \
+    "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/proposed/.gitkeep" \
+    "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/superseded/.gitkeep" \
+    "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/rejected/.gitkeep"
 
 # --- Copy and substitute files -----------------------------------------------
 
-# Top-level governance README
-subst "$SRC/README.md" "$DST/#ORG@$AGENCY_DIR/README.md"
+# Top-level unit README
+subst "$SRC/README.md" "$DST/@$AGENCY_DIR/README.md"
 
 # Agent instructions. Per §0014's agent-identity convention, every agent's
 # directory is named <role-dir>@<unit-name>/. At the agency level the unit-name
@@ -234,40 +251,48 @@ subst "$SRC/README.md" "$DST/#ORG@$AGENCY_DIR/README.md"
 # Each agent directory gets two files: AGENTS.md (the canonical instructions,
 # auto-loaded by Codex/Cursor/Copilot/etc.) and CLAUDE.md (a one-line pointer,
 # `@AGENTS.md`, that Claude Code auto-loads and recursively imports).
-subst "$SRC/agents/user/AGENTS.md"         "$DST/#ORG@$AGENCY_DIR/agents/$USER_DIR@$AGENCY_DIR/AGENTS.md"
-subst "$SRC/agents/lead/AGENTS.md"         "$DST/#ORG@$AGENCY_DIR/agents/$LEAD_DIR@$AGENCY_DIR/AGENTS.md"
-subst "$SRC/agents/implementer/AGENTS.md"  "$DST/#ORG@$AGENCY_DIR/agents/$IMPL_DIR@$AGENCY_DIR/AGENTS.md"
-subst "$SRC/agents/registrar/AGENTS.md"    "$DST/#ORG@$AGENCY_DIR/agents/registrar@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/user/AGENTS.md"         "$DST/@$AGENCY_DIR/$USER_DIR@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/lead/AGENTS.md"         "$DST/@$AGENCY_DIR/$LEAD_DIR@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/implementer/AGENTS.md"  "$DST/@$AGENCY_DIR/$IMPL_DIR@$AGENCY_DIR/AGENTS.md"
+subst "$SRC/registrar/AGENTS.md"    "$DST/@$AGENCY_DIR/registrar@$AGENCY_DIR/AGENTS.md"
 
 for dir in "$USER_DIR@$AGENCY_DIR" "$LEAD_DIR@$AGENCY_DIR" "$IMPL_DIR@$AGENCY_DIR" "registrar@$AGENCY_DIR"; do
-    printf '@AGENTS.md\n' > "$DST/#ORG@$AGENCY_DIR/agents/$dir/CLAUDE.md"
+    printf '@AGENTS.md\n' > "$DST/@$AGENCY_DIR/$dir/CLAUDE.md"
 done
 
-# ADR tree: README, templates, accepted, superseded, anti-patterns
-subst "$SRC/adr/README.md"                       "$DST/#ORG@$AGENCY_DIR/adr/README.md"
-subst "$SRC/adr/anti-patterns/README.md"         "$DST/#ORG@$AGENCY_DIR/adr/anti-patterns/README.md"
+# CANON tree: README, templates, accepted, superseded, anti-patterns
+subst "$SRC/CANON/README.md"                     "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/README.md"
+subst "$SRC/CANON/anti-patterns/README.md"       "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/anti-patterns/README.md"
 
-for f in "$SRC/adr/_templates"/*.md; do
-    subst "$f" "$DST/#ORG@$AGENCY_DIR/adr/_templates/$(basename "$f")"
+for f in "$SRC/CANON/_templates"/*.md; do
+    subst "$f" "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/_templates/$(basename "$f")"
 done
 
-for f in "$SRC/adr/accepted"/*.md; do
-    subst "$f" "$DST/#ORG@$AGENCY_DIR/adr/accepted/$(basename "$f")"
+for f in "$SRC/CANON/accepted"/*.md; do
+    subst "$f" "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/accepted/$(basename "$f")"
 done
 
-for f in "$SRC/adr/superseded"/*.md; do
+for f in "$SRC/CANON/superseded"/*.md; do
     # Only copy if present (scaffold may ship superseded/§0008 or none).
-    [ -f "$f" ] && subst "$f" "$DST/#ORG@$AGENCY_DIR/adr/superseded/$(basename "$f")"
+    [ -f "$f" ] && subst "$f" "$DST/@$AGENCY_DIR/CANON@$AGENCY_DIR/superseded/$(basename "$f")"
 done
 
-# Docs
-for f in "$SRC/docs"/*.md; do
-    subst "$f" "$DST/#ORG@$AGENCY_DIR/docs/$(basename "$f")"
+# REFERENCE tree (root unit only): top-level docs + foundations
+subst "$SRC/REFERENCE/README.md" "$DST/@$AGENCY_DIR/REFERENCE@$AGENCY_DIR/README.md"
+
+for f in "$SRC/REFERENCE"/*.md; do
+    # Skip the README we already copied to avoid double-substitution.
+    [ "$(basename "$f")" = "README.md" ] && continue
+    subst "$f" "$DST/@$AGENCY_DIR/REFERENCE@$AGENCY_DIR/$(basename "$f")"
 done
 
-for f in "$SRC/docs/foundations"/*.md; do
-    subst "$f" "$DST/#ORG@$AGENCY_DIR/docs/foundations/$(basename "$f")"
+for f in "$SRC/REFERENCE/foundations"/*.md; do
+    subst "$f" "$DST/@$AGENCY_DIR/REFERENCE@$AGENCY_DIR/foundations/$(basename "$f")"
 done
+
+# OPS — open container for operational artifacts. Ships only a README explaining
+# its purpose; the unit fills it in over time.
+subst "$SRC/OPS/README.md" "$DST/@$AGENCY_DIR/OPS@$AGENCY_DIR/README.md"
 
 # --- Git initialization (§0016, §0017) ---------------------------------------
 

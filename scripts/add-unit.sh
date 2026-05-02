@@ -2,9 +2,13 @@
 #
 # add-unit.sh — add a new unit to an existing agency or unit.
 #
-# Invoked by the silcrow:silcrow-add-unit skill. Creates the unit's directory,
-# populates its #ORG@<unit-name>/ governance folder, and writes an establishing
-# ADR into the parent's #ORG@<parent-unit-name>/adr/accepted/.
+# Invoked by the silcrow:silcrow-add-unit skill. Creates the unit's directory
+# nested inside the parent unit, scaffolds its flat structure (CANON@, OPS@,
+# agent dirs, README per §0014), and writes an establishing ADR into the
+# parent's CANON@<parent-unit-name>/accepted/.
+#
+# Sub-units inherit REFERENCE from the agency root (§0014) — REFERENCE is
+# root-only.
 #
 # The skill figures out all values through conversation; this script does the
 # mechanical work.
@@ -18,7 +22,11 @@
 #               [--skip-commit]
 #
 # Arguments:
-#   parent_path         Absolute path to the parent unit (must contain #ORG@*/).
+#   parent_path         Absolute path to the parent unit's directory (its
+#                       basename should start with @, e.g. /path/to/@acme/).
+#                       The new sub-unit will be created nested inside this
+#                       directory as a sibling of the parent's agents and
+#                       governance folders.
 #   unit_name           Kebab-case unit name (without @ prefix); the directory
 #                       will be named @<unit_name>/.
 #   unit_purpose        One-sentence description of what the unit owns.
@@ -38,7 +46,7 @@
 #   0   Success.
 #   1   Plugin scaffold source not found.
 #   2   Argument error.
-#   3   Parent unit not found (no #ORG@*/ in parent_path).
+#   3   Parent unit not found (no @*/ in parent_path).
 #   4   Unit already exists at parent_path/@<unit_name>/.
 
 set -euo pipefail
@@ -136,12 +144,24 @@ IMPL_DIR="${POSITIONAL[5]}"
 IMPL_ROLE="${POSITIONAL[6]}"
 DATE="$(date -u +%Y-%m-%d)"
 
-# --- Helper: detect if a directory is a unit (has any #ORG@*/ subdir) --------
+# --- Helper: detect if a directory IS a unit (basename starts with @) ----
 
-has_org_marker() {
+is_unit_dir() {
+    local dir="$1"
+    local base
+    base="$(basename "$dir")"
+    case "$base" in
+        @*) return 0 ;;
+        *)  return 1 ;;
+    esac
+}
+
+# --- Helper: detect if a directory contains a unit (has @<x>/ subdir) ----
+
+contains_unit_dir() {
     local dir="$1"
     local d
-    for d in "$dir"/#ORG@*; do
+    for d in "$dir"/@*; do
         [ -d "$d" ] && return 0
     done
     return 1
@@ -149,12 +169,12 @@ has_org_marker() {
 
 # --- Resolve AGENCY_DIR (auto-walk up if not supplied) -----------------------
 
-# The agency root is the outermost ancestor of PARENT_PATH that still contains
-# a #ORG@*/ directory. Walk up until the parent isn't a unit — the last
-# unit-having directory is the agency's root unit.
+# Walk up the tree from PARENT_PATH while each step is itself a unit dir
+# (basename starts with @). The outermost @<...>/ directory is the agency's
+# root unit, and its name (sans @) is AGENCY_DIR.
 if [ -z "$AGENCY_DIR_ARG" ]; then
     walker="$PARENT_PATH"
-    while has_org_marker "$(dirname "$walker")"; do
+    while is_unit_dir "$(dirname "$walker")"; do
         walker="$(dirname "$walker")"
     done
     AGENCY_BASENAME="$(basename "$walker")"
@@ -214,18 +234,18 @@ else
     PLUGIN_ROOT="$( dirname "$SCRIPT_DIR" )"
 fi
 
-ESTABLISH_TEMPLATE="$PLUGIN_ROOT/scaffold/#ORG/adr/_templates/establish-unit.md"
+ESTABLISH_TEMPLATE="$PLUGIN_ROOT/scaffold/unit/CANON/_templates/establish-unit.md"
 
 if [ ! -f "$ESTABLISH_TEMPLATE" ]; then
     echo "Error: establish-unit template not found at $ESTABLISH_TEMPLATE" >&2
     exit 1
 fi
 
-# --- Verify the parent is a unit (has #ORG@<parent-name>/) -------------------
+# --- Verify PARENT_PATH itself is a unit (basename starts with @) ------------
 
-if ! has_org_marker "$PARENT_PATH"; then
-    echo "Error: parent path '$PARENT_PATH' does not contain a #ORG@*/ directory." >&2
-    echo "Run :silcrow-init first to scaffold the agency, or navigate to an existing unit." >&2
+if ! is_unit_dir "$PARENT_PATH"; then
+    echo "Error: parent path '$PARENT_PATH' is not a unit directory (basename must start with @)." >&2
+    echo "Run :silcrow-init first to scaffold the agency, or navigate to an existing unit's directory." >&2
     exit 3
 fi
 
@@ -241,9 +261,11 @@ fi
 
 # --- Determine the next §-number for the establishing ADR --------------------
 
-# Look at the parent's #ORG@<parent-name>/adr/accepted/ and find the highest §NNNN.
-# §-numbers live in filenames like §NNNN-title.md.
-ACCEPTED_DIR="$PARENT_PATH/#ORG@$PARENT_UNIT_NAME/adr/accepted"
+# Look at the parent unit's CANON@<parent-name>/accepted/ and find the highest
+# §NNNN. §-numbers live in filenames like §NNNN-title.md. PARENT_PATH IS the
+# parent unit's directory, so CANON@<parent>/ is a direct child.
+PARENT_CANON="$PARENT_PATH/CANON@$PARENT_UNIT_NAME"
+ACCEPTED_DIR="$PARENT_CANON/accepted"
 
 HIGHEST=0
 if [ -d "$ACCEPTED_DIR" ]; then
@@ -265,7 +287,7 @@ if [ -d "$ACCEPTED_DIR" ]; then
 fi
 
 # Also check superseded/ and rejected/ — §-numbers are never reused.
-for dir in "$PARENT_PATH/#ORG@$PARENT_UNIT_NAME/adr/superseded" "$PARENT_PATH/#ORG@$PARENT_UNIT_NAME/adr/rejected"; do
+for dir in "$PARENT_CANON/superseded" "$PARENT_CANON/rejected"; do
     if [ -d "$dir" ]; then
         for f in "$dir"/§*.md; do
             [ -f "$f" ] || continue
@@ -302,46 +324,46 @@ else
     mkdir -p "$UNIT_PATH"
 fi
 
-# --- Scaffold the unit's #ORG@<unit-name>/ -----------------------------------
-
+# --- Scaffold the sub-unit's flat structure (§0014) --------------------------
+#
 # Per §0014's agent-identity convention, every agent's directory is named
-# <role-dir>@<unit-name>/. At this unit, that means lead@$UNIT_NAME, etc.
+# <role-dir>@<unit-name>/. CANON@<unit>/ and OPS@<unit>/ live at the unit's top
+# level. REFERENCE is root-only — sub-units inherit it from the agency root.
+
 mkdir -p \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$LEAD_DIR@$UNIT_NAME/inbox/archive" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$IMPL_DIR@$UNIT_NAME/inbox/archive" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/registrar@$UNIT_NAME/inbox/archive" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/accepted" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/proposed" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/superseded" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/rejected" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/anti-patterns" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/docs"
+    "$UNIT_PATH/$LEAD_DIR@$UNIT_NAME/inbox/archive" \
+    "$UNIT_PATH/$IMPL_DIR@$UNIT_NAME/inbox/archive" \
+    "$UNIT_PATH/registrar@$UNIT_NAME/inbox/archive" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/_templates" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/accepted" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/proposed" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/superseded" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/rejected" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/anti-patterns" \
+    "$UNIT_PATH/OPS@$UNIT_NAME"
 
 touch \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$LEAD_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$IMPL_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/agents/registrar@$UNIT_NAME/inbox/archive/.gitkeep" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/accepted/.gitkeep" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/proposed/.gitkeep" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/superseded/.gitkeep" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/rejected/.gitkeep" \
-    "$UNIT_PATH/#ORG@$UNIT_NAME/adr/anti-patterns/.gitkeep"
+    "$UNIT_PATH/$LEAD_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
+    "$UNIT_PATH/$IMPL_DIR@$UNIT_NAME/inbox/archive/.gitkeep" \
+    "$UNIT_PATH/registrar@$UNIT_NAME/inbox/archive/.gitkeep" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/accepted/.gitkeep" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/proposed/.gitkeep" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/superseded/.gitkeep" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/rejected/.gitkeep" \
+    "$UNIT_PATH/CANON@$UNIT_NAME/anti-patterns/.gitkeep"
 
-# --- Unit-level README files -------------------------------------------------
+# --- Unit-level README -------------------------------------------------------
 
-cat > "$UNIT_PATH/#ORG@$UNIT_NAME/README.md" <<README
+cat > "$UNIT_PATH/README.md" <<README
 # @$UNIT_NAME
 
 $UNIT_PURPOSE
 
-\`@$UNIT_NAME\` is a **unit** in the agency \`@$AGENCY_DIR\`'s tree, sitting as
-a child of \`@$PARENT_UNIT_NAME\`. Governance for this unit lives here
-(\`#ORG@$UNIT_NAME/\`); operational work lives alongside it in this unit's
-root directory.
-
-Every unit in the agency is structurally identical (§0014) — the root unit and
-every sub-unit follow the same conventions. \`@$UNIT_NAME\`'s position in the
-tree is what makes it a sub-unit; the rules are the same as anywhere else.
+\`@$UNIT_NAME\` is a **unit** in the agency \`@$AGENCY_DIR\`'s tree, nested
+inside its parent unit \`@$PARENT_UNIT_NAME\`. Per §0014, every unit follows the
+same flat layout: \`CANON@$UNIT_NAME/\` for decisions, \`OPS@$UNIT_NAME/\` for
+operational artifacts, agent directories alongside, and any sub-units as
+siblings. REFERENCE lives only at the agency's root and is inherited.
 
 ---
 
@@ -349,32 +371,31 @@ tree is what makes it a sub-unit; the rules are the same as anywhere else.
 
 \`@$UNIT_NAME\` is bound by every ancestor unit's ADRs:
 
-- The agency's root unit's \`#ORG@$AGENCY_DIR/adr/accepted/\` (§0001 through
-  whatever the root has authored).
-- Any intermediate parent units' \`#ORG@<parent-name>/adr/accepted/\` (when
-  nested deeper than one level).
+- The agency's root unit's \`@$AGENCY_DIR/CANON@$AGENCY_DIR/accepted/\` (§0001
+  through whatever the root has authored).
+- Any intermediate parent units' \`CANON@<parent-name>/accepted/\` (when nested
+  deeper than one level).
 
-\`@$UNIT_NAME\`'s own \`#ORG@$UNIT_NAME/adr/accepted/\` holds only decisions
+\`@$UNIT_NAME\`'s own \`CANON@$UNIT_NAME/accepted/\` holds only decisions
 specific to this unit, narrower than (or unrelated to) what the ancestors
 already cover.
 
 For foundational process docs — \`philosophy.md\`, \`decision-process.md\`,
 \`message-protocol.md\`, \`foundations/\`, the registrar checklists — see the
-agency's root unit's \`#ORG@$AGENCY_DIR/docs/\`. Those docs live only at the
-root and are inherited by every unit. This unit does not duplicate that
-content.
+agency's root unit's \`@$AGENCY_DIR/REFERENCE@$AGENCY_DIR/\`. REFERENCE is
+root-only and inherited by every unit; sub-units do not duplicate it.
 
 ---
 
 ## This unit's roles
 
-- **$LEAD_ROLE @ $UNIT_DISPLAY** (\`#ORG@$UNIT_NAME/agents/$LEAD_DIR@$UNIT_NAME/\`)
-  — tier-1 of \`@$UNIT_NAME\`; reports up the tree to the Lead of the parent
-  unit \`@$PARENT_UNIT_NAME\`.
-- **$IMPL_ROLE @ $UNIT_DISPLAY** (\`#ORG@$UNIT_NAME/agents/$IMPL_DIR@$UNIT_NAME/\`)
-  — tier-2 of \`@$UNIT_NAME\`; reports to $LEAD_ROLE @ $UNIT_DISPLAY.
-- **Registrar @ $UNIT_DISPLAY** (\`#ORG@$UNIT_NAME/agents/registrar@$UNIT_NAME/\`)
-  — audits \`@$UNIT_NAME\`'s record. Outside the unit's decision hierarchy.
+- **$LEAD_ROLE @ $UNIT_DISPLAY** (\`$LEAD_DIR@$UNIT_NAME/\`) — tier-1 of
+  \`@$UNIT_NAME\`; reports up the tree to the Lead of the parent unit
+  \`@$PARENT_UNIT_NAME\`.
+- **$IMPL_ROLE @ $UNIT_DISPLAY** (\`$IMPL_DIR@$UNIT_NAME/\`) — tier-2 of
+  \`@$UNIT_NAME\`; reports to $LEAD_ROLE @ $UNIT_DISPLAY.
+- **Registrar @ $UNIT_DISPLAY** (\`registrar@$UNIT_NAME/\`) — audits
+  \`@$UNIT_NAME\`'s record. Outside the unit's decision hierarchy.
 
 There is no User at this unit. There is one User across the agency, who is
 the principal of every unit and lives at the agency's root unit
@@ -385,20 +406,19 @@ the principal of every unit and lives at the agency's root unit
 ## Establishing ADR
 
 \`@$UNIT_NAME\` was established by \`§$NEXT_SECTION\` in
-\`@$PARENT_UNIT_NAME\`'s \`#ORG@$PARENT_UNIT_NAME/adr/accepted/\`. Read it for
-the unit's scope and original reasoning.
+\`@$PARENT_UNIT_NAME\`'s \`CANON@$PARENT_UNIT_NAME/accepted/\`. Read it for the
+unit's scope and original reasoning.
 README
 
-cat > "$UNIT_PATH/#ORG@$UNIT_NAME/docs/README.md" <<README
-# @$UNIT_NAME docs
+# --- OPS README pointer for sub-unit -----------------------------------------
 
-\`@$UNIT_NAME\` inherits foundational documentation from the agency's root unit
-(\`@$AGENCY_DIR\`'s \`#ORG@$AGENCY_DIR/docs/\`). Decision process, message
-protocol, philosophy, foundations, and registrar playbook all live there.
+cat > "$UNIT_PATH/OPS@$UNIT_NAME/README.md" <<README
+# OPS — @$UNIT_NAME
 
-This folder exists for documentation specific to \`@$UNIT_NAME\` — onboarding
-notes, process addenda, unit-internal references. It starts empty and fills
-only with content genuinely specific to this unit.
+\`OPS@$UNIT_NAME/\` is this unit's operational catch-all — code, deliverables,
+shared work product, anything that isn't governance and isn't private to a
+single agent. See the agency's \`@$AGENCY_DIR/OPS@$AGENCY_DIR/README.md\` for
+the operational-container conventions every unit shares.
 README
 
 # --- Unit-level agent instructions -------------------------------------------
@@ -411,9 +431,9 @@ README
 # sub-unit Leads/Implementers/Registrars.
 
 # Locate the templates (shared with scaffold.sh).
-TEMPLATE_LEAD="$PLUGIN_ROOT/scaffold/#ORG/agents/lead/AGENTS.md"
-TEMPLATE_IMPL="$PLUGIN_ROOT/scaffold/#ORG/agents/implementer/AGENTS.md"
-TEMPLATE_REG="$PLUGIN_ROOT/scaffold/#ORG/agents/registrar/AGENTS.md"
+TEMPLATE_LEAD="$PLUGIN_ROOT/scaffold/unit/lead/AGENTS.md"
+TEMPLATE_IMPL="$PLUGIN_ROOT/scaffold/unit/implementer/AGENTS.md"
+TEMPLATE_REG="$PLUGIN_ROOT/scaffold/unit/registrar/AGENTS.md"
 
 for tmpl in "$TEMPLATE_LEAD" "$TEMPLATE_IMPL" "$TEMPLATE_REG"; do
     if [ ! -f "$tmpl" ]; then
@@ -447,13 +467,13 @@ subst() {
         "$src" > "$dst"
 }
 
-subst "$TEMPLATE_LEAD" "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$LEAD_DIR@$UNIT_NAME/AGENTS.md"
-subst "$TEMPLATE_IMPL" "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$IMPL_DIR@$UNIT_NAME/AGENTS.md"
-subst "$TEMPLATE_REG"  "$UNIT_PATH/#ORG@$UNIT_NAME/agents/registrar@$UNIT_NAME/AGENTS.md"
+subst "$TEMPLATE_LEAD" "$UNIT_PATH/$LEAD_DIR@$UNIT_NAME/AGENTS.md"
+subst "$TEMPLATE_IMPL" "$UNIT_PATH/$IMPL_DIR@$UNIT_NAME/AGENTS.md"
+subst "$TEMPLATE_REG"  "$UNIT_PATH/registrar@$UNIT_NAME/AGENTS.md"
 
 # Write CLAUDE.md pointers alongside each AGENTS.md so Claude Code auto-loads.
 for dir in "$LEAD_DIR@$UNIT_NAME" "$IMPL_DIR@$UNIT_NAME" "registrar@$UNIT_NAME"; do
-    printf '@AGENTS.md\n' > "$UNIT_PATH/#ORG@$UNIT_NAME/agents/$dir/CLAUDE.md"
+    printf '@AGENTS.md\n' > "$UNIT_PATH/$dir/CLAUDE.md"
 done
 
 # --- Render the establishing ADR ---------------------------------------------
@@ -500,7 +520,7 @@ sed \
 # Set the status to 'accepted' at the top.
 # The template ships with "Status:** accepted" already — no change needed.
 
-# --- Update the ADR index (parent's #ORG@<parent-name>/adr/README.md) --------
+# --- Update the ADR index (parent's @<parent-name>/CANON@<parent-name>/README.md) --------
 
 # Add a row to the Accepted table. We do a simple sed insertion after the last
 # existing §-numbered row. This is best-effort; the Registrar's audit will
@@ -509,7 +529,7 @@ sed \
 # For reliability in this script, we simply append a single line to a known
 # location. If the table structure has drifted, the Lead can fix it later.
 
-INDEX="$PARENT_PATH/#ORG@$PARENT_UNIT_NAME/adr/README.md"
+INDEX="$PARENT_CANON/README.md"
 if [ -f "$INDEX" ]; then
     # Append a note at the end; Registrar can normalize on next audit.
     cat >> "$INDEX" <<INDEX_NOTE

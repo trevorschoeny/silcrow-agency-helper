@@ -31,8 +31,8 @@ Bring an existing agency into conformity with the plugin's current canonical sta
 
 Four tiny steps:
 
-1. Confirm the agency exists (walk up for `#ORG@<unit-name>/`).
-2. Identify the Registrar's inbox (`#ORG@<unit-name>/agents/registrar@<unit-name>/inbox/`).
+1. Confirm the agency exists (walk up to find a directory whose basename starts with `@` — that's the unit).
+2. Identify the Registrar's inbox at `<found_unit>/registrar@<unit-name>/inbox/`.
 3. Drop a single message into that inbox containing:
    - The plugin's name: `silcrow`. The Registrar resolves the canonical source path themselves at read-time (per the workflow doc), so you don't pre-resolve `${CLAUDE_PLUGIN_ROOT}` and risk pinning the wrong cached version.
    - A request: *"Audit this agency against the current scaffold canonical state. Report additions, deletions, and changes to User and Lead for approval. Execute approved changes."*
@@ -47,9 +47,11 @@ That's it. No diffing. No reporting. No file operations. The Registrar is the en
 Before any output:
 
 - `pwd` to find the current working directory.
-- Walk upward to find the nearest `#ORG@<unit-name>/`. That's the unit this audit will scope to — the root unit if invoked at the agency's top, or a sub-unit if invoked deeper. `:silcrow-update` works at any level; the Registrar for that scope handles it.
-- If no `#ORG@<unit-name>/` is found, stop. Tell the user: *"I don't see an agency here (no `#ORG@<unit-name>/` in the current or parent directories). Run `:silcrow-init` to scaffold one, or navigate to an existing agency's directory."*
-- Find the Registrar's inbox: `<found_org_parent>/#ORG@<unit-name>/agents/registrar@<unit-name>/inbox/`. Verify it exists.
+- Walk upward to find the nearest directory whose basename starts with `@`. That's the unit this audit will scope to — the root unit if invoked at the agency's top, or a sub-unit if invoked deeper. `:silcrow-update` works at any level; the Registrar for that scope handles it.
+- If no `@`-prefixed directory is found walking up (or in the CWD itself), stop. Tell the user: *"I don't see an agency here (no `@<unit-name>/` in the current or parent directories). Run `:silcrow-init` to scaffold one, or navigate to an existing agency's directory."*
+- Find the Registrar's inbox: `<found_unit_path>/registrar@<unit-name>/inbox/`. Verify it exists.
+
+Detect 0.10-and-earlier legacy structures: if walking up surfaces a `#ORG@<unit-name>/` directory anywhere (instead of a flat `@<unit-name>/` containing `CANON@<unit-name>/`, `OPS@<unit-name>/`, etc.), tell the user the agency uses a pre-0.11 structure and recommend they re-init in a new directory and copy their accepted ADRs across. Don't proceed.
 
 ---
 
@@ -83,10 +85,10 @@ Silcrow plugin.
   audit session (the path includes the version, and version-pinning at
   message-write time can drift from the active install). Procedure:
   1. Read `${CLAUDE_PLUGIN_ROOT}` from your own session env. If it points
-     at a path containing `scaffold/#ORG/`, that's the canonical source.
+     at a path containing `scaffold/unit/`, that's the canonical source.
   2. If `${CLAUDE_PLUGIN_ROOT}` isn't set, walk
      `~/.claude/plugins/cache/silcrow/` and pick the latest semver
-     directory; its `scaffold/#ORG/` is canonical.
+     directory; its `scaffold/unit/` is canonical.
   3. If multiple versions are present in cache and one isn't unambiguously
      the active one, surface the situation to the User and confirm which
      to sync against before diffing. Record the resolved path + how it
@@ -95,7 +97,7 @@ Silcrow plugin.
 
 Please:
 
-1. Scan past audit ADRs (§0015) in `#ORG@<unit-name>/adr/accepted/` to determine which items
+1. Scan past audit ADRs (§0015) in this unit's `CANON@<unit-name>/accepted/` to determine which items
    have been previously rejected, deferred, or resolved via local supersession.
 2. Compute a dynamic diff between the plugin's canonical state and the agency's
    current state. Classify each file as match, addition, removal, modification,
@@ -105,16 +107,16 @@ Please:
 4. Wait for per-item approval from User and/or Lead.
 5. Execute approved changes:
    - File moves/renames — direct.
-   - ADR creations — assign §-numbers, place in `#ORG@<unit-name>/adr/accepted/`, update index and bidirectional citations.
+   - ADR creations — assign §-numbers, place in this unit's `CANON@<unit-name>/accepted/`, update index and bidirectional citations.
    - Content rewrites — per-file dialogue for customized files; plugin version for untouched ones.
-   - Removals — archive to `#ORG@<unit-name>/.archive/<date>/`, never delete.
+   - Removals — archive to `<unit-path>/.archive/<date>/`, never delete.
    - Conflicts — present options; execute the user's pick.
 6. Author one audit ADR (§0015) summarizing the whole session — accepts,
    rejects, deferrals, and file-level changes.
 7. Commit the whole update as one structured commit per §0017.
 8. Send a final acknowledgment to User and Lead.
 
-See the `:silcrow-update` workflow section of `#ORG@<unit-name>/agents/registrar@<unit-name>/AGENTS.md`
+See the agency's `@<root-unit>/REFERENCE@<root-unit>/registrar-update-workflow.md`
 for the detailed orchestration procedure. This message is the single trigger;
 everything from here is yours.
 ```
@@ -127,7 +129,7 @@ Substitute `YYYY-MM-DD` with today's date and `<agency_or_unit_path>` with the f
 
 Output a short message to the user:
 
-> *Update audit initiated. I've dropped a request in the Registrar's inbox at `<agency_root>/#ORG@<unit-name>/agents/registrar@<unit-name>/inbox/YYYY-MM-DD-update-skill-request.md`.*
+> *Update audit initiated. I've dropped a request in the Registrar's inbox at `<unit-path>/registrar@<unit-name>/inbox/YYYY-MM-DD-update-skill-request.md`.*
 >
 > *The Registrar will:*
 > - *Diff the agency against the plugin's current canonical state.*
@@ -135,14 +137,15 @@ Output a short message to the user:
 > - *Write a report to your inbox and your Lead's inbox with every proposed change — one-sentence descriptor, approve/reject/defer per item.*
 > - *Execute what you approve, author an audit ADR summarizing the session (§0015), and commit it all in one structured commit (§0017).*
 >
-> *Open a session with the Registrar (inside `#ORG@<unit-name>/agents/registrar@<unit-name>/`) to work through the audit, or wait for the report to arrive in your inbox.*
+> *Open a session with the Registrar (inside `<unit-path>/registrar@<unit-name>/`) to work through the audit, or wait for the report to arrive in your inbox.*
 
 ---
 
 ## Rules
 
 - **Be thin.** This skill does nothing except drop the trigger message. No diffing, reporting, file operations, ADR authoring. All of that is the Registrar's role.
-- **Refuse to proceed without `#ORG@<unit-name>/`.** If the CWD is not inside a scaffolded agency, redirect to `:silcrow-init`.
-- **Write to the correct inbox.** The audit scope is whichever unit's `#ORG@<unit-name>/` was found by walking up — the root unit if invoked at the agency's top, or a sub-unit if invoked deeper in the tree. Write to that unit's Registrar inbox; the Registrar for that scope handles their scope only (§0014 federation rule).
-- **Never edit `#ORG@<unit-name>/` content directly.** This skill only writes one message file into an inbox. All substantive work happens through the Registrar.
-- **The message triggers the workflow.** The Registrar's `AGENTS.md` describes what happens after. You don't orchestrate — you initiate.
+- **Refuse to proceed without an `@`-prefixed unit directory.** If the CWD is not inside a scaffolded agency, redirect to `:silcrow-init`.
+- **Refuse to proceed on legacy structures.** If the CWD is inside a pre-0.11 agency (presence of `#ORG@<unit-name>/` wrappers), tell the user to re-init in a new directory and copy ADRs across — the structural change is too large for incremental audit.
+- **Write to the correct inbox.** The audit scope is whichever unit was found by walking up — the root unit if invoked at the agency's top, or a sub-unit if invoked deeper in the tree. Write to that unit's Registrar inbox; the Registrar for that scope handles their scope only (§0014 federation rule).
+- **Never edit governance content directly.** This skill only writes one message file into an inbox. All substantive work happens through the Registrar.
+- **The message triggers the workflow.** The Registrar's `AGENTS.md` and the agency's `REFERENCE@<root>/registrar-update-workflow.md` describe what happens after. You don't orchestrate — you initiate.

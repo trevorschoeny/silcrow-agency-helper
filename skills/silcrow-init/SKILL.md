@@ -17,7 +17,7 @@ allowed-tools:
 
 # Agent Org Scaffold — Init
 
-Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0018) that capture the pattern's load-bearing decisions.
+Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0020, with §0008 superseded by §0011) that capture the pattern's load-bearing decisions.
 
 An **agency** is the whole organizational tree. Its top-level node is the **root unit**, which shares the agency's name. The tree may stop there (a single root unit, one cohesive body of work) or extend into nested **sub-units** — each itself a full unit, recursively, with its own governance and agents (§0014). The scaffold supports both shapes.
 
@@ -42,7 +42,7 @@ Before any output to the user:
 - Check for `.git/` at the destination. If present, git init will be skipped and existing history will be preserved.
 - Walk the destination (one level deep) to find any nested `.git/` directories — these are flagged for the user later but not acted on here.
 - Check CLAUDE.md or the environment for the user's name. If found, you'll substitute it into the locked intro; if not, you'll silently omit.
-- Note whether the destination directory's basename starts with `@`. That's the scaffold convention for units, and agencies are units (§0014). If it doesn't start with `@`, you'll offer a rename during conversation.
+- The destination is the **parent directory** of where the agency will live. The scaffold creates `@<agency-name>/` inside the destination per §0014's `@` prefix convention. Don't expect or require the destination's own basename to start with `@`.
 
 No questions yet. No output. Just orient.
 
@@ -70,13 +70,10 @@ Now converse naturally. Based on what you peeked, do the following in whichever 
 
 ### What to suggest/confirm
 
-- **Suggest** an agency name if the directory or project files imply one. Example: if the CWD is `my-wedding/`, suggest "Wedding" or similar.
+- **Suggest** an agency name if the directory or project files imply one. Example: if the CWD is `my-wedding/`, suggest "Wedding" or similar (the agency directory will become `@wedding/` inside the CWD).
 - **Confirm** the user's name if you couldn't detect it.
 - **Propose** single-unit vs multi-unit based on what you found. If multi-unit, suggest initial unit names and purposes.
 - **Note** if a `.git/` already exists at the destination (scaffold will skip `git init`). If nested `.git/` directories exist inside the destination, mention that you'll flag them for the Registrar at first audit.
-- **Check the directory-name convention.** If the current directory doesn't start with `@`, surface the convention and offer a rename:
-  > *By scaffold convention, agencies use the `@` prefix like units do (§0014). Your current directory is `foo/`. Should I rename it to `@foo/` before scaffolding?*
-  The user can accept the rename (do `git mv` or `mv` as appropriate) or proceed with the unprefixed name (the `#ORG@<unit-name>/` marker identifies it as an agency either way).
 - **Ask only what you can't infer.** No forms, no numbered phases. Conversational.
 
 ### What you need to gather
@@ -137,16 +134,17 @@ Quote every argument so values with spaces pass through cleanly.
 
 The script:
 - Prints `✓ Scaffolded <agency_name> at <destination>` on success.
-- Exits 3 on conflict (existing `#ORG@<unit-name>/` at destination). Relay the error; do not attempt recovery.
+- Creates `<destination>/@<agency-dir>/` containing the unit's flat layout (CANON@, OPS@, REFERENCE@, agent dirs, README) per §0014.
+- Exits 3 on conflict (existing `@<unit-name>/` at destination, or pre-0.11 `#ORG@<unit-name>/` legacy structure). Relay the error; for legacy structures, redirect the user to scaffold fresh in a new directory.
 - Prints nested `.git/` warnings if any were detected. Pass these forward in your report.
 
 ### Units next (if multi-unit)
 
-For each declared unit, invoke `scripts/add-unit.sh`. The first positional argument is the parent unit's path — at init time, that's the agency root (`<destination>`):
+For each declared unit, invoke `scripts/add-unit.sh`. The first positional argument is the parent unit's path — at init time, that's the agency root unit `<destination>/@<agency-dir>/`:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh" \
-    "<destination>" \
+    "<destination>/@<agency-dir>" \
     "<unit_name>" \
     "<unit_purpose>" \
     "<unit_lead_dir>" \
@@ -163,13 +161,15 @@ For each declared unit, invoke `scripts/add-unit.sh`. The first positional argum
     [--submodule-source <url_or_path>]
 ```
 
+The first argument is the **parent unit's directory** — its basename starts with `@`. The new sub-unit will be created nested inside it as a sibling of the parent's agents, CANON, OPS, etc.
+
 Pass `--user-role`, `--user-dir`, and `--parent-lead-role` so the unit's
 establishing ADR and templates render with the agency's actual role and
 directory names (for references like "route through the agency Lead or User").
 
 `--agency-dir` and `--agency-name` are **optional** — by default the script
-walks up from the parent path to find the agency's root unit (the topmost
-`#ORG@<unit-name>/` in the tree) and reads the agency name from there. Pass them
+walks up from the parent path to find the agency's root unit (the outermost
+`@<unit-name>/` in the tree) and reads the agency name from there. Pass them
 explicitly only if you need to override the auto-detection.
 
 `--unit-display` is also **optional** — if omitted, the script title-cases
@@ -177,9 +177,9 @@ explicitly only if you need to override the auto-detection.
 display form that differs from the auto-cased default.
 
 Each invocation:
-- Authors an establishing ADR in the parent unit's `#ORG@<parent-unit-name>/adr/accepted/`.
-- Creates the unit directory (or `git submodule add` if submodule mode).
-- Scaffolds the unit's `#ORG@<unit-name>/` with agents, ADR tree, docs, and README.
+- Authors an establishing ADR in the parent unit's `CANON@<parent-unit-name>/accepted/`.
+- Creates the sub-unit directory `@<unit_name>/` nested inside the parent unit (or `git submodule add` if submodule mode).
+- Scaffolds the sub-unit's flat structure (CANON@, OPS@, agent dirs, README; no REFERENCE — that's root-only).
 - Commits with `§NNNN: establish unit @<name>`.
 
 If any unit fails, relay the error and stop. Do not continue to further units until the user resolves the issue.
@@ -232,13 +232,13 @@ If nested `.git/` directories were detected during scaffold, include a short not
 
 Output this wording exactly, substituting agency name, user's name, role names, and §-numbers where needed.
 
-> *If you want to ground in the theory behind this scaffold before diving in, read `#ORG@<agency-name>/docs/philosophy.md` first, then `#ORG@<agency-name>/docs/decision-process.md` for how ADRs flow, and `#ORG@<agency-name>/docs/message-protocol.md` for how agents talk to each other. `#ORG@<agency-name>/docs/foundations/` has deeper reading on stratified cognition, subsidiarity, the actor model, ADRs as a tradition, legal-citation inheritance, the registrar pattern, and the canon/operational split — each one short, each one standalone.*
+> *If you want to ground in the theory behind this scaffold before diving in, read `@<agency-name>/REFERENCE@<agency-name>/philosophy.md` first, then `@<agency-name>/REFERENCE@<agency-name>/decision-process.md` for how ADRs flow, and `@<agency-name>/REFERENCE@<agency-name>/message-protocol.md` for how agents talk to each other. `@<agency-name>/REFERENCE@<agency-name>/foundations/` has deeper reading on stratified cognition, subsidiarity, the actor model, ADRs as a tradition, legal-citation inheritance, the registrar pattern, and the canon/operational split — each one short, each one standalone.*
 >
 > *Agents work together by sending messages to each other's inboxes — small markdown files dropped into the receiving agent's `inbox/` directory. Each agent already knows where its own inbox lives, who it takes messages from, who it sends messages to, and how to archive what it's read. You don't need to configure any of that — it's baked into every agent's `AGENTS.md`.*
 >
-> *When you're ready to start working, close this session. Open a new one inside `#ORG@<agency-name>/agents/<lead-dir>@<agency-name>/` — that's your agency's lead, and the first conversation you want is planning-level: expanding §0020 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
+> *When you're ready to start working, close this session. Open a new one inside `@<agency-name>/<lead-dir>@<agency-name>/` — that's your agency's lead, and the first conversation you want is planning-level: superseding §0020 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
 >
-> *You can start a session with any agent the same way — open it inside that agent's directory. Unit-level agents live under `@<unit-name>/#ORG@<unit-name>/agents/<role>@<unit-name>/`. The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
+> *You can start a session with any agent the same way — open it inside that agent's directory (two levels below the agency root, e.g. `@<agency-name>/<role>@<agency-name>/`, or for sub-unit agents `@<agency-name>/@<sub-unit>/<role>@<sub-unit>/`). The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
 >
 > *You can run the `:silcrow-add-unit` skill at any time to add a new unit, or the `:silcrow-update` skill to bring this agency into alignment with the latest plugin updates. The registrar assists with both.*
 >
