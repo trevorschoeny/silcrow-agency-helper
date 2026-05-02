@@ -51,8 +51,6 @@ Before any output:
 - If no `@`-prefixed directory is found walking up (or in the CWD itself), stop. Tell the user: *"I don't see an agency here (no `@<unit-name>/` in the current or parent directories). Run `:silcrow-init` to scaffold one, or navigate to an existing agency's directory."*
 - Find the Registrar's inbox: `<found_unit_path>/registrar@<unit-name>/inbox/`. Verify it exists.
 
-Detect 0.10-and-earlier legacy structures: if walking up surfaces a `#ORG@<unit-name>/` directory anywhere (instead of a flat `@<unit-name>/` containing `CANON@<unit-name>/`, `OPS@<unit-name>/`, etc.), tell the user the agency uses a pre-0.11 structure and recommend they re-init in a new directory and copy their accepted ADRs across. Don't proceed.
-
 ---
 
 ## Phase 2 — Drop the message
@@ -145,7 +143,6 @@ Output a short message to the user:
 
 - **Be thin.** This skill does nothing except drop the trigger message. No diffing, reporting, file operations, ADR authoring. All of that is the Registrar's role.
 - **Refuse to proceed without an `@`-prefixed unit directory.** If the CWD is not inside a scaffolded agency, redirect to `:silcrow-init`.
-- **Refuse to proceed on legacy structures.** If the CWD is inside a pre-0.11 agency (presence of `#ORG@<unit-name>/` wrappers), tell the user to re-init in a new directory and copy ADRs across — the structural change is too large for incremental audit.
 - **Write to the correct inbox.** The audit scope is whichever unit was found by walking up — the root unit if invoked at the agency's top, or a sub-unit if invoked deeper in the tree. Write to that unit's Registrar inbox; the Registrar for that scope handles their scope only (§0014 federation rule).
 - **Never edit governance content directly.** This skill only writes one message file into an inbox. All substantive work happens through the Registrar.
 - **The message triggers the workflow.** The Registrar's `AGENTS.md` and the agency's `REFERENCE@<root>/registrar-update-workflow.md` describe what happens after. You don't orchestrate — you initiate.

@@ -38,7 +38,7 @@
 #   0   Success.
 #   1   Scaffold source not found (plugin misconfiguration).
 #   2   Argument error.
-#   3   Destination conflict (existing @*/ or scaffold residue).
+#   3   Destination already contains an @*/ unit directory.
 
 set -euo pipefail
 
@@ -129,36 +129,6 @@ if [ -n "$EXISTING_UNIT_MARKER" ]; then
     echo "Refusing to overwrite. Choose a different destination." >&2
     exit 3
 fi
-
-# Also refuse if a pre-0.11 #ORG@<unit>/ governance wrapper is present —
-# that's a 0.9.x/0.10.x scaffold using the old wrapper-folder layout. The
-# user needs to migrate via re-init (drop their old agency or move ADRs into
-# a fresh 0.11 scaffold). Automatic structural migration isn't supported.
-LEGACY_ORG_MARKER="$(find "$DST" -maxdepth 1 -type d -name '#ORG@*' 2>/dev/null | head -1 || true)"
-if [ -n "$LEGACY_ORG_MARKER" ]; then
-    echo "Error: destination contains $(basename "$LEGACY_ORG_MARKER") (pre-0.11 scaffold)." >&2
-    echo "Silcrow 0.11 introduced a flat structure (§0014); the #ORG@<unit-name>/ wrapper is gone." >&2
-    echo "To migrate, scaffold a fresh 0.11 agency in a new directory and copy your accepted/" >&2
-    echo "ADRs into the new agency's CANON@<unit-name>/accepted/. The legacy agency stays untouched." >&2
-    exit 3
-fi
-
-# Also refuse if a pre-0.9.0 single #ORG/ marker (without unit suffix) is present.
-if [ -d "$DST/#ORG" ]; then
-    echo "Error: destination contains a legacy #ORG/ directory (pre-0.9.0 scaffold)." >&2
-    echo "Migrate by scaffolding fresh in a new directory and copying any preserved content." >&2
-    exit 3
-fi
-
-# Also refuse if older-still flat layout is present (pre-#ORG/ scaffolds).
-for path in adr agents docs proposed; do
-    if [ -d "$DST/$path" ]; then
-        echo "Error: destination contains legacy scaffold directory '$path/'." >&2
-        echo "This looks like an older-style scaffold; scaffold fresh in a new directory." >&2
-        echo "Refusing to overwrite." >&2
-        exit 3
-    fi
-done
 
 # --- Nested .git detection (informational) -----------------------------------
 

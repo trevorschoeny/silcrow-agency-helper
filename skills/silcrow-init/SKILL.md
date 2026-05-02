@@ -135,7 +135,7 @@ Quote every argument so values with spaces pass through cleanly.
 The script:
 - Prints `✓ Scaffolded <agency_name> at <destination>` on success.
 - Creates `<destination>/@<agency-dir>/` containing the unit's flat layout (CANON@, OPS@, REFERENCE@, agent dirs, README) per §0014.
-- Exits 3 on conflict (existing `@<unit-name>/` at destination, or pre-0.11 `#ORG@<unit-name>/` legacy structure). Relay the error; for legacy structures, redirect the user to scaffold fresh in a new directory.
+- Exits 3 if the destination already contains an `@<unit-name>/` directory (already scaffolded). Relay the error.
 - Prints nested `.git/` warnings if any were detected. Pass these forward in your report.
 
 ### Units next (if multi-unit)
