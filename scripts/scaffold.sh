@@ -126,6 +126,11 @@ if [ -z "$AGENCY_DIR" ]; then
     exit 2
 fi
 
+# AGENCY_PATH is the agency's own directory. All scaffolding, git operations,
+# and the initial commit happen inside this path — never in $DST itself,
+# which may be a shared parent directory containing unrelated projects.
+AGENCY_PATH="$DST/@$AGENCY_DIR"
+
 # --- Locate the plugin's scaffold source -------------------------------------
 
 # Prefer CLAUDE_PLUGIN_ROOT (set by Claude Code when the plugin is installed).
@@ -152,27 +157,10 @@ fi
 # @*/ siblings in $DST (other agencies, archives, etc.) are not conflicts.
 # A scaffolded unit always has its CANON@<unit>/ subdirectory; we use that
 # as the marker.
-TARGET_UNIT_DIR="$DST/@$AGENCY_DIR"
-if [ -d "$TARGET_UNIT_DIR/CANON@$AGENCY_DIR" ]; then
-    echo "Error: $TARGET_UNIT_DIR is already a scaffolded unit." >&2
+if [ -d "$AGENCY_PATH/CANON@$AGENCY_DIR" ]; then
+    echo "Error: $AGENCY_PATH is already a scaffolded unit." >&2
     echo "Refusing to overwrite. Choose a different agency name or destination." >&2
     exit 3
-fi
-
-# --- Nested .git detection (informational) -----------------------------------
-
-# If the user is scaffolding inside a directory that already contains nested
-# git repos (e.g., an existing codebase with its own .git/), note them so the
-# skill can surface the information for the user to decide about later.
-NESTED_GITS=()
-if [ -d "$DST" ]; then
-    # Find .git directories that aren't at the destination root itself.
-    while IFS= read -r -d '' nested; do
-        # Skip the destination root's own .git (we'll handle that below).
-        if [ "$nested" != "$DST/.git" ]; then
-            NESTED_GITS+=("$nested")
-        fi
-    done < <(find "$DST" -name .git -type d -print0 2>/dev/null || true)
 fi
 
 # --- Create the destination tree ---------------------------------------------
@@ -294,17 +282,23 @@ done
 subst "$SRC/OPS/README.md" "$DST/@$AGENCY_DIR/OPS@$AGENCY_DIR/README.md"
 
 # --- Git initialization (§0016, §0017) ---------------------------------------
+#
+# All git operations target the AGENCY_PATH (the agency's own directory).
+# Never touch $DST: it's a parent directory that may contain other unrelated
+# projects. The agency is its own self-contained git repo.
 
 if [ "$SKIP_GIT" -eq 0 ]; then
-    # Only run git init if the destination isn't already inside a repo.
-    # `git rev-parse --is-inside-work-tree` exits 0 if inside a repo.
-    if ! (cd "$DST" && git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-        (cd "$DST" && git init --quiet)
+    # Only run git init if the agency isn't already inside an existing repo
+    # (e.g., the user is scaffolding the agency inside a project they already
+    # have under version control — let that outer repo track the agency).
+    if ! (cd "$AGENCY_PATH" && git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+        (cd "$AGENCY_PATH" && git init --quiet)
     fi
 
-    # Write default .gitignore per §0016, only if one doesn't already exist.
-    if [ ! -f "$DST/.gitignore" ]; then
-        cat > "$DST/.gitignore" <<'GITIGNORE'
+    # Write default .gitignore per §0016, only if the agency doesn't already
+    # have one (a parent repo's .gitignore is left alone).
+    if [ ! -f "$AGENCY_PATH/.gitignore" ]; then
+        cat > "$AGENCY_PATH/.gitignore" <<'GITIGNORE'
 # OS
 .DS_Store
 Thumbs.db
@@ -328,13 +322,12 @@ GITIGNORE
     fi
 
     # Initial commit (§0017 — governance commits cite §NNNN).
-    # Only commit if we're in a repo we just initialized (no existing HEAD) OR
-    # if there are staged changes. We avoid committing if the surrounding repo
-    # already has history — the user can make their own initial commit then.
-    if (cd "$DST" && git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-        # Check if there's no HEAD yet (fresh repo).
-        if ! (cd "$DST" && git rev-parse --verify HEAD >/dev/null 2>&1); then
-            (cd "$DST" && \
+    # Only commit if the agency is in a fresh repo (no HEAD yet). If it's
+    # already inside a parent repo with history, the user can stage and
+    # commit themselves; we don't commit the parent's content.
+    if (cd "$AGENCY_PATH" && git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+        if ! (cd "$AGENCY_PATH" && git rev-parse --verify HEAD >/dev/null 2>&1); then
+            (cd "$AGENCY_PATH" && \
                 git add . && \
                 git commit --quiet -m "Initialize agency @$AGENCY_NAME (§0001)")
         fi
@@ -343,12 +336,4 @@ fi
 
 # --- Success output ----------------------------------------------------------
 
-echo "✓ Scaffolded $AGENCY_NAME at $DST"
-
-# Report nested git findings for the skill to surface.
-if [ "${#NESTED_GITS[@]}" -gt 0 ]; then
-    echo "! Detected nested .git/ directories (the Registrar will surface these at first audit):"
-    for n in "${NESTED_GITS[@]}"; do
-        echo "  - $n"
-    done
-fi
+echo "✓ Scaffolded $AGENCY_NAME at $AGENCY_PATH"

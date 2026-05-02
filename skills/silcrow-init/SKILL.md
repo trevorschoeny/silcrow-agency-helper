@@ -39,12 +39,11 @@ Before any output to the user:
 
 - `ls` the current working directory (CWD).
 - Look for obvious project markers: README, package.json, pyproject.toml, Cargo.toml, etc. Use these to orient.
-- Check for `.git/` in the CWD. If present, git init will be skipped and existing history will be preserved.
-- Walk the CWD (one level deep) to find any nested `.git/` directories — these are flagged for the user later but not acted on here.
+- Check whether the CWD is inside an existing git repo (`git rev-parse --is-inside-work-tree`). If yes, the new agency will inherit that repo (scaffold will skip `git init`); mention this during conversation. If no, the agency will become its own self-contained git repo.
 - Check CLAUDE.md or the environment for the user's name. If found, you'll substitute it into the locked intro; if not, you'll silently omit.
 - **Walk up from the CWD looking for an `@<...>/` ancestor.** If found, the user is already inside an existing unit/agency; in Phase 3 you'll redirect them to `:silcrow-add-unit` rather than creating a new agency on top of an existing one.
 
-The default scaffolding location is the CWD. The script creates `@<agency-dir>/` (the agency's own directory) inside the CWD; the CWD's own name is irrelevant. The user can ask for a different location during conversation, but most users will scaffold "right here."
+The default scaffolding location is the CWD. The script creates `@<agency-dir>/` (the agency's own directory) inside the CWD; the CWD's own name is irrelevant. The agency's git repo, `.gitignore`, and initial commit all live inside `@<agency-dir>/` — never in the CWD itself, which may be a shared parent containing unrelated projects. The user can ask for a different parent location during conversation, but most users will scaffold "right here."
 
 No questions yet. No output. Just orient.
 
@@ -76,7 +75,7 @@ Now converse naturally. Based on what you peeked, do the following in whichever 
 - **Suggest** an agency name if the directory or project files imply one (e.g., a `wedding-planning/` CWD suggests agency name "Wedding"). Show the slug you'd derive ("Wedding" → `@wedding/`) and let the user adjust either the display name or the slug.
 - **Confirm** the user's name if you couldn't detect it.
 - **Propose** single-unit vs multi-unit based on what you found. If multi-unit, suggest initial unit names and purposes.
-- **Note** if a `.git/` already exists in the CWD (scaffold will skip `git init`). If nested `.git/` directories exist inside the CWD, mention that you'll flag them for the Registrar at first audit.
+- **Note** if the CWD is already inside a git repo (the agency will inherit; scaffold will skip `git init`). Otherwise, the agency becomes its own self-contained git repo at `<cwd>/@<slug>/`.
 - **If you detected an `@<...>/` ancestor in Phase 1**, redirect: *"You're already inside an agency at `<ancestor>`. Did you mean to add a sub-unit (`:silcrow-add-unit`) instead of creating a new agency on top of it?"* Do not proceed unless the user confirms they want a separate agency anyway.
 - **Ask only what you can't infer.** No forms, no numbered phases. Conversational.
 
@@ -139,11 +138,11 @@ If the parent directory already contains a git repo (the user is scaffolding ins
 Quote every argument so values with spaces pass through cleanly.
 
 The script:
-- Prints `✓ Scaffolded <agency_name> at <parent_directory>` on success.
+- Prints `✓ Scaffolded <agency_name> at <parent_directory>/@<agency-dir>` on success.
 - Creates `<parent_directory>/@<agency-dir>/` containing the unit's flat layout (CANON@, OPS@, REFERENCE@, agent dirs, README) per §0014.
 - The agency dir slug defaults to `<agency_name>` slugified (lowercase, spaces → hyphens, slug-safe per §0014); pass `--agency-dir <slug>` to override.
+- Initializes git **inside the agency directory** (`<parent_directory>/@<agency-dir>/`), not in the parent — the parent may be a shared directory containing unrelated projects, and we never touch it. Skips `git init` if the agency directory is already inside an existing git repo.
 - Exits 3 if `<parent_directory>/@<agency-dir>/` is already a scaffolded unit (CANON@ exists inside). Unrelated `@*/` siblings in the parent directory are not conflicts. Relay the error if it fires.
-- Prints nested `.git/` warnings if any were detected. Pass these forward in your report.
 
 ### Units next (if multi-unit)
 
@@ -228,10 +227,6 @@ Agency lives at: /Users/trevorschoeny/Code/@acme
 ```
 
 Role names reflect whatever was chosen during onboarding. Unit roles are tagged `(inherited)` when they match the agency's; otherwise the unit's own role names are listed. Unit mode is always shown. The "Agency lives at" line is the only path in the ontology report — navigation to specific agent directories belongs to the next-steps block.
-
-If nested `.git/` directories were detected during scaffold, include a short note after the ontology report:
-
-> *Note: detected N nested .git/ directories inside the agency. The Registrar will surface these at first audit for you to decide how to handle (submodule, leave nested, or move elsewhere).*
 
 ---
 
