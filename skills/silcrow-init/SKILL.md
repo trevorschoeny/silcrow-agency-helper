@@ -34,11 +34,17 @@ The skill follows a six-phase flow: **silent peek → locked intro → natural c
 
 Before any output to the user:
 
-- `ls` the current working directory (CWD).
-- Look for obvious project markers in the CWD itself (README, package.json, pyproject.toml, Cargo.toml, etc.). Use these to orient or suggest an agency name.
 - Check CLAUDE.md or the environment for the user's name. If found, you'll substitute it into the locked intro; if not, you'll silently omit.
 
-That's the entire peek. **The skill operates strictly inside the CWD. It never walks up the filesystem, never looks at sibling directories, never inspects anything outside the CWD.** The script creates `@<agency-dir>/` inside the CWD — purely additive — and is responsible for every filesystem operation including git initialization. Your job is to converse, gather inputs, and invoke the script.
+That's the entire peek.
+
+**The agency-vs-CWD relationship — read this carefully:**
+
+- The agency starts at `@<slug>/` — that is the top-level node, the root unit.
+- The agency lives **inside** the CWD, at `<cwd>/@<slug>/`.
+- The CWD is **not** part of the agency. It's merely a parent container the scaffold creates the agency inside. The CWD's name, contents, sibling directories, ancestors, and any git state outside the agency are all irrelevant to this skill.
+
+**You do not inspect the CWD.** You do not `ls` it, do not read its files, do not take note of its name, do not infer anything from its contents. Your only concern is setting up the agency by gathering inputs from the user and invoking the script. The script handles every filesystem operation, including git.
 
 No questions yet. No output. Just orient.
 
@@ -54,6 +60,8 @@ Output this text exactly. The only substitution is the user's name — inserted 
 >
 > *An agency is the whole tree of work. Its topmost node is the **root unit** (which shares the agency's name); below the root, an agency can stay as a single unit — one cohesive body of work — or branch into **sub-units**, each itself a full unit with its own governance and agent team. Every unit, root or sub, has the same shape. Units can be departments, teams, product lines, research threads, codebases — any partition of the work that's independent enough to deserve its own decision record and agent team.*
 >
+> *The agency starts at its root unit's directory. I'll create that directory inside whatever directory we're in right now — the directory we're in is just a container, not part of the agency itself.*
+>
 > *Two rules matter: **sub-units answer to their parent unit** (decisions at any unit bind that unit and everything below it), and **sibling units don't police each other** (no cross-branch oversight).*
 
 Output this, then drop out of scripted mode.
@@ -62,21 +70,23 @@ Output this, then drop out of scripted mode.
 
 ## Phase 3 — Natural conversation
 
-Now converse naturally. Based on what you peeked, do the following in whichever order feels natural:
+Now converse naturally. Do the following in whichever order feels natural:
 
-### What to suggest/confirm
+### What to do
 
-- **Tell the user where the agency will go.** Default: "I'll create the agency right here in `<cwd>` — it'll live at `<cwd>/@<slug>/`." Show the path concretely so the user can redirect if they want it somewhere else.
-- **Suggest** an agency name if the CWD's contents imply one (e.g., a CWD containing wedding-related files suggests agency name "Wedding"). Show the slug you'd derive ("Wedding" → `@wedding/`) and let the user adjust either the display name or the slug.
-- **Confirm** the user's name if you couldn't detect it.
-- **Propose** single-unit vs multi-unit based on the CWD context. If multi-unit, suggest initial unit names and purposes.
-- **Ask only what you can't infer.** No forms, no numbered phases. Conversational.
+- **Tell the user where the agency will go.** Default: "I'll create the agency right here in `<cwd>` — it'll live at `<cwd>/@<slug>/`." Show the path concretely so the user can redirect if they want it somewhere else. The CWD is just a path token here; you don't read or interpret its name.
+- **Ask the user for an agency name.** Don't suggest one. Once they answer, show the slug you'd derive (e.g., "Wedding" → `@wedding/`) and let them adjust either the display name or the slug.
+- **Confirm the user's name** if you couldn't detect it from CLAUDE.md / env.
+- **Ask whether the agency is single-unit or multi-unit.** If multi-unit, gather unit names and purposes from the user. Don't infer.
+- **Be conversational, not formulaic.** No forms, no numbered phases.
 
 ### What you must not do
 
+- **Do not inspect the CWD.** Don't `ls` it, don't read any file in it, don't take note of its name. The CWD's contents and name are irrelevant to setting up the agency.
+- **Do not walk up the filesystem.** Don't look at the CWD's parent, ancestors, or siblings. Whatever exists outside the CWD is also irrelevant.
+- **Do not infer anything from context around the agency.** Don't suggest an agency name from CWD contents, don't guess unit structure from project markers, don't assume role names. Ask the user for what's needed.
 - **Do not rename, move, or delete anything.** The script handles all filesystem work. Never run `mv`, `git mv`, or any operation that mutates paths outside what the script does internally.
-- **Do not walk up the filesystem.** Don't look at the CWD's parent, ancestors, or siblings. Whatever exists outside the CWD is none of init's business.
-- **Do not check git state above the CWD.** The script will git-init the agency directory itself; that's its job. You don't need to know anything about git context outside the CWD.
+- **Do not check git state.** The script git-inits the agency directory itself; that's its job. You don't need to know anything about git context anywhere on the filesystem.
 
 ### What you need to gather
 
