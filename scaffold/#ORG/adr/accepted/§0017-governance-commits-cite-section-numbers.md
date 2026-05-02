@@ -78,7 +78,7 @@ Scaffold-agnosticism: the convention is already a soft guideline; adding enforce
 
 ## Anti-patterns surfaced
 
-- **Over-citing on operational commits.** `§0019: update product roadmap` when the update has no bearing on the scope ADR. Dilutes the citation's signal. Use citations when they mean something.
+- **Over-citing on operational commits.** `§0020: update product roadmap` when the update has no bearing on the scope ADR. Dilutes the citation's signal. Use citations when they mean something.
 - **Missing citation on a supersession.** Superseding §0008 with §0011 is a governance-touching commit; the message must cite §0011 (creating) and §0008 (superseding). Without the citation, the supersession is invisible to `git log --grep='§0008'`.
 - **Enforcing the convention via hooks.** Defeats scaffold-agnosticism. Keep the convention as a norm.
 - **Mixed-concern commits that don't cite.** A commit that touches `#ORG@{unit_name}/` and operational content at the same time should use the governance form and cite the relevant §NNNN. If no ADR applies, split the commit.

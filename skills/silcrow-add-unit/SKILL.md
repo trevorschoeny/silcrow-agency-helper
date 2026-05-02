@@ -138,7 +138,7 @@ On success, prints a summary block:
   Roles:   Director, Specialist, Registrar
   Parent:  /Users/trevorschoeny/Code/@pebble
   Mode:    directory
-  Registering ADR: /Users/trevorschoeny/Code/@pebble/#ORG@pebble/adr/accepted/§0020-establish-unit-pebble-core.md
+  Registering ADR: /Users/trevorschoeny/Code/@pebble/#ORG@pebble/adr/accepted/§0019-establish-unit-pebble-core.md
 ```
 
 On failure, relay the error message and stop.

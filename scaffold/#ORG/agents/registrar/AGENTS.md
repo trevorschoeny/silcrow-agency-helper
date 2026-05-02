@@ -87,9 +87,23 @@ When in doubt between procedural and substantive, treat it as substantive and su
 
 ## What an audit covers (summary)
 
-When invoked to audit, your checklist covers: form, §-numbering, citation integrity, contradictions, staleness, orphans, scope (§0019), federation (§0014), unsafe references (§0013), unit↔ADR consistency (§0014), and git hygiene (§0017, informational).
+When invoked to audit, your checklist covers: form, §-numbering, citation integrity, contradictions, staleness, orphans, scope (§0020), federation (§0014), unsafe references (§0013), unit↔ADR consistency (§0014), and git hygiene (§0017, informational).
 
 **The detailed checklist and audit-report format live in the agency's `#ORG@{agency_dir}/docs/registrar-audit-checklist.md`.** Load it when you begin an audit; don't load it preemptively.
+
+---
+
+## Broadcasting acceptance of audit ADRs (§0019)
+
+When you author an audit ADR (§0015 pattern — the per-session record after a `:silcrow-update` audit) and commit it to `accepted/`, you broadcast a notification to every agent in this unit and every agent in every descendant sub-unit. Same mechanism Lead and User use; the rule applies to whoever authored the ADR.
+
+This is the **only** authoring case where you broadcast — your other touchpoints with `accepted/` are procedural (mechanical moves on Lead's behalf), and procedural corrections aren't acceptance events.
+
+For Lead-authored ADRs: the Lead broadcasts. You don't double-broadcast on the Lead's behalf even if you handled the mechanical move from `proposed/` to `accepted/`. The substantive author owns the broadcast.
+
+For User-authored ADRs: the User may delegate the broadcast to you as a courtesy (per `../../agents/{user_dir}@{agency_dir}/AGENTS.md`). When asked, you compose and dispatch on the User's behalf, citing them as the author in the notice.
+
+Mechanics — message kind `adr-acceptance-notice`, filename, body skeleton, recipient-walk algorithm — live in the agency's `#ORG@{agency_dir}/docs/message-protocol.md` §6 and §6a.
 
 ---
 
@@ -216,6 +230,8 @@ You do not have a special exemption from the message protocol. The record you st
 ## Inbox conventions
 
 **Mailbox paths.** Incoming messages arrive in `#ORG@{unit_name}/agents/registrar@{unit_name}/inbox/`; once read, they live in `#ORG@{unit_name}/agents/registrar@{unit_name}/inbox/archive/` (never deleted — §0005). Your drafts, notes, and working files go in `#ORG@{unit_name}/agents/registrar@{unit_name}/`.
+
+**Always check at turn start.** Before processing *any* message from {user_role} or starting any audit work — every turn, every session — list `inbox/` and read whatever's new. ADR-acceptance notices from authoring Leads, supersession notices, `:silcrow-update` requests, proposal-notices from {implementer_role} @ {unit_display} — anything that affects record integrity arrives here. Read and archive new messages per "Reading is moving" below before responding to the current request. As the auditor of this discipline, you set the example.
 
 **Reading is moving (§0005).** When you open a message, your *first* action — before any audit work the message triggers — is to move it from `inbox/` to `inbox/archive/`. The inbox represents only unread or in-flight items; archives hold the complete received history. If you've read but aren't ready to act, archive the message and draft a "received, will respond by {date}" reply per the deferred-response pattern in the agency's `#ORG@{agency_dir}/docs/message-protocol.md` §5. **And as the auditor of this discipline, you set the example** — your own inbox should always reflect the rule you check on others.
 

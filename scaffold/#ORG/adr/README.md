@@ -50,12 +50,13 @@ If the agency decides to introduce a particular subfolder scheme, **that decisio
 | §0016 | [Agency default `.gitignore` — OS, editor, and secrets patterns only](accepted/§0016-default-gitignore.md) | accepted | {date} |
 | §0017 | [Governance commits cite the governing §NNNN; operational commits are free-form](accepted/§0017-governance-commits-cite-section-numbers.md) | accepted | {date} |
 | §0018 | [Units with independent versioning needs are git submodules](accepted/§0018-submodules-for-independently-versioned-units.md) | accepted | {date} |
-| §0019 | [Agency scope](accepted/§0019-agency-scope.md) — *seed, expected to be superseded early; intentional first lesson in the supersession discipline* | accepted | {date} |
+| §0019 | [Decision-record acceptance is broadcast to every bound agent](accepted/§0019-broadcast-decision-records-on-acceptance.md) | accepted | {date} |
+| §0020 | [Agency scope](accepted/§0020-agency-scope.md) — *seed, expected to be superseded early; intentional first lesson in the supersession discipline* | accepted | {date} |
 
-**About the founding set.** §0001 records the decision to adopt this scaffold. §0002–§0018 are **constitutional decisions inherited from the scaffold** via §0001 — they capture the load-bearing choices that define how this agency runs. Each names its alternatives and cites its foundations so it can be evaluated or superseded on its own merits, like any other ADR.
+**About the founding set.** §0001 records the decision to adopt this scaffold. §0002–§0019 are **constitutional decisions inherited from the scaffold** via §0001 — they capture the load-bearing choices that define how this agency runs. Each names its alternatives and cites its foundations so it can be evaluated or superseded on its own merits, like any other ADR.
 
-- §0019 is explicitly a seed — the scaffold invites the User and Lead to supersede it with a richer scope statement as an early collaborative task.
-- §0011–§0018 evolve earlier decisions or extend them: §0011 supersedes §0008 (Registrar operating mode); §0012 extends §0006 (tier model + authorship); §0013 establishes the canon/operational split that the rest of the agency's work flows within; §0014 codifies the `#ORG@<unit-name>/` and `@<unit-name>/` conventions; §0015–§0018 cover updates, gitignore, commit conventions, and submodules.
+- §0020 is explicitly a seed — the scaffold invites the User and Lead to supersede it with a richer scope statement as an early collaborative task. Its supersession is the first concrete demonstration of §0019 (broadcast on acceptance).
+- §0011–§0019 evolve earlier decisions or extend them: §0011 supersedes §0008 (Registrar operating mode); §0012 extends §0006 (tier model + authorship); §0013 establishes the canon/operational split that the rest of the agency's work flows within; §0014 codifies the `#ORG@<unit-name>/` and `@<unit-name>/` conventions; §0015–§0018 cover updates, gitignore, commit conventions, and submodules; §0019 establishes that ADRs broadcast through inboxes on acceptance, propagating awareness along the inheritance edges of the unit tree.
 
 ## Superseded decisions
 

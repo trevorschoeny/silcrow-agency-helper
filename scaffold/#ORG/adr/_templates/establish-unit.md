@@ -6,7 +6,7 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every subsequent operational artifact scoped to `@{unit_name}`; every ADR authored inside `@{unit_name}/#ORG@{unit_name}/adr/`.
-- **Influenced by:** §0010 (roster change protocol), §0019 (agency scope), §0014 (agency and unit structure).
+- **Influenced by:** §0010 (roster change protocol), §0020 (agency scope), §0014 (agency and unit structure).
 
 ## Y-statement
 
@@ -108,7 +108,7 @@ Reconsider `@{unit_name}`'s establishment if:
 
 - `§0001` — the founding scaffold decision.
 - `§0010` — roster change protocol (adding a unit creates new agents and roles).
-- `§0019` — agency scope; `@{unit_name}` operates within agency scope.
+- `§0020` — agency scope; `@{unit_name}` operates within agency scope.
 - `§0014` — agency and unit structure; this ADR implements the unit-addition pattern.
 - `§0018` — submodule decision (if `@{unit_name}` is a submodule).
 - `@{parent_unit_name}`'s `#ORG@{parent_unit_name}/README.md` — governance overview of the parent unit.

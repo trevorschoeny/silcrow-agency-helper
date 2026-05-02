@@ -113,7 +113,7 @@ The scaffold ships with **nineteen seeded ADRs** (§0001–§0018, minus §0008 
 | §0008 | *(superseded by §0011)* Registrar authority is procedural, not substantive |
 | §0009 | Anti-patterns are first-class records |
 | §0010 | Roster change protocol |
-| §0019 | Agency scope (seed — expand early) |
+| §0020 | Agency scope (seed — expand early) |
 | §0011 | Registrar operates as async auditor, not sync gatekeeper |
 | §0012 | User as principal; local tier numbering; Implementer drafts-with-approval |
 | §0013 | Canonical and operational artifacts: direction of constraint, promotion rule, reference rule |

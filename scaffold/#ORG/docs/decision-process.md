@@ -267,7 +267,7 @@ Skills don't create a different kind of ADR — they produce the same MADR-with-
 
 ### Greenfield decision (Lead direct-commit, §0011)
 
-The {lead_role} drafts in `#ORG@{unit_name}/agents/{lead_dir}@{unit_name}/draft-logging-adr.md`, assigns the next §-number by checking `accepted/` (e.g. §0020), moves the file to `#ORG@{unit_name}/adr/accepted/§0020-use-structured-logging.md`, sets `Status: accepted`, and commits `§0020: use structured logging`. Either Lead or Registrar updates the index — the Registrar will fix it at next audit if the Lead doesn't.
+The {lead_role} drafts in `#ORG@{unit_name}/agents/{lead_dir}@{unit_name}/draft-logging-adr.md`, assigns the next §-number by checking `accepted/` (e.g. §0019), moves the file to `#ORG@{unit_name}/adr/accepted/§0019-use-structured-logging.md`, sets `Status: accepted`, and commits `§0019: use structured logging`. Either Lead or Registrar updates the index — the Registrar will fix it at next audit if the Lead doesn't.
 
 ### Implementer draft with approval (§0012)
 
@@ -275,7 +275,7 @@ The {implementer_role} drafts in their own directory, moves the draft to `#ORG@{
 
 ### Supersession
 
-Lead drafts a new ADR with `Supersedes: §0020`, commits to `accepted/` with the next §-number (say §0042). Either Lead or Registrar moves §0020 to `superseded/` (filename unchanged), updates §0020's `Status:` and `Superseded by:` fields, and appends a retrospective note. Commit cites both: `§0042: adopt observability v2; supersedes §0020`. Old citations to §0020 continue to resolve; readers see the retrospective note and follow forward.
+Lead drafts a new ADR with `Supersedes: §0019`, commits to `accepted/` with the next §-number (say §0042). Either Lead or Registrar moves §0019 to `superseded/` (filename unchanged), updates §0019's `Status:` and `Superseded by:` fields, and appends a retrospective note. Commit cites both: `§0042: adopt observability v2; supersedes §0019`. Old citations to §0019 continue to resolve; readers see the retrospective note and follow forward.
 
 ### Anti-pattern discovered post-adoption
 

@@ -41,9 +41,9 @@ Read this file **when you're invoked to audit the record** (by User, Lead, or vi
 
 - [ ] Flag ADRs with empty `Influences` AND empty `Influenced by` fields. Not necessarily wrong, but worth noting.
 
-## G. Scope (§0019)
+## G. Scope (§0020)
 
-- [ ] Every accepted ADR falls within this unit's scope as stated in §0019 (or the current scope ADR). Scope violations — surface to {user_role}.
+- [ ] Every accepted ADR falls within this unit's scope as stated in §0020 (or the current scope ADR). Scope violations — surface to {user_role}.
 - [ ] In agencies with multiple units: a unit's ADRs don't exceed that unit's scope or any ancestor unit's scope. (Each unit's ADRs are bound by every ancestor's ADRs walking up to the root.)
 
 ## H. Federation (§0014)
@@ -103,7 +103,7 @@ SUBSTANTIVE ISSUES FOR {lead_role}
 
 SUBSTANTIVE ISSUES FOR {user_role}
   [U1] §0101 establishes a practice ("we only take enterprise clients")
-       that appears to exceed current agency scope (§0019). Scope clarification needed.
+       that appears to exceed current agency scope (§0020). Scope clarification needed.
 
 INFORMATIONAL
   [I1] 2 uncommitted governance files; 1 unpushed governance commit.

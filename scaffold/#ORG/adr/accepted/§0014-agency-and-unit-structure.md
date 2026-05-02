@@ -6,7 +6,7 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every directory layout; every inbox path; every ADR-to-directory audit; the `:silcrow-add-unit` skill; the `:silcrow-update` skill's structural migrations.
-- **Influenced by:** §0001, §0005, §0010, §0019, §0013
+- **Influenced by:** §0001, §0005, §0010, §0020, §0013
 
 ## Y-statement
 
@@ -179,6 +179,6 @@ Reconsider this ADR if:
 - §0001 — the founding decision this structure implements.
 - §0005 — inboxes live at `#ORG@<unit-name>/agents/<role>@<unit-name>/inbox/` per this structure.
 - §0010 — roster change protocol; adding a unit triggers it.
-- §0019 — agency scope.
+- §0020 — agency scope.
 - §0013 — canon/operational split; this ADR is its structural expression.
 - §0018 — submodule decision for units with independent versioning.

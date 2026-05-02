@@ -66,7 +66,7 @@ The audit model is not new; it mirrors real-world practice. University registrar
 
 ## What the Registrar audits and how corrections work
 
-On-demand audits cover form, contradictions, staleness, citation integrity, orphans, scope violations (§0019), federation-rule violations, unsafe references (§0013), unit↔ADR consistency (§0014), and git hygiene (§0017, informational). The full checklist lives in `../../agents/registrar/AGENTS.md`.
+On-demand audits cover form, contradictions, staleness, citation integrity, orphans, scope violations (§0020), federation-rule violations, unsafe references (§0013), unit↔ADR consistency (§0014), and git hygiene (§0017, informational). The full checklist lives in `../../agents/registrar/AGENTS.md`.
 
 Correction authority is **hybrid**:
 - **Procedural issues** (filename typos, malformed §-numbering, broken citation paths, bidirectional-link repair) — Registrar fixes directly.

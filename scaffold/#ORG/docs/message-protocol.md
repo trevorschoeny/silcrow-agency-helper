@@ -46,7 +46,7 @@ Examples (assume an agency whose root unit is `acme`):
 
 - `2026-04-19-lead@acme-brief-implement-structured-logging.md`
 - `2026-04-21-implementer@acme-plan-for-structured-logging.md`
-- `2026-04-21-registrar@acme-ack-§0020.md`
+- `2026-04-21-registrar@acme-ack-§0019.md`
 - `2026-04-22-{user_dir}-approve-§0088.md`
 
 Rules:
@@ -150,9 +150,64 @@ From the Registrar to the {user_role} and/or {lead_role} after an audit run (inv
 
 Dropped into the Registrar's inbox by the `:silcrow-update` skill. Contains the plugin's canonical source path and a request to run a dynamic diff. See `../agents/{registrar_dir}@{unit_name}/AGENTS.md` for the Registrar's response workflow.
 
+### ADR acceptance notice
+
+Sent by the **author** of an ADR (Lead, User, or — for audit ADRs — the Registrar) to every agent in the accepting unit and every agent in every descendant sub-unit, the moment the ADR lands in `accepted/` (§0019). Short, pointer-style. The notice doesn't carry the ADR's content; it points the recipient at the canonical record they should read.
+
+Filename:
+
+```
+YYYY-MM-DD-{sender}-§NNNN-accepted.md
+```
+
+Examples:
+
+- `2026-05-15-lead@acme-§0042-accepted.md`
+- `2026-05-15-registrar@acme-§0055-accepted.md` (for an audit ADR)
+
+Body skeleton:
+
+```markdown
+# §NNNN accepted — {short title}
+
+- **From:** {sender}
+- **To:** {recipient slug}
+- **Date:** YYYY-MM-DD
+- **References:** §NNNN
+- **Kind:** adr-acceptance-notice
+
+§NNNN was accepted in `@{accepting-unit}` on YYYY-MM-DD. This decision binds
+your unit by inheritance (per §0014).
+
+Read the ADR at `{relative path to §NNNN}` for the decision and reasoning.
+```
+
+Add lines as appropriate:
+
+- **Implementer-drafted ADRs** — name both author and approver: *"Drafted by {implementer_role} @ {unit_display}, approved by {lead_role} @ {unit_display}."*
+- **Supersession** — *"This ADR supersedes §00XX (now in `superseded/`)."*
+- **Audit ADRs (§0015)** — *"This is the audit ADR for the `:silcrow-update` session of YYYY-MM-DD; see it for the full list of changes in that session."*
+
+Recipients **archive on read** like any other message (§0005's `read = move` rule); the canonical record is the ADR itself, not the notice. The notice is just an alert.
+
 ### Others
 
 You'll develop your own conventions over time. When a recurring message kind emerges (e.g., "escalation," "retrospective," "approval-request"), don't hesitate to name it explicitly.
+
+---
+
+## 6a. Broadcast recipients — walking the tree (§0019)
+
+When you author an ADR that lands in `accepted/`, the broadcast goes to every agent in the accepting unit + every agent in every descendant sub-unit. The walk:
+
+1. **Start at the accepting unit.** That's the unit whose `#ORG@<unit-name>/adr/accepted/` now contains the new ADR. Call it `<accepting-unit>`.
+2. **Enumerate the accepting unit's agents.** List `#ORG@<accepting-unit>/agents/<role>@<accepting-unit>/` directories. Each one is a recipient (skip yourself — you authored it).
+3. **Recurse into descendant units.** For each `@<sub-unit>/` directory at the accepting unit's root level, repeat steps 2–3 inside that sub-unit. Continue recursively to every leaf.
+4. **Deposit the notification** in each recipient's `inbox/` per the deposit procedure (§2).
+
+The recipient set respects inheritance (§0014): ADRs propagate downward, so broadcasts do too. **Don't broadcast to ancestor units, peer units, or cousin units** — they aren't bound by `<accepting-unit>`'s decisions.
+
+Cost-wise: the walk is O(agents in subtree). For a single-root agency with 4 agents, it's 3 deposits (skipping self). For a multi-unit tree, it grows roughly linearly with agent count. Notifications are short pointer messages; the cost is bounded.
 
 ---
 

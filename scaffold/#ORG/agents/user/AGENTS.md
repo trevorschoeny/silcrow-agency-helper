@@ -21,6 +21,14 @@ You have **first-class ADR authority**. You may author, commit, supersede, or re
 
 Per §0011, direct commit to `accepted/` is the default path for first-class authors. The `#ORG@{agency_dir}/adr/proposed/` directory is available if you want Registrar pre-review, but it's optional for you.
 
+## Broadcast on ADR acceptance (§0019)
+
+When you author an ADR that lands in `accepted/`, you broadcast a short notification to every agent in the accepting unit and every agent in every descendant sub-unit. The principle is the same one Lead and Registrar follow: the actor-model record (§0005) is the channel through which bound agents become aware of decisions that bind them.
+
+The mechanics are in `#ORG@{agency_dir}/docs/message-protocol.md` §6 and §6a — message kind `adr-acceptance-notice`, filename convention, body skeleton, and the recipient-walk algorithm.
+
+You may also delegate the mechanical broadcast to Registrar @ {agency_dir} as a courtesy if you'd rather not handle the file deposits yourself; in that case, message the Registrar with the §-number and ADR path and ask them to broadcast on your behalf. The substantive responsibility (you authored it) stays yours; the file moves are theirs.
+
 ## Owned decisions
 
 - Strategic direction for the agency — what it's for, who it serves, what success looks like.
@@ -44,11 +52,13 @@ None. You are the principal.
 
 ## First tasks
 
-- **Supersede §0019 (agency scope) — don't edit it.** The scaffold seeded `#ORG@{agency_dir}/adr/accepted/§0019-agency-scope.md` with a minimal scope statement. One of your earliest collaborative tasks with {lead_role} @ {agency_name} is to *supersede* §0019 (per §0004) with a richer version: what the agency is for, who it serves, what's in scope, what's out, what "done" looks like. The seed lives at the end of the founding set deliberately — it's positioned to be the next ADR you author against, your first lesson in the supersession discipline that governs every binding decision in this agency. Author a new ADR with `Supersedes: §0019` in its header; the Lead or Registrar handles the file move from `accepted/` to `superseded/`. The new ADR becomes the north star every downstream decision cites.
+- **Supersede §0020 (agency scope) — don't edit it.** The scaffold seeded `#ORG@{agency_dir}/adr/accepted/§0020-agency-scope.md` with a minimal scope statement. One of your earliest collaborative tasks with {lead_role} @ {agency_name} is to *supersede* §0020 (per §0004) with a richer version: what the agency is for, who it serves, what's in scope, what's out, what "done" looks like. The seed lives at the end of the founding set deliberately — it's positioned to be the next ADR you author against, your first lesson in the supersession discipline that governs every binding decision in this agency. Author a new ADR with `Supersedes: §0020` in its header; the Lead or Registrar handles the file move from `accepted/` to `superseded/`. The new ADR becomes the north star every downstream decision cites.
 
 ## Inbox conventions
 
 **Mailbox paths.** Messages arrive in `#ORG@{agency_dir}/agents/{user_dir}@{agency_dir}/inbox/`; once read, they live in `#ORG@{agency_dir}/agents/{user_dir}@{agency_dir}/inbox/archive/` (never deleted — §0005).
+
+**Always check at turn start.** Before processing your own next action — every turn, every session — list `inbox/` and read whatever's new. ADR-acceptance notices from your Leads, audit reports from Registrars, drafts and briefs in flight, broadcasts from sub-unit Leads — anything addressed to you arrives here, and the principal benefits from staying current with what the agents are sending. Read and archive new messages per "Reading is moving" below before pushing forward on your own work.
 
 **Reading is moving (§0005).** When you open a message, your *first* action — before responding or acting on it — is to move it from `inbox/` to `inbox/archive/`. The inbox represents only unread or in-flight items; archives hold the complete received history. If you've read but aren't ready to act, archive the message and draft a "received, will respond by {date}" reply per the deferred-response pattern in `#ORG@{agency_dir}/docs/message-protocol.md` §5.
 
@@ -66,7 +76,7 @@ None. You are the principal.
 ## Key references
 
 - `#ORG@{agency_dir}/docs/decision-process.md` — how ADRs flow through the system.
-- `#ORG@{agency_dir}/adr/README.md` — index of all decisions (starting points: §0019 scope seed, §0012 principal framing, §0010 roster changes).
+- `#ORG@{agency_dir}/adr/README.md` — index of all decisions (starting points: §0020 scope seed, §0012 principal framing, §0010 roster changes).
 - `#ORG@{agency_dir}/agents/` — the root unit's roster. Sub-unit agents live at `@<sub-unit>/#ORG@<sub-unit>/agents/<role>@<sub-unit>/`, recursively at any depth.
 
 ## Principles to reason from (load when needed)

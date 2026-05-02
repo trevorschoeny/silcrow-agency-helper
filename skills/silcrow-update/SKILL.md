@@ -34,7 +34,7 @@ Four tiny steps:
 1. Confirm the agency exists (walk up for `#ORG@<unit-name>/`).
 2. Identify the Registrar's inbox (`#ORG@<unit-name>/agents/registrar@<unit-name>/inbox/`).
 3. Drop a single message into that inbox containing:
-   - The plugin's canonical source path: `${CLAUDE_PLUGIN_ROOT}/scaffold/#ORG/`.
+   - The plugin's name: `silcrow`. The Registrar resolves the canonical source path themselves at read-time (per the workflow doc), so you don't pre-resolve `${CLAUDE_PLUGIN_ROOT}` and risk pinning the wrong cached version.
    - A request: *"Audit this agency against the current scaffold canonical state. Report additions, deletions, and changes to User and Lead for approval. Execute approved changes."*
 4. Let the user know the audit has been initiated and point them at the Registrar's next report.
 
@@ -79,8 +79,18 @@ Message body:
 Audit this agency against the current scaffold canonical state shipped by the
 Silcrow plugin.
 
-- **Plugin canonical source:** `${CLAUDE_PLUGIN_ROOT}/scaffold/#ORG/`
-  - (resolve `${CLAUDE_PLUGIN_ROOT}` from the environment Claude Code provides; it points at the installed plugin's root directory)
+- **Plugin:** `silcrow`. Resolve the canonical source path yourself in your
+  audit session (the path includes the version, and version-pinning at
+  message-write time can drift from the active install). Procedure:
+  1. Read `${CLAUDE_PLUGIN_ROOT}` from your own session env. If it points
+     at a path containing `scaffold/#ORG/`, that's the canonical source.
+  2. If `${CLAUDE_PLUGIN_ROOT}` isn't set, walk
+     `~/.claude/plugins/cache/silcrow/` and pick the latest semver
+     directory; its `scaffold/#ORG/` is canonical.
+  3. If multiple versions are present in cache and one isn't unambiguously
+     the active one, surface the situation to the User and confirm which
+     to sync against before diffing. Record the resolved path + how it
+     was chosen in the audit ADR's reasoning.
 - **Agency root:** `<agency_or_unit_path>`
 
 Please:
