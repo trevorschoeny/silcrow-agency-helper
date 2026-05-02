@@ -14,13 +14,16 @@
 #   scaffold.sh <destination> <agency_name> <agency_description> \
 #               <user_dir> <user_role> <lead_dir> <lead_role> \
 #               <implementer_dir> <implementer_role> \
-#               [--skip-git]
+#               [--agency-dir <slug>] [--skip-git]
 #
 # Arguments:
-#   destination         Absolute path to the agency's root directory.
-#                       The script creates/expects this directory and places
-#                       @<agency-name>/ inside it.
-#   agency_name         Display name for the agency (e.g. "Acme Co").
+#   destination         Absolute path to the directory the agency will live
+#                       inside. The script creates @<agency-dir>/ inside this
+#                       path; the destination's own basename is irrelevant.
+#   agency_name         Display name for the agency (e.g. "Acme Co"). The
+#                       agency's directory slug is derived from this by
+#                       default (lowercase, spaces → hyphens, slug-safe);
+#                       override with --agency-dir.
 #   agency_description  One-paragraph description of the agency's purpose.
 #   user_dir            Directory name for the User (e.g. "trevor").
 #   user_role           Display name for the User role (e.g. "Trevor").
@@ -30,6 +33,10 @@
 #   implementer_role    Display name for the Implementer role (e.g. "Implementer").
 #
 # Options:
+#   --agency-dir <slug> Override the auto-derived agency directory slug. Use
+#                       when the user wants a different slug than slugifying
+#                       the agency name produces (e.g. display "Acme Corp"
+#                       with dir @acme/).
 #   --skip-git          Skip git init, .gitignore creation, and initial commit.
 #                       Use when the user declined git or when the destination
 #                       is already inside a git repo.
@@ -45,6 +52,7 @@ set -euo pipefail
 # --- Argument parsing --------------------------------------------------------
 
 SKIP_GIT=0
+AGENCY_DIR_OVERRIDE=""
 POSITIONAL=()
 
 while [ "$#" -gt 0 ]; do
@@ -52,6 +60,10 @@ while [ "$#" -gt 0 ]; do
         --skip-git)
             SKIP_GIT=1
             shift
+            ;;
+        --agency-dir)
+            AGENCY_DIR_OVERRIDE="$2"
+            shift 2
             ;;
         --)
             shift
@@ -76,7 +88,7 @@ if [ "${#POSITIONAL[@]}" -ne 9 ]; then
 Usage: scaffold.sh <destination> <agency_name> <agency_description> \
                    <user_dir> <user_role> <lead_dir> <lead_role> \
                    <implementer_dir> <implementer_role> \
-                   [--skip-git]
+                   [--agency-dir <slug>] [--skip-git]
 USAGE
     exit 2
 fi
@@ -92,11 +104,27 @@ IMPL_DIR="${POSITIONAL[7]}"
 IMPL_ROLE="${POSITIONAL[8]}"
 DATE="$(date -u +%Y-%m-%d)"
 
-# The agency is the root unit. Compute its slug from the destination basename
-# (stripping any leading @). At the agency level, {unit_name} = AGENCY_DIR
-# and {unit_display} = AGENCY_NAME, since the root unit shares the agency's name.
-DST_BASENAME="$(basename "$DST")"
-AGENCY_DIR="${DST_BASENAME#@}"
+# Compute the agency directory slug. By default, derive it from the agency
+# display name: lowercase, whitespace → hyphens, strip everything outside
+# §0014's unit-name slug constraints (alphanumeric, hyphens, underscores, dots).
+# The skill can override via --agency-dir if the user wants a different slug
+# than the auto-derivation produces.
+if [ -n "$AGENCY_DIR_OVERRIDE" ]; then
+    AGENCY_DIR="$AGENCY_DIR_OVERRIDE"
+else
+    AGENCY_DIR="$(echo "$AGENCY_NAME" \
+        | tr '[:upper:]' '[:lower:]' \
+        | tr -s ' \t' '-' \
+        | sed -E 's/[^a-z0-9._-]//g' \
+        | sed -E 's/-+/-/g' \
+        | sed -E 's/^-+|-+$//g')"
+fi
+
+if [ -z "$AGENCY_DIR" ]; then
+    echo "Error: agency name '$AGENCY_NAME' produced an empty slug." >&2
+    echo "Pass --agency-dir <slug> with an explicit slug, or pick a different agency name." >&2
+    exit 2
+fi
 
 # --- Locate the plugin's scaffold source -------------------------------------
 
@@ -119,14 +147,15 @@ fi
 
 # --- Pre-flight conflict check -----------------------------------------------
 
-# Refuse to overwrite an existing scaffold. Per §0014, any @<unit-name>/
-# directory marks a unit; if one exists at the destination, this is
-# already-scaffolded territory.
-EXISTING_UNIT_MARKER="$(find "$DST" -maxdepth 1 -type d -name '@*' 2>/dev/null | head -1 || true)"
-if [ -n "$EXISTING_UNIT_MARKER" ]; then
-    echo "Error: destination already contains $(basename "$EXISTING_UNIT_MARKER")." >&2
-    echo "This directory appears to be a scaffolded unit already." >&2
-    echo "Refusing to overwrite. Choose a different destination." >&2
+# Refuse to overwrite an existing scaffold. The check is narrow on purpose:
+# only the SPECIFIC @<agency-dir>/ we're about to create matters. Unrelated
+# @*/ siblings in $DST (other agencies, archives, etc.) are not conflicts.
+# A scaffolded unit always has its CANON@<unit>/ subdirectory; we use that
+# as the marker.
+TARGET_UNIT_DIR="$DST/@$AGENCY_DIR"
+if [ -d "$TARGET_UNIT_DIR/CANON@$AGENCY_DIR" ]; then
+    echo "Error: $TARGET_UNIT_DIR is already a scaffolded unit." >&2
+    echo "Refusing to overwrite. Choose a different agency name or destination." >&2
     exit 3
 fi
 

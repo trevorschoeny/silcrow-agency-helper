@@ -37,12 +37,14 @@ The skill follows a six-phase flow: **silent peek → locked intro → natural c
 
 Before any output to the user:
 
-- `ls` the current working directory (and any path the user indicates as destination).
+- `ls` the current working directory (CWD).
 - Look for obvious project markers: README, package.json, pyproject.toml, Cargo.toml, etc. Use these to orient.
-- Check for `.git/` at the destination. If present, git init will be skipped and existing history will be preserved.
-- Walk the destination (one level deep) to find any nested `.git/` directories — these are flagged for the user later but not acted on here.
+- Check for `.git/` in the CWD. If present, git init will be skipped and existing history will be preserved.
+- Walk the CWD (one level deep) to find any nested `.git/` directories — these are flagged for the user later but not acted on here.
 - Check CLAUDE.md or the environment for the user's name. If found, you'll substitute it into the locked intro; if not, you'll silently omit.
-- The destination is the **parent directory** of where the agency will live. The scaffold creates `@<agency-name>/` inside the destination per §0014's `@` prefix convention. Don't expect or require the destination's own basename to start with `@`.
+- **Walk up from the CWD looking for an `@<...>/` ancestor.** If found, the user is already inside an existing unit/agency; in Phase 3 you'll redirect them to `:silcrow-add-unit` rather than creating a new agency on top of an existing one.
+
+The default scaffolding location is the CWD. The script creates `@<agency-dir>/` (the agency's own directory) inside the CWD; the CWD's own name is irrelevant. The user can ask for a different location during conversation, but most users will scaffold "right here."
 
 No questions yet. No output. Just orient.
 
@@ -70,18 +72,21 @@ Now converse naturally. Based on what you peeked, do the following in whichever 
 
 ### What to suggest/confirm
 
-- **Suggest** an agency name if the directory or project files imply one. Example: if the CWD is `my-wedding/`, suggest "Wedding" or similar (the agency directory will become `@wedding/` inside the CWD).
+- **Tell the user where the agency will go.** Default: "I'll create the agency right here in `<cwd>` — it'll live at `<cwd>/@<slug>/`." Show the path concretely so the user can redirect if they want it somewhere else.
+- **Suggest** an agency name if the directory or project files imply one (e.g., a `wedding-planning/` CWD suggests agency name "Wedding"). Show the slug you'd derive ("Wedding" → `@wedding/`) and let the user adjust either the display name or the slug.
 - **Confirm** the user's name if you couldn't detect it.
 - **Propose** single-unit vs multi-unit based on what you found. If multi-unit, suggest initial unit names and purposes.
-- **Note** if a `.git/` already exists at the destination (scaffold will skip `git init`). If nested `.git/` directories exist inside the destination, mention that you'll flag them for the Registrar at first audit.
+- **Note** if a `.git/` already exists in the CWD (scaffold will skip `git init`). If nested `.git/` directories exist inside the CWD, mention that you'll flag them for the Registrar at first audit.
+- **If you detected an `@<...>/` ancestor in Phase 1**, redirect: *"You're already inside an agency at `<ancestor>`. Did you mean to add a sub-unit (`:silcrow-add-unit`) instead of creating a new agency on top of it?"* Do not proceed unless the user confirms they want a separate agency anyway.
 - **Ask only what you can't infer.** No forms, no numbered phases. Conversational.
 
 ### What you need to gather
 
 **Agency-level (for `scripts/scaffold.sh`):**
 
-- Destination path (absolute preferred).
+- Where the agency goes (default: CWD; user can specify a different parent directory).
 - Agency name (display form, e.g. "Acme Co" or "Wedding").
+- Agency directory slug (default: derived from the agency name — lowercase, spaces → hyphens, slug-safe). Show the user the proposed slug; they can override if they want a different one (e.g., display "Acme Corporation" with dir `@acme/`).
 - Agency description (one sentence, one paragraph — whatever feels right).
 - User directory name (kebab-case, lowercase; default `user` or the user's first name).
 - User display name (title-case, e.g. "Trevor" or "User").
@@ -113,11 +118,11 @@ No "shall I run it?" confirmation. If the answers are well-formed, proceed to Ph
 
 ### Agency first
 
-Invoke `scripts/scaffold.sh` with nine positional arguments:
+Invoke `scripts/scaffold.sh` with nine positional arguments. The first argument is the parent directory the agency will live inside — typically the user's CWD. Pass `--agency-dir <slug>` if the user picked a slug different from the auto-derived one.
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh" \
-    "<destination>" \
+    "<parent_directory>" \
     "<agency_name>" \
     "<agency_description>" \
     "<user_dir>" \
@@ -125,26 +130,28 @@ Invoke `scripts/scaffold.sh` with nine positional arguments:
     "<lead_dir>" \
     "<lead_role>" \
     "<implementer_dir>" \
-    "<implementer_role>"
+    "<implementer_role>" \
+    [--agency-dir "<slug>"]
 ```
 
-If the destination already contains a git repo (the user is scaffolding inside an existing repo), the script detects that and skips `git init` gracefully. If the user declined git entirely, pass `--skip-git`.
+If the parent directory already contains a git repo (the user is scaffolding inside an existing repo), the script detects that and skips `git init` gracefully. If the user declined git entirely, pass `--skip-git`.
 
 Quote every argument so values with spaces pass through cleanly.
 
 The script:
-- Prints `✓ Scaffolded <agency_name> at <destination>` on success.
-- Creates `<destination>/@<agency-dir>/` containing the unit's flat layout (CANON@, OPS@, REFERENCE@, agent dirs, README) per §0014.
-- Exits 3 if the destination already contains an `@<unit-name>/` directory (already scaffolded). Relay the error.
+- Prints `✓ Scaffolded <agency_name> at <parent_directory>` on success.
+- Creates `<parent_directory>/@<agency-dir>/` containing the unit's flat layout (CANON@, OPS@, REFERENCE@, agent dirs, README) per §0014.
+- The agency dir slug defaults to `<agency_name>` slugified (lowercase, spaces → hyphens, slug-safe per §0014); pass `--agency-dir <slug>` to override.
+- Exits 3 if `<parent_directory>/@<agency-dir>/` is already a scaffolded unit (CANON@ exists inside). Unrelated `@*/` siblings in the parent directory are not conflicts. Relay the error if it fires.
 - Prints nested `.git/` warnings if any were detected. Pass these forward in your report.
 
 ### Units next (if multi-unit)
 
-For each declared unit, invoke `scripts/add-unit.sh`. The first positional argument is the parent unit's path — at init time, that's the agency root unit `<destination>/@<agency-dir>/`:
+For each declared unit, invoke `scripts/add-unit.sh`. The first positional argument is the parent unit's path — at init time, that's the agency root unit `<parent_directory>/@<agency-dir>/`:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh" \
-    "<destination>/@<agency-dir>" \
+    "<parent_directory>/@<agency-dir>" \
     "<unit_name>" \
     "<unit_purpose>" \
     "<unit_lead_dir>" \
@@ -197,7 +204,7 @@ Agency: Acme Co
 Description: A coding project that coordinates product experimentation and release.
 User directory: trevor (display: Trevor)
 Agency roles: Lead, Implementer
-Destination: /Users/trevorschoeny/Code/@acme
+Agency lives at: /Users/trevorschoeny/Code/@acme
 ```
 
 ### Multi-unit — example
@@ -217,14 +224,14 @@ Units:
   - @ops        purpose: Owns infrastructure and day-to-day operations.
                 roles:   Architect, Engineer
                 mode:    submodule
-Destination: /Users/trevorschoeny/Code/@acme
+Agency lives at: /Users/trevorschoeny/Code/@acme
 ```
 
-Role names reflect whatever was chosen during onboarding. Unit roles are tagged `(inherited)` when they match the agency's; otherwise the unit's own role names are listed. Unit mode is always shown. The `Destination` is the only path in the ontology report — navigation to specific agent directories belongs to the next-steps block.
+Role names reflect whatever was chosen during onboarding. Unit roles are tagged `(inherited)` when they match the agency's; otherwise the unit's own role names are listed. Unit mode is always shown. The "Agency lives at" line is the only path in the ontology report — navigation to specific agent directories belongs to the next-steps block.
 
 If nested `.git/` directories were detected during scaffold, include a short note after the ontology report:
 
-> *Note: detected N nested .git/ directories inside the destination. The Registrar will surface these at first audit for you to decide how to handle (submodule, leave nested, or move elsewhere).*
+> *Note: detected N nested .git/ directories inside the agency. The Registrar will surface these at first audit for you to decide how to handle (submodule, leave nested, or move elsewhere).*
 
 ---
 
