@@ -3,10 +3,6 @@ name: silcrow-init
 description: Scaffold a Silcrow agency — a hierarchical agent organization with ADR decision tracking, actor-model messaging, and registrar-enforced record integrity. Use when the user says "scaffold agent organization," "initialize agency," "set up agent org," "bootstrap agency," "new agency," "silcrow," "Silcrow agency," or similar.
 user-invocable: true
 allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Bash(ls:*)
   - Bash(${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh:*)
   - Bash(${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh:*)
   - AskUserQuestion
