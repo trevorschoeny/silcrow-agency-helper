@@ -68,21 +68,34 @@ Output this, then drop out of scripted mode.
 
 Now converse naturally. Do the following in whichever order feels natural:
 
-### What to do
+### Path placement is fixed — do not negotiate it
 
-- **Tell the user where the agency will go.** Default: "I'll create the agency right here in `<cwd>` — it'll live at `<cwd>/@<slug>/`." Show the path concretely so the user can redirect if they want it somewhere else. The CWD is just a path token here; you don't read or interpret its name.
-- **Ask the user for an agency name.** Don't suggest one. Once they answer, show the slug you'd derive (e.g., "Wedding" → `@wedding/`) and let them adjust either the display name or the slug.
-- **Confirm the user's name** if you couldn't detect it from CLAUDE.md / env.
-- **Ask whether the agency is single-unit or multi-unit.** If multi-unit, gather unit names and purposes from the user. Don't infer.
-- **Be conversational, not formulaic.** No forms, no numbered phases.
+**The agency is always created at `<CWD>/@<slug>/`. The CWD is the parent. Always.**
+
+- You do not propose alternative parent directories. Not as a sibling of the CWD, not in the CWD's parent, not in the user's home directory, nowhere else.
+- You do not reason about whether the CWD is "the right place" or whether its name "matches" the agency. The CWD is the right place because the user invoked the skill there. That is the entire criterion.
+- You do not say things like "I can't rename the CWD, so let me put it elsewhere." There is nothing to rename and nothing to put elsewhere. The agency goes inside the CWD as `@<slug>/`. End of question.
+- You do not ask the user to confirm the location. State it as fact: *"The agency will be created at `<CWD>/@<slug>/`."* Then proceed.
+
+If — and only if — the user explicitly asks to put the agency in a different parent directory, you accept that override. But you never offer the option, never suggest it, never imply that the CWD might not be where they want it.
+
+### What to gather
+
+- **Agency name.** Ask the user. Don't suggest one. Once they answer, show the slug you'd derive (e.g., "Wedding" → `@wedding/`) and let them adjust either the display name or the slug.
+- **The user's name** if you couldn't detect it from CLAUDE.md / env. Confirm.
+- **Single-unit or multi-unit.** Ask. If multi-unit, gather unit names and purposes from the user. Don't infer.
+- **Role customization** if the user wants different display or directory names for User/Lead/Implementer.
+
+Be conversational, not formulaic. No forms, no numbered phases.
 
 ### What you must not do
 
 - **Do not inspect the CWD.** Don't `ls` it, don't read any file in it, don't take note of its name. The CWD's contents and name are irrelevant to setting up the agency.
 - **Do not walk up the filesystem.** Don't look at the CWD's parent, ancestors, or siblings. Whatever exists outside the CWD is also irrelevant.
-- **Do not infer anything from context around the agency.** Don't suggest an agency name from CWD contents, don't guess unit structure from project markers, don't assume role names. Ask the user for what's needed.
+- **Do not infer anything from context around the agency.** Don't suggest an agency name from CWD contents, don't guess unit structure from project markers, don't assume role names. Ask the user.
 - **Do not rename, move, or delete anything.** The script handles all filesystem work. Never run `mv`, `git mv`, or any operation that mutates paths outside what the script does internally.
 - **Do not check git state.** The script git-inits the agency directory itself; that's its job. You don't need to know anything about git context anywhere on the filesystem.
+- **Do not propose alternative scaffolding locations.** See "Path placement is fixed" above.
 
 ### What you need to gather
 
