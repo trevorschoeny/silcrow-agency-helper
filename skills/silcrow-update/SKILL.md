@@ -31,8 +31,8 @@ Bring an existing agency into conformity with the plugin's current canonical sta
 
 Four tiny steps:
 
-1. Confirm the agency exists (walk up to find a directory whose basename starts with `@` — that's the unit).
-2. Identify the Registrar's inbox at `<found_unit>/Registrar @ <Unit Name>/inbox/`.
+1. Confirm the current working directory is a unit (basename starts with `@`).
+2. Identify the Registrar's inbox at `<cwd>/Registrar @ <Unit Name>/inbox/`.
 3. Drop a single message into that inbox containing:
    - The plugin's name: `silcrow`. The Registrar resolves the canonical source path themselves at read-time (per the workflow doc), so you don't pre-resolve `${CLAUDE_PLUGIN_ROOT}` and risk pinning the wrong cached version.
    - A request: *"Audit this agency against the current scaffold canonical state. Report additions, deletions, and changes to User and Lead for approval. Execute approved changes."*
@@ -46,10 +46,9 @@ That's it. No diffing. No reporting. No file operations. The Registrar is the en
 
 Before any output:
 
-- `pwd` to find the current working directory.
-- Walk upward to find the nearest directory whose basename starts with `@`. That's the unit this audit will scope to — the root unit if invoked at the agency's top, or a sub-unit if invoked deeper. `:silcrow-update` works at any level; the Registrar for that scope handles it.
-- If no `@`-prefixed directory is found walking up (or in the CWD itself), stop. Tell the user: *"I don't see an agency here (no `@ <Unit Name>/` in the current or parent directories). Run `:silcrow-init` to scaffold one, or navigate to an existing agency's directory."*
-- Find the Registrar's inbox: `<found_unit_path>/Registrar @ <Unit Name>/inbox/`. Verify it exists.
+- `pwd` to find the current working directory. Verify its basename starts with `@`. That's the unit this audit will scope to — the root unit if CWD is the agency's top, or a sub-unit if CWD is deeper. `:silcrow-update` works at any level; the Registrar for that scope handles it.
+- If CWD's basename doesn't start with `@`, stop. Tell the user: *"I don't see a unit here (the current directory's basename doesn't start with `@`). Run `:silcrow-init` to scaffold an agency, or navigate into a unit's directory."*
+- Find the Registrar's inbox: `<cwd>/Registrar @ <Unit Name>/inbox/`. Verify it exists.
 
 ---
 
@@ -84,14 +83,14 @@ Silcrow plugin.
   message-write time can drift from the active install). Procedure:
   1. Read `${CLAUDE_PLUGIN_ROOT}` from your own session env. If it points
      at a path containing `scaffold/unit/`, that's the canonical source.
-  2. If `${CLAUDE_PLUGIN_ROOT}` isn't set, walk
+  2. If `${CLAUDE_PLUGIN_ROOT}` isn't set, scan
      `~/.claude/plugins/cache/silcrow/` and pick the latest semver
      directory; its `scaffold/unit/` is canonical.
   3. If multiple versions are present in cache and one isn't unambiguously
      the active one, surface the situation to the User and confirm which
      to sync against before diffing. Record the resolved path + how it
      was chosen in the audit ADR's reasoning.
-- **Agency root:** `<agency_or_unit_path>`
+- **Audit scope:** `<cwd>` (this unit and any sub-units nested inside it)
 
 Please:
 
@@ -119,7 +118,7 @@ for the detailed orchestration procedure. This message is the single trigger;
 everything from here is yours.
 ```
 
-Substitute `YYYY-MM-DD` with today's date and `<agency_or_unit_path>` with the found root.
+Substitute `YYYY-MM-DD` with today's date and `<cwd>` with the current working directory.
 
 ---
 
@@ -127,22 +126,22 @@ Substitute `YYYY-MM-DD` with today's date and `<agency_or_unit_path>` with the f
 
 Output a short message to the user:
 
-> *Update audit initiated. I've dropped a request in the Registrar's inbox at `<unit-path>/Registrar @ <Unit Name>/inbox/YYYY-MM-DD-update-skill-request.md`.*
+> *Update audit initiated. I've dropped a request in the Registrar's inbox at `<cwd>/Registrar @ <Unit Name>/inbox/YYYY-MM-DD-update-skill-request.md`.*
 >
 > *The Registrar will:*
-> - *Diff the agency against the plugin's current canonical state.*
+> - *Diff this unit (and any sub-units) against the plugin's current canonical state.*
 > - *Scan past audit ADRs to skip previously-rejected items.*
 > - *Write a report to your inbox and your Lead's inbox with every proposed change — one-sentence descriptor, approve/reject/defer per item.*
 > - *Execute what you approve, author an audit ADR summarizing the session (§0013), and commit it all in one structured commit (§0015).*
 >
-> *Open a session with the Registrar (inside `<unit-path>/Registrar @ <Unit Name>/`) to work through the audit, or wait for the report to arrive in your inbox.*
+> *Open a session with the Registrar (inside `<cwd>/Registrar @ <Unit Name>/`) to work through the audit, or wait for the report to arrive in your inbox.*
 
 ---
 
 ## Rules
 
 - **Be thin.** This skill does nothing except drop the trigger message. No diffing, reporting, file operations, ADR authoring. All of that is the Registrar's role.
-- **Refuse to proceed without an `@`-prefixed unit directory.** If the CWD is not inside a scaffolded agency, redirect to `:silcrow-init`.
-- **Write to the correct inbox.** The audit scope is whichever unit was found by walking up — the root unit if invoked at the agency's top, or a sub-unit if invoked deeper in the tree. Write to that unit's Registrar inbox; the Registrar for that scope handles their scope only (§0012 federation rule).
+- **CWD must be a unit.** If CWD's basename doesn't start with `@`, redirect to `:silcrow-init` or tell the user to navigate into a unit's directory first.
+- **Write to CWD's Registrar.** The audit scope is the CWD's unit and any sub-units nested inside it. Write to `<cwd>/Registrar @ <Unit Name>/inbox/`; the Registrar for that scope handles their scope only (§0012 federation rule).
 - **Never edit governance content directly.** This skill only writes one message file into an inbox. All substantive work happens through the Registrar.
 - **The message triggers the workflow.** The Registrar's `AGENTS.md` and the agency's `3 | Silcrow Agency Reference/Registrar Update Workflow.md` describe what happens after. You don't orchestrate — you initiate.

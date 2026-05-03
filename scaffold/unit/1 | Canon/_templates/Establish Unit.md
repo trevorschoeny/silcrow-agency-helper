@@ -47,7 +47,7 @@ There is no User at this unit. There is one User across the agency, who is princ
 
 ## Reports to
 
-- Every ancestor unit's ADRs bind `@ {unit_name}` — `@ {parent_unit_name}`'s `1 | Canon/accepted/`, plus any further ancestors walking up to the agency's root.
+- Every ancestor unit's ADRs bind `@ {unit_name}` — `@ {parent_unit_name}`'s `1 | Canon/accepted/`, plus those of any further ancestors between `@ {parent_unit_name}` and the agency's root.
 - `@ {unit_name}`'s own decisions live in `@ {unit_name}/1 | Canon/accepted/`.
 - Federation rule (§0012): `@ {unit_name}` does not adjudicate peer or cousin units; they don't adjudicate `@ {unit_name}`. Cross-unit issues route up the tree to the lowest common ancestor's Lead, or to {user_role}.
 
@@ -67,7 +67,7 @@ When this ADR is accepted, the following directory is created nested inside `@ {
 └── Registrar @ {unit_name}/                   ← Registrar agent (with inbox/archive/)
 ```
 
-Sub-units have no `3 | Silcrow Agency Reference/` of their own (§0012); foundational reference lives at the agency's root and is inherited by walking up. `@ {unit_name}` inherits every ancestor unit's ADRs by reference — its own `1 | Canon/accepted/` starts empty and fills only with decisions specific to `@ {unit_name}`.
+Sub-units have no `3 | Silcrow Agency Reference/` of their own (§0012); foundational reference lives at the agency's root and every unit inherits it by reference to that path. `@ {unit_name}` inherits every ancestor unit's ADRs by reference — its own `1 | Canon/accepted/` starts empty and fills only with decisions specific to `@ {unit_name}`.
 
 ## Considered options
 

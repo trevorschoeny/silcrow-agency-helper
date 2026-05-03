@@ -1,6 +1,6 @@
 # 3 | Silcrow Agency Reference — {agency_name}
 
-`3 | Silcrow Agency Reference/` is the agency's **procedural reference**. It holds the canonical procedural docs that explain how the agency runs: the philosophy, the decision process, the message protocol, the registrar's procedures, and the seven foundational disciplines. Per §0012, this folder lives **only at the agency's root unit**; sub-units inherit by reference (walk up the tree).
+`3 | Silcrow Agency Reference/` is the agency's **procedural reference**. It holds the canonical procedural docs that explain how the agency runs: the philosophy, the decision process, the message protocol, the registrar's procedures, and the seven foundational disciplines. Per §0012, this folder lives **only at the agency's root unit**; every other unit inherits it by reference to that path.
 
 ## What's here
 
@@ -25,11 +25,11 @@ Both are canon in the §0011 sense (they bind operational work). But they have d
 
 - Load these on demand — they're not preemptive reading.
 - Each agent's `AGENTS.md` cites the reference files most relevant to its role under "Key references" and "Principles to reason from."
-- When a procedural question arises that isn't covered by an ADR, walk the relevant reference doc and reason from foundations.
+- When a procedural question arises that isn't covered by an ADR, work through the relevant reference doc and reason from foundations.
 
 ## This folder is root-only
 
-Sub-units do not have their own `3 | Silcrow Agency Reference/`. Agents in sub-units reference the root unit's copy by walking up the tree (`@ {agency_name}/3 | Silcrow Agency Reference/...`). This avoids duplication and the drift that comes with it.
+Sub-units do not have their own `3 | Silcrow Agency Reference/`. Agents in sub-units reference the root unit's copy directly at `@ {agency_name}/3 | Silcrow Agency Reference/...`. This avoids duplication and the drift that comes with it.
 
 ## See also
 

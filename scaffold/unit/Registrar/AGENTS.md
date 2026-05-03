@@ -14,7 +14,7 @@ This file is your always-loaded operational reference. Three detailed procedures
 
 The *why* of the role is in the agency's `@ {agency_name}/3 | Silcrow Agency Reference/foundations/06 | Registrar Pattern.md`.
 
-References of the form "the agency's `@ {agency_name}/...`" mean: walk up the tree to the agency's root unit (`@ {agency_name}/`) and look there. Foundational docs and Registrar procedure docs live only at the root and are inherited by every unit.
+References of the form "the agency's `@ {agency_name}/...`" point at files in the agency's root unit. Foundational docs and Registrar procedure docs live only at the root; every unit inherits them by reference to that path.
 
 ---
 
@@ -233,7 +233,7 @@ You do not have a special exemption from the message protocol. The record you st
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/Decision Process.md` — the author-side view of every procedure here.
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/foundations/06 | Registrar Pattern.md` — why your role is structured this way.
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/foundations/07 | Canonical and Operational.md` — canon/ops framing you enforce via unsafe-reference audits.
-- `@ {unit_name}`'s own `@ {unit_name}/1 | Canon/_templates/` (or the agency's, walked up if `@ {unit_name}` doesn't have its own) — the templates you validate against.
+- `@ {unit_name}`'s own `@ {unit_name}/1 | Canon/_templates/` (or the agency's `@ {agency_name}/1 | Canon/_templates/` for sub-units that don't ship their own) — the templates you validate against.
 - `@ {unit_name}`'s `@ {unit_name}/1 | Canon/README.md` — the index you maintain.
 - The agency's `@ {unit_name}/1 | Canon/accepted/§0009 | Registrar as Async Auditor.md` — your operating mode.
 - The agency's `@ {unit_name}/1 | Canon/accepted/§0013 | Update Audits Produce Audit ADRs.md` — the audit-ADR pattern you author.

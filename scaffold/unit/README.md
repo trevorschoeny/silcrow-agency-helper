@@ -1,3 +1,5 @@
+<!-- silcrow-meta agency="{agency_name}" user-role="{user_role}" lead-role="{lead_role}" implementer-role="{implementer_role}" -->
+
 # {agency_name}
 
 {agency_description}
@@ -73,7 +75,7 @@ The unit's flat structure (§0012):
 
 Per §0012, the unit's directory is `@ <Unit Name>/` (the `@ ` prefix is load-bearing for unit detection). Governance folders use a numeric prefix and `|` separator (`1 | Canon`, `2 | Working Files`, `3 | Silcrow Agency Reference`) — these names are constants in every unit, not per-unit-suffixed. Agent directories are `<Role> @ <Unit Name>/` (Title-case role, spaces around `@`). Sub-folders deeper than the unit's top level (e.g., `accepted/`, `inbox/`, `foundations/`) carry no prefix.
 
-Sub-units, when present, live as siblings of agents and governance folders inside `@ {unit_name}/`. They follow the same flat structure recursively. `3 | Silcrow Agency Reference/` exists only at the root; sub-units walk up to inherit it.
+Sub-units, when present, live as siblings of agents and governance folders inside `@ {unit_name}/`. They follow the same flat structure recursively. `3 | Silcrow Agency Reference/` exists only at the root; every other unit inherits it by reference to the root's path.
 
 `2 | Working Files/` is the open container for operational artifacts — code repositories, deliverables, shared work product, anything that isn't governance and isn't private to a single agent.
 

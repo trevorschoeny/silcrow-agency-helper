@@ -1,6 +1,6 @@
 ---
 name: silcrow-add-unit
-description: Add a new unit to an existing agency (or sub-unit to an existing unit). Authors the establishing ADR and scaffolds the unit's `@ <Unit Name>/` governance folder in one coherent motion. Use when the user says "add a unit," "create a new unit," "split off a unit," "new sub-unit," "scaffold unit," or similar within an existing scaffolded agency.
+description: Add a new sub-unit nested inside the unit you're currently in. Authors the establishing ADR and scaffolds the new sub-unit's `@ <Unit Name>/` governance folder in one coherent motion. Use when the user says "add a unit," "create a new unit," "split off a unit," "new sub-unit," "scaffold unit," or similar within an existing scaffolded agency.
 user-invocable: true
 allowed-tools:
   - Read
@@ -16,21 +16,21 @@ allowed-tools:
 
 # Agent Org Scaffold — Add Unit
 
-Add a new unit to an existing agency (or sub-unit to an existing unit). The skill authors the establishing ADR (per §0012) *and* runs the mechanical scaffolding in one motion. Lead or User invokes; Registrar audits afterwards.
+Add a new sub-unit nested inside the unit you're currently in. The skill authors the establishing ADR (per §0012) *and* runs the mechanical scaffolding in one motion. Lead or User invokes; Registrar audits afterwards.
 
-The new sub-unit is created nested inside the parent unit's directory as a sibling of the parent's agents, `1 | Canon`, `2 | Working Files`, and any other governance folders (per §0012's flat layout). `3 | Silcrow Agency Reference` stays at the root unit only; sub-units inherit it.
+The new sub-unit is created nested inside the current unit's directory as a sibling of the unit's agents, `1 | Canon`, `2 | Working Files`, and any other governance folders (per §0012's flat layout). `3 | Silcrow Agency Reference` stays at the root unit only; sub-units inherit it by reference.
 
 ## When to use
 
-- The user wants to add a sub-organization to an existing agency.
+- The user wants to add a sub-organization to the unit they're currently in.
 - The work has matured enough that it deserves its own decision record and agent team.
 - The user says something like "let's split X into its own unit" or "I want to add a sub-unit for Y."
 
-If the user hasn't yet run `:silcrow-init`, this skill will detect that and redirect them. If they want to update an existing agency to the current scaffold, direct them to `:silcrow-update`.
+The skill assumes the current working directory **is** the parent unit — i.e., its basename starts with `@`. If it isn't, the skill stops and tells the user. If the user hasn't yet run `:silcrow-init`, this skill will detect that and redirect them. If they want to update an existing agency to the current scaffold, direct them to `:silcrow-update`.
 
 ## How this skill works
 
-Four-phase flow: **silent peek → natural conversation → run add-unit script → report with hand-off**. The bundled script `scripts/add-unit.sh` does the mechanical work — renders the establishing ADR, creates the sub-unit directory nested inside the parent unit, scaffolds the flat structure (`1 | Canon`, `2 | Working Files`, agent dirs, README), and commits.
+Four-phase flow: **silent peek → natural conversation → run add-unit script → report with hand-off**. The bundled script `scripts/add-unit.sh` does the mechanical work — renders the establishing ADR, creates the sub-unit directory nested inside the current unit, scaffolds the flat structure (`1 | Canon`, `2 | Working Files`, agent dirs, README), and commits.
 
 ---
 
@@ -38,13 +38,18 @@ Four-phase flow: **silent peek → natural conversation → run add-unit script 
 
 Before any output:
 
-- `pwd` to find the current working directory.
-- Walk upward from the CWD to find the nearest directory whose basename starts with `@`. That directory IS the parent unit this skill will add a unit inside.
-  - If the CWD itself has a basename starting with `@`, the parent unit is the CWD itself.
-  - If no `@`-prefixed directory is found walking up, stop and tell the user: *"I don't see an agency or unit here (no `@ <Unit Name>/` in the current or parent directories). Run `:silcrow-init` first to scaffold an agency, or navigate to an existing agency's directory."* Do not proceed.
-- Read the parent unit's own `README.md` (at the parent unit's path) to understand the agency's context and naming conventions.
-- Scan `<parent_path>/1 | Canon/accepted/` for existing unit-establishing ADRs (look for filenames containing `Establish Unit`) — these tell you what units already exist and what names are taken.
-- Check whether the parent is a git repo (`git rev-parse --is-inside-work-tree`).
+- `pwd` to find the current working directory. Verify its basename starts with `@`. If it doesn't, stop and tell the user: *"I don't see a unit here (the current directory's basename doesn't start with `@`). Navigate into a unit's directory (the one named `@ <Unit Name>/`) and try again. If you haven't scaffolded an agency yet, run `:silcrow-init` first."* Do not proceed.
+- Read the unit's own `README.md` at `<cwd>/README.md`. Extract the four meta fields from its `silcrow-meta` anchor on the first line:
+  - `agency="..."` — the agency name (used in the establishing ADR's references)
+  - `user-role="..."` — the agency's user role (used for "route through the User or ..." references)
+  - `lead-role="..."` — this unit's lead role (becomes the new sub-unit's `parent-lead-role`)
+  - `implementer-role="..."` — this unit's implementer role (used as the default-inherit value when proposing the new sub-unit's roles)
+
+  If the anchor is missing or any field is absent, tell the user: *"This unit's README is missing its complete `silcrow-meta` anchor. Run `:silcrow-update` to bring the agency in line with the current scaffold, then try again."* Do not proceed.
+
+  The unit's own name is the CWD basename minus the `@ ` prefix. That's the parent unit's name for the new sub-unit.
+- Scan `<cwd>/1 | Canon/accepted/` for existing unit-establishing ADRs (look for filenames containing `Establish Unit`) — these tell you what sub-units already exist and what names are taken.
+- Check whether the unit is a git repo (`git rev-parse --is-inside-work-tree`).
 - Check the environment / CLAUDE.md for the user's name.
 
 No questions yet. Just orient.
@@ -66,10 +71,10 @@ Now converse naturally. No locked intro this time — the user has already seen 
 
 ### What you need to gather
 
-- **Unit name** — Title-case English, can have spaces (e.g., `Pebble Core`, `Research`). Validate that `@ <Unit Name>/` doesn't already exist under the parent.
+- **Unit name** — Title-case English, can have spaces (e.g., `Pebble Core`, `Research`). Validate that `<cwd>/@ <Unit Name>/` doesn't already exist.
 - **Unit purpose** — one sentence describing what this unit owns.
-- **Lead role** — default inherits agency; may override.
-- **Implementer role** — default inherits agency; may override.
+- **Lead role** — default inherits the parent unit's `lead-role` from the meta anchor; may override.
+- **Implementer role** — default inherits the parent unit's `implementer-role` from the meta anchor; may override.
 
 ### Role rename guidance
 
@@ -83,28 +88,27 @@ No "shall I run it?" confirmation for well-formed answers. Proceed to Phase 3.
 
 ## Phase 3 — Run the script
 
-Invoke `scripts/add-unit.sh` with positional arguments:
+Invoke `scripts/add-unit.sh` with positional arguments. The first positional is the current working directory (the parent unit's path). The four `--`-flagged values come straight from Phase 1's meta-anchor extraction:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh" \
-    "<parent_path>" \
+    "<cwd>" \
     "<unit_name>" \
     "<unit_purpose>" \
     "<lead_role>" \
     "<implementer_role>" \
-    --user-role "<agency_user_role>" \
+    --agency-name "<agency_name>" \
+    --user-role "<user_role>" \
     --parent-lead-role "<parent_lead_role>"
 ```
 
-To find the agency's user role and the parent unit's lead role: read the parent unit's own `README.md` or inspect the agent dir names (`<Role> @ <Parent Name>/`) and their `AGENTS.md` role names. These values feed into the unit's establishing ADR so references like "route through the parent Lead or Trevor" render with the real names.
-
-`--agency-name` is **optional** — the script walks up the tree from `<parent_path>` to find the agency's root unit (the outermost `@`-prefixed directory in the chain) and reads the agency name from there. Pass it explicitly only when you need to override the auto-detection.
-
-`<parent_path>` is the **parent unit's own directory** (the `@ <Parent Name>/` directory found by Phase 1's walk-up). The new sub-unit is created as a sibling of the parent's agents and governance folders, nested directly inside `<parent_path>`.
+- `<cwd>` is the current working directory (the parent unit's own directory, basename starting with `@`). The new sub-unit is created as a sibling of the parent's agents and governance folders, nested directly inside `<cwd>`.
+- `<agency_name>`, `<user_role>`, and `<parent_lead_role>` come from the parent unit's `silcrow-meta` anchor: `agency`, `user-role`, and `lead-role` respectively. These render references like "route through the parent Lead or User" in the establishing ADR with real names.
+- `<lead_role>` and `<implementer_role>` are the new sub-unit's roles, gathered in Phase 2.
 
 The script:
-- Authors `§NNNN | Establish Unit @ <Unit Name>.md` in `<parent_path>/1 | Canon/accepted/` using the `Establish Unit.md` template.
-- Creates `<parent_path>/@ <Unit Name>/`.
+- Authors `§NNNN | Establish Unit @ <Unit Name>.md` in `<cwd>/1 | Canon/accepted/` using the `Establish Unit.md` template.
+- Creates `<cwd>/@ <Unit Name>/`.
 - Scaffolds the new sub-unit's flat structure (`1 | Canon`, `2 | Working Files`, agent dirs, README; no `3 | Silcrow Agency Reference` — that's root-only).
 - Commits with `§NNNN: establish unit @ <Unit Name>` (per §0015), unless `--skip-commit` is passed.
 
@@ -126,7 +130,7 @@ On failure, relay the error message and stop.
 
 Echo the script's summary block, then output this locked scripted next-steps:
 
-> *The new unit is ready. Open a session inside `<parent_path>/@ <Unit Name>/<Lead Role> @ <Unit Name>/` to brief your unit lead. The unit's Registrar is already set up to audit its decision record.*
+> *The new unit is ready. Open a session inside `<cwd>/@ <Unit Name>/<Lead Role> @ <Unit Name>/` to brief your unit lead. The unit's Registrar is already set up to audit its decision record.*
 >
 > *To verify the addition landed clean, ask the agency's Registrar to run an audit: they'll check that the ADR and directory agree, and flag any inconsistencies (§0009, §0012).*
 >
@@ -138,8 +142,8 @@ Substitute the angle-bracketed tokens with actual values.
 
 ## Rules
 
-- **Walk up to find a directory whose basename starts with `@`.** Don't assume the CWD is the parent unit. Sub-units can be added inside units, and the skill must figure out the correct parent.
-- **Refuse to proceed if no `@`-prefixed directory is found.** Redirect to `:silcrow-init`.
+- **CWD must be a unit.** The skill operates on the current working directory and only the current working directory. Its basename must start with `@`. If not, refuse and redirect to `:silcrow-init` (or tell the user to navigate into a unit's directory first).
+- **All inputs come from CWD.** Agency name, user role, and parent lead role are read from CWD's `silcrow-meta` anchor; the parent unit's name is CWD's basename. The skill does not look anywhere outside CWD to figure out what unit it's in.
 - **Use the script.** Don't try to hand-create the unit's directory tree or ADR.
 - **Never overwrite existing units.** The script refuses on conflict; relay the error.
 - **The ADR template has placeholders** that the script fills only partially (name, purpose, roles, date, §-number). Other placeholders (reasoning, scope specifics) are left for the Lead/User to fill in after the unit is established.

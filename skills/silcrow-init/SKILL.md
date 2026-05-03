@@ -124,13 +124,14 @@ For each declared unit, invoke `scripts/add-unit.sh`. The first positional argum
     "<unit_purpose>" \
     "<unit_lead_role>" \
     "<unit_implementer_role>" \
+    --agency-name "<agency_name>" \
     --user-role "<user_role>" \
     --parent-lead-role "<lead_role>"
 ```
 
 The first argument is the **parent unit's directory** — its basename starts with `@`. The new sub-unit will be created nested inside it as a sibling of the parent's agents and governance folders. The scaffold script's success line gave you the absolute agency path; substitute that here.
 
-Pass `--user-role` and `--parent-lead-role` so the unit's establishing ADR and templates render with the agency's actual role names (for references like "route through the agency Lead or User").
+Pass `--agency-name`, `--user-role`, and `--parent-lead-role` so the unit's establishing ADR and templates render with the agency's actual values (for references like "route through the agency Lead or User"). At init time, all three are values the user just gave you.
 
 Each invocation:
 - Authors an establishing ADR in the parent unit's `1 | Canon/accepted/`.

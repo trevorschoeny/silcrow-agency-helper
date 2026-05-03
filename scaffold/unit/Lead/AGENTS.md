@@ -166,7 +166,7 @@ If `@ {unit_name}` is a sub-unit:
 - The agency's `@ {unit_name}/1 | Canon/_templates/` — `MADR Full`, `MADR Minimal`, `Establish Unit`.
 - The agency's `@ {unit_name}/1 | Canon/README.md` — the index; §0009 (your direct-commit authority), §0010 (tier model + Implementer drafts), §0011 (canon/ops), §0012 (units), §0017 (scope seed — expand early with {user_role} if you're at the root).
 
-References of the form "the agency's `@ {agency_name}/...`" mean: walk up the tree to the agency's root unit (`@ {agency_name}/`) and look there. Foundational docs (`Philosophy.md`, `Decision Process.md`, `Message Protocol.md`, `foundations/`) live only at the root and are inherited by every unit.
+References of the form "the agency's `@ {agency_name}/...`" point at files in the agency's root unit. Foundational docs (`Philosophy.md`, `Decision Process.md`, `Message Protocol.md`, `foundations/`) live only at the root; every unit inherits them by reference to that path.
 
 ## Principles to reason from (load when needed)
 

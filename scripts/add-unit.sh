@@ -16,11 +16,14 @@
 # Usage:
 #   add-unit.sh <parent_path> <unit_name> <unit_purpose> \
 #               <lead_role> <implementer_role> \
+#               --agency-name <agency_name> \
+#               [--user-role <user_role>] \
+#               [--parent-lead-role <parent_lead_role>] \
 #               [--skip-commit]
 #
 # Arguments:
 #   parent_path         Absolute path to the parent unit's directory (its
-#                       basename should start with `@ `, e.g.
+#                       basename must start with `@ `, e.g.
 #                       /path/to/@ Pebble/). The new sub-unit will be created
 #                       nested inside this directory as a sibling of the
 #                       parent's agents and governance folders.
@@ -32,13 +35,27 @@
 #   implementer_role    Display name for the unit's Implementer (e.g.
 #                       "Implementer", "Specialist").
 #
-# Options:
+# Required options:
+#   --agency-name       Display name of the agency this unit belongs to.
+#                       Used in the establishing ADR's prose, the unit-level
+#                       README, and inherited references like
+#                       `@ <agency_name>/3 | Silcrow Agency Reference/`.
+#                       The caller (the silcrow-add-unit skill) reads this
+#                       from the parent unit's `silcrow-meta` README anchor.
+#
+# Optional options:
+#   --user-role         Display name of the agency's user role (default: User).
+#                       Used in the establishing ADR's prose for references
+#                       like "route through the User."
+#   --parent-lead-role  Display name of the parent unit's Lead role (default:
+#                       Lead). Used in the establishing ADR's prose for
+#                       references like "reports up to the parent Lead."
 #   --skip-commit       Skip the governance commit after creating the unit.
 #
 # Exit codes:
 #   0   Success.
 #   1   Plugin scaffold source not found.
-#   2   Argument error.
+#   2   Argument error (including missing --agency-name).
 #   3   Parent unit not found (basename doesn't start with `@`).
 #   4   Unit already exists at parent_path/`@ <unit_name>`/.
 
@@ -103,6 +120,10 @@ IMPL_ROLE="${POSITIONAL[4]}"
 DATE="$(date -u +%Y-%m-%d)"
 
 # --- Helper: detect if a directory IS a unit (basename starts with @) ----
+#
+# Used once to validate PARENT_PATH. The script never inspects PARENT_PATH's
+# parent or any ancestor — all extra-CWD facts (agency name, user role,
+# parent lead role) come in as explicit flags from the caller.
 
 is_unit_dir() {
     local dir="$1"
@@ -114,24 +135,19 @@ is_unit_dir() {
     esac
 }
 
-# --- Resolve AGENCY_NAME (auto-walk up if not supplied) ----------------------
+# --- Resolve AGENCY_NAME (required from caller) ------------------------------
 
-# Walk up the tree from PARENT_PATH while each step is itself a unit dir
-# (basename starts with `@`). The outermost `@ <Name>/` directory is the
-# agency's root unit, and its name (sans `@ ` prefix) is AGENCY_NAME.
 if [ -z "$AGENCY_NAME_ARG" ]; then
-    walker="$PARENT_PATH"
-    while is_unit_dir "$(dirname "$walker")"; do
-        walker="$(dirname "$walker")"
-    done
-    AGENCY_BASENAME="$(basename "$walker")"
-    # Strip the `@ ` prefix (note the literal space).
-    AGENCY_NAME="${AGENCY_BASENAME#@ }"
-else
-    AGENCY_NAME="$AGENCY_NAME_ARG"
+    echo "Error: --agency-name is required." >&2
+    echo "The skill reads it from the parent unit's silcrow-meta README anchor and passes it explicitly." >&2
+    exit 2
 fi
+AGENCY_NAME="$AGENCY_NAME_ARG"
 
-# --- Compute parent unit's name (default: derive from PARENT_PATH) -----------
+# --- Compute parent unit's name from PARENT_PATH basename --------------------
+#
+# PARENT_PATH is the parent unit's own directory; its basename is `@ <Name>/`,
+# so PARENT_UNIT_NAME is the basename minus the `@ ` prefix.
 
 if [ -n "$PARENT_UNIT_NAME_ARG" ]; then
     PARENT_UNIT_NAME="$PARENT_UNIT_NAME_ARG"
@@ -256,6 +272,8 @@ touch \
 # --- Unit-level README -------------------------------------------------------
 
 cat > "$UNIT_PATH/README.md" <<README
+<!-- silcrow-meta agency="$AGENCY_NAME" user-role="$USER_ROLE_ARG" lead-role="$LEAD_ROLE" implementer-role="$IMPL_ROLE" -->
+
 # @ $UNIT_NAME
 
 $UNIT_PURPOSE

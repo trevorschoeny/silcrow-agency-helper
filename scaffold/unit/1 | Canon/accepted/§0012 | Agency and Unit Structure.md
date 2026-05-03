@@ -24,7 +24,7 @@ The plugin needs a unit structure that:
 
 - **Stays shallow at the agent layer.** Operators interact with agents and their inboxes daily. A four-deep path imposes friction that compounds across an agency's lifetime.
 - **Distinguishes governance from operational without an extra folder level.** §0011's canon/operational split is load-bearing, but enforcing it through a wrapper directory adds depth.
-- **Identifies units programmatically.** Tooling — the registrar's audit, the `:silcrow-add-unit` skill's parent-walk, the `:silcrow-update` skill's tree traversal — needs to recognize what's a unit and what isn't.
+- **Identifies units programmatically.** Tooling — the registrar's audit, the `:silcrow-add-unit` skill's CWD-must-be-a-unit check, the `:silcrow-update` skill's same check — needs to recognize what's a unit and what isn't.
 - **Recurses cleanly.** A sub-unit should be structurally identical to its parent. No special-casing depth.
 - **Reads naturally to a non-developer.** A wedding planner, a healthcare initiative, or a research lab using silcrow should not have to learn slug conventions or shell shorthand to navigate their own agency.
 - **Self-identifies enough that the parent context is recoverable.** Opening a folder standalone in an editor or file manager should reveal the unit it belongs to (via the parent dir's name, since the governance folders themselves are constants).
@@ -47,7 +47,7 @@ The plugin needs a unit structure that:
 - **Agent identity** — `<Role> @ <Unit Name>` for both directory paths and prose narrative (e.g. `Lead @ Pebble`, `Trevor @ Pebble Core`). One name per concept; no separate slug-vs-display form.
 - **`1 | Canon/`** — the unit's canonical decisions. Holds `accepted/`, `proposed/`, `superseded/`, `rejected/`, `_templates/`, and a `README.md` index. Per-unit (every unit has one). Subject to §0004's immutability and supersession discipline.
 - **`2 | Working Files/`** — operational artifacts: code, deliverables, shared work product, anything that isn't governance and isn't private to a single agent. Per-unit. Open container with no prescribed sub-structure.
-- **`3 | Silcrow Agency Reference/`** — canonical procedural reference (philosophy, foundations, message protocol, decision process, registrar workflows). **Root unit only**; sub-units inherit by reference (walk up the tree). Mutable, unlike `1 | Canon/`.
+- **`3 | Silcrow Agency Reference/`** — canonical procedural reference (philosophy, foundations, message protocol, decision process, registrar workflows). **Root unit only**; every other unit inherits it by reference to the root's path. Mutable, unlike `1 | Canon/`.
 - **Direct-child folder of a unit** — any folder placed at the unit's root: agent directory, sub-unit directory, or governance folder.
 - **Subfolder** — any folder deeper than direct-child level (e.g., `accepted/`, `foundations/`, `inbox/`). Plain names; no prefix.
 
@@ -98,7 +98,7 @@ The Registrar audits the pair. A sub-unit directory without its registering ADR 
 
 #### `3 | Silcrow Agency Reference/` is root-only; sub-units inherit by reference
 
-Foundational documents (`Philosophy.md`, `Decision Process.md`, `Message Protocol.md`, registrar workflows, `foundations/`) live at the root unit's `3 | Silcrow Agency Reference/`. Sub-units do not duplicate them; agents in sub-units reference the root's folder by walking up the tree.
+Foundational documents (`Philosophy.md`, `Decision Process.md`, `Message Protocol.md`, registrar workflows, `foundations/`) live at the root unit's `3 | Silcrow Agency Reference/`. Sub-units do not duplicate them; agents in sub-units reference the root's folder directly via `@ {agency_name}/3 | Silcrow Agency Reference/`.
 
 This is the one shape exception to the "every unit is structurally identical" rule: sub-units have `1 | Canon/`, `2 | Working Files/`, agents, sub-units, README — but no `3 | Silcrow Agency Reference/`. The agency's foundational reference is shared, not duplicated.
 
@@ -161,7 +161,7 @@ Any directory whose own basename starts with `@` is a unit.
 - **Positive:** Sub-units live as siblings of their parent's agents and governance, recursively repeating the same shape.
 - **Positive:** `2 | Working Files/` resolves "where do operational deliverables go?" — they go in `2 | Working Files/`.
 - **Negative:** Paths now contain spaces, `@`, and `|` throughout. Every script and template that constructs a path must use rigorous quoting (`"$VAR"`); pipes outside quotes pipe shell commands, with potentially destructive consequences.
-- **Negative:** Governance folders no longer self-identify through a per-unit suffix. Opening `1 | Canon/` alone doesn't reveal which unit's canon it holds; the parent directory's name carries the identity. In practice this matters only for tooling that operates without parent context, and that tooling can walk one level up.
+- **Negative:** Governance folders no longer self-identify through a per-unit suffix. Opening `1 | Canon/` alone doesn't reveal which unit's canon it holds; the parent directory's name carries the identity. In practice this matters only for tooling that operates without parent context, and that tooling can resolve the unit name from the parent directory's basename.
 - **Negative:** First-time visitors must learn the `@ ` prefix convention and the `1 | / 2 | / 3 | ` governance scheme. The unit's `README.md` orients newcomers.
 
 ## Anti-patterns surfaced

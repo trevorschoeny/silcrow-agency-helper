@@ -56,7 +56,7 @@ The generated agency ships a **founding record of 17 ADRs** (§0001 + 16 constit
 
 ### `:silcrow-add-unit` — add a sub-unit
 
-Run inside any existing unit's directory (root or otherwise) to add a sub-unit beneath it. The skill walks up to find the parent unit's `@ <Parent Unit Name>/` directory, converses to gather the sub-unit's details, and runs `scripts/add-unit.sh` — which authors an establishing ADR in the parent's `1 | Canon/accepted/` and scaffolds the sub-unit's flat structure (`1 | Canon`, `2 | Working Files`, agent dirs, README) nested inside the parent unit.
+Run inside an existing unit's directory (the one named `@ <Unit Name>/`, root or otherwise) to add a sub-unit nested inside it. The skill reads the unit's `silcrow-meta` README anchor for the agency name and role values, converses to gather the sub-unit's details, and runs `scripts/add-unit.sh` — which authors an establishing ADR in the parent's `1 | Canon/accepted/` and scaffolds the sub-unit's flat structure (`1 | Canon`, `2 | Working Files`, agent dirs, README) nested inside the parent unit.
 
 ### `:silcrow-update` — reconcile with the plugin's current state
 

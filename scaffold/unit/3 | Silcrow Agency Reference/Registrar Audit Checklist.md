@@ -44,7 +44,7 @@ Read this file **when you're invoked to audit the record** (by User, Lead, or vi
 ## G. Scope (§0017)
 
 - [ ] Every accepted ADR falls within this unit's scope as stated in §0017 (or the current scope ADR). Scope violations — surface to {user_role}.
-- [ ] In agencies with multiple units: a unit's ADRs don't exceed that unit's scope or any ancestor unit's scope. (Each unit's ADRs are bound by every ancestor's ADRs walking up to the root.)
+- [ ] In agencies with multiple units: a unit's ADRs don't exceed that unit's scope or any ancestor unit's scope. (Each unit's ADRs are bound by every ancestor unit's ADRs, up to and including the root's.)
 
 ## H. Federation (§0012)
 
@@ -88,7 +88,7 @@ Report as informational. The flag prompts the relevant agent (or {user_role}) to
 
 ## Audit report structure
 
-After walking the checklist, send one report to appropriate inboxes:
+After working through the checklist, send one report to appropriate inboxes:
 
 ```
 Audit report — YYYY-MM-DD

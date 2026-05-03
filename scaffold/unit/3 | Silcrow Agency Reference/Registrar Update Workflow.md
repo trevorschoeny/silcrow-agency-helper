@@ -13,7 +13,7 @@ The skill drops a message naming the plugin (`silcrow`) and asking you to audit 
 Before diffing, find the path to the active plugin's `scaffold/unit/`:
 
 1. **Check `${CLAUDE_PLUGIN_ROOT}` first.** Read it from your session env. If set, verify `${CLAUDE_PLUGIN_ROOT}/scaffold/unit/` exists. If yes, that's your canonical source.
-2. **Fallback: walk the cache.** If `${CLAUDE_PLUGIN_ROOT}` is unset (or its `scaffold/unit/` doesn't exist), look at `~/.claude/plugins/cache/silcrow/`. Identify all version directories present. Pick the latest semver if exactly one is plausibly active.
+2. **Fallback: scan the cache.** If `${CLAUDE_PLUGIN_ROOT}` is unset (or its `scaffold/unit/` doesn't exist), look at `~/.claude/plugins/cache/silcrow/`. Identify all version directories present. Pick the latest semver if exactly one is plausibly active.
 3. **Ambiguity: surface to {user_role}.** If multiple version directories are present in the cache and you can't tell which is active (no clear marker of which Claude Code is using), do not guess. Send a brief message to {user_role} naming the candidates and ask which to sync against. Resume only after they confirm.
 4. **Record the resolution.** Whichever path you ended up using and how you chose it goes in the audit ADR's reasoning section (§0013 record). Future readers can trace what was canonical at audit time.
 
