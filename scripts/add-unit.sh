@@ -4,11 +4,11 @@
 #
 # Invoked by the silcrow:silcrow-add-unit skill. Creates the unit's directory
 # nested inside the parent unit, scaffolds its flat structure (1 | Canon,
-# 2 | Working Files, agent dirs, README per §0013), and writes an establishing
+# 2 | Working Files, agent dirs, README per §0012), and writes an establishing
 # ADR into the parent's `1 | Canon/accepted/`.
 #
 # Sub-units inherit `3 | Silcrow Agency Reference` from the agency root
-# (§0013) — that folder is root-only.
+# (§0012) — that folder is root-only.
 #
 # The skill figures out all values through conversation; this script does the
 # mechanical work.
@@ -227,7 +227,7 @@ NEXT_SECTION=$(printf "%04d" "$NEXT_NUM")
 
 # --- Create the unit directory and scaffold its flat structure ---------------
 #
-# Per §0013's flat layout: agents and governance folders are direct children
+# Per §0012's flat layout: agents and governance folders are direct children
 # of `@ <Unit Name>/`. Agent dirs are `<Role> @ <Unit Name>/`. Governance
 # folders are constants (`1 | Canon`, `2 | Working Files`) — no per-unit
 # suffix. Sub-units inherit `3 | Silcrow Agency Reference` from the agency
@@ -261,7 +261,7 @@ cat > "$UNIT_PATH/README.md" <<README
 $UNIT_PURPOSE
 
 \`@ $UNIT_NAME\` is a **unit** in the agency \`@ $AGENCY_NAME\`'s tree, nested
-inside its parent unit \`@ $PARENT_UNIT_NAME\`. Per §0013, every unit follows
+inside its parent unit \`@ $PARENT_UNIT_NAME\`. Per §0012, every unit follows
 the same flat layout: \`1 | Canon/\` for decisions, \`2 | Working Files/\` for
 operational artifacts, agent directories alongside, and any sub-units as
 siblings. \`3 | Silcrow Agency Reference/\` lives only at the agency's root
@@ -302,7 +302,7 @@ duplicate it.
 
 There is no User at this unit. There is one User across the agency, who is
 the principal of every unit and lives at the agency's root unit
-(\`@ $AGENCY_NAME\`) (§0011).
+(\`@ $AGENCY_NAME\`) (§0010).
 
 ---
 
@@ -329,7 +329,7 @@ README
 #
 # Each agent directory gets only AGENTS.md — the universal cross-tool
 # convention, auto-loaded by Claude Code natively. Every unit in the agency
-# is structurally identical (§0013), so we use the same templates as the root
+# is structurally identical (§0012), so we use the same templates as the root
 # unit with this unit's values substituted.
 
 TEMPLATE_LEAD="$PLUGIN_ROOT/scaffold/unit/Lead/AGENTS.md"
@@ -402,7 +402,7 @@ if [ -f "$INDEX" ]; then
 INDEX_NOTE
 fi
 
-# --- Git commit (§0016 convention) -------------------------------------------
+# --- Git commit (§0015 convention) -------------------------------------------
 
 if [ "$SKIP_COMMIT" -eq 0 ]; then
     if (cd "$PARENT_PATH" && git rev-parse --is-inside-work-tree >/dev/null 2>&1); then

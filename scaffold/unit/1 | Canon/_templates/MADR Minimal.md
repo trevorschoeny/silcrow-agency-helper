@@ -1,4 +1,4 @@
-# §NNNN — {short decision title in imperative form}
+# §NNNN | {short decision title in imperative form}
 
 - **Status:** proposed
 - **Date:** YYYY-MM-DD

@@ -5,7 +5,7 @@
 - **Authors:** scaffold initialization (inherited via §0001)
 - **Supersedes:** —
 - **Superseded by:** —
-- **Influences:** §0008 (immutability is what the Registrar enforces); all future ADRs.
+- **Influences:** §0009 (immutability is what the Registrar enforces); all future ADRs.
 - **Influenced by:** §0001, §0003
 
 ## Why-statement

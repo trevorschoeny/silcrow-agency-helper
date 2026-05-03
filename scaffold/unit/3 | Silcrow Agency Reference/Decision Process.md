@@ -8,7 +8,7 @@ The underlying philosophy — *why* we do it this way — is in `Philosophy.md`.
 
 ## 1. What counts as a decision worth recording
 
-Not every choice needs an ADR. Use the **promotion rule** from §0012:
+Not every choice needs an ADR. Use the **promotion rule** from §0011:
 
 > *An operational choice is promoted to canonical when it needs to constrain future work beyond the current execution. Not when it's large. Not when it's important. When it's **binding**.*
 
@@ -36,16 +36,17 @@ Every accepted ADR receives a §-number. Numbers are:
 - **Sequential** — assigned in the order the Registrar accepts them.
 - **Monotonic** — never go backward.
 - **Never reused** — not even for rejected or withdrawn proposals.
-- **Unique within the unit's record** — no per-topic sub-numbering. Per §0013, every unit (including the root) is its own §-numbering scope: each unit's `@ {unit_name}/1 | Canon/` carries its own monotonic sequence, and there is no separate registry above or beside the units that assigns §-numbers across the tree.
+- **Unique within the unit's record** — no per-topic sub-numbering. Per §0012, every unit (including the root) is its own §-numbering scope: each unit's `@ {unit_name}/1 | Canon/` carries its own monotonic sequence, and there is no separate registry above or beside the units that assigns §-numbers across the tree.
 
 The §-number is assigned by the Registrar at acceptance time, or by a Lead/User committing directly to `accepted/`. The filename embeds the number and is permanent once assigned. Status changes move the file between folders (`accepted/`, `superseded/`, `rejected/`); the filename does not change.
 
 ### Filenames
 
-`§NNNN-short-kebab-title.md`
+`§NNNN | Title in Title Case.md`
 
 - Four-digit zero-padded number. Supports up to 9999 ADRs per unit's record, which is more than enough.
-- Kebab-case short title.
+- A pipe (` | `) separates the §-number from the title.
+- Title is short, in English Title Case, with spaces. Per §0012, the scaffold uses Title Case with spaces throughout for readability across non-developer audiences.
 - The literal `§` character is used in the filename.
 
 ### Identity vs. navigation
@@ -56,16 +57,16 @@ The §-numbering discipline above governs ADR *identity* and is scaffold-prescri
 
 ## 3. Who may author ADRs, and the lifecycle
 
-Per §0010 and §0011, authorship authority differs by role:
+Per §0009 and §0010, authorship authority differs by role:
 
 - **{lead_role}** — first-class. May draft, commit, and supersede directly in `accepted/`. May also use `proposed/` for optional Registrar pre-review.
-- **{user_role}** — first-class. Same authority as Lead (and more — as principal per §0011).
+- **{user_role}** — first-class. Same authority as Lead (and more — as principal per §0010).
 - **{implementer_role}** — draft-with-approval. May draft ADRs but must place them in `proposed/` awaiting Lead or User approval.
 - **Registrar** — no authoring. Registrar flags form issues and records the work others do.
 
 ### The lifecycle — three paths
 
-The scaffold used to gate every ADR through a sync validation step by the Registrar. That's no longer the default (§0010).
+Per §0009, the Registrar does not gate every ADR through a sync validation step; first-class authors commit directly when confident, and the Registrar audits the record on demand.
 
 #### Path A — Lead direct commit (default for Lead/User)
 
@@ -76,7 +77,7 @@ The scaffold used to gate every ADR through a sync validation step by the Regist
 └────────┘         └─────────────────┘          └──────────────────────────────┘
 ```
 
-Lead writes the draft privately, assigns themselves the next available §-number (looking at `accepted/` to see what's next), commits the file directly into `accepted/`. No Registrar pre-review. The Registrar audits later on demand (§0010).
+Lead writes the draft privately, assigns themselves the next available §-number (looking at `accepted/` to see what's next), commits the file directly into `accepted/`. No Registrar pre-review. The Registrar audits later on demand (§0009).
 
 #### Path B — Lead via `proposed/` (optional pre-review)
 
@@ -161,7 +162,7 @@ More in `foundations/04 | Architecture Decision Records.md`.
 
 ## 5. Canonical vs operational artifacts
 
-Per §0012, the agency produces two kinds of artifacts:
+Per §0011, the agency produces two kinds of artifacts:
 
 - **Canonical (ADRs)** — immutable, citable, stable.
 - **Operational (everything else)** — plans, briefs, implementations, research, schedules, codebases — mutable and evolving.
@@ -170,7 +171,7 @@ Constraint flows one direction: canonical binds operational; operational never b
 
 ### When an operational choice needs to become an ADR
 
-Apply the **promotion rule**. The test is *binding on future work*, not size or importance. See §0012 for paired examples.
+Apply the **promotion rule**. The test is *binding on future work*, not size or importance. See §0011 for paired examples.
 
 ### When an ADR references operational artifacts
 
@@ -182,7 +183,7 @@ Use the **reference rule**. Safe references are:
 
 Apply the **delete test** (if the referenced file vanishes, does the ADR still carry its decision?) and the **contradiction test** (if the referenced file contradicts the ADR, does the ADR still hold on its own terms?). If either answer is "no," the reference is unsafe — rewrite so the ADR's meaning lives inside the ADR.
 
-The Registrar audits for unsafe references (§0010) and surfaces them to the Lead for remediation.
+The Registrar audits for unsafe references (§0009) and surfaces them to the Lead for remediation.
 
 ---
 
@@ -245,11 +246,11 @@ When an ADR is superseded, the citation graph is preserved but annotated.
 
 ### `:silcrow-add-unit` — unit-establishing ADRs
 
-When the {lead_role} or {user_role} adds a new unit via the `silcrow:silcrow-add-unit` skill, the skill authors a unit-establishing ADR automatically (§0013). The ADR lands in the parent's `@ <parent-unit-name>/1 | Canon/accepted/` with the establishing reasoning captured. This is the fast path for a specific kind of structural decision; the skill is doing what the author would otherwise do by hand.
+When the {lead_role} or {user_role} adds a new unit via the `silcrow:silcrow-add-unit` skill, the skill authors a unit-establishing ADR automatically (§0012). The ADR lands in the parent's `@ <Parent Unit Name>/1 | Canon/accepted/` with the establishing reasoning captured. This is the fast path for a specific kind of structural decision; the skill is doing what the author would otherwise do by hand.
 
 ### `:silcrow-update` — update audit ADRs
 
-When the {user_role} invokes `silcrow:silcrow-update` to bring the agency into conformity with the plugin's current canonical state, the Registrar orchestrates an audit (per §0014). At the end of the audit, the Registrar authors **one audit ADR** summarizing accepts, rejects, deferrals, and file changes. That ADR is canonical — per §0014, rejections and deferrals are decisions that bind future audit behavior, and they belong in the record.
+When the {user_role} invokes `silcrow:silcrow-update` to bring the agency into conformity with the plugin's current canonical state, the Registrar orchestrates an audit (per §0013). At the end of the audit, the Registrar authors **one audit ADR** summarizing accepts, rejects, deferrals, and file changes. That ADR is canonical — per §0013, rejections and deferrals are decisions that bind future audit behavior, and they belong in the record.
 
 ### Both paths produce normal ADRs
 
@@ -259,27 +260,27 @@ Skills don't create a different kind of ADR — they produce the same MADR-with-
 
 ## Worked examples
 
-### Greenfield decision (Lead direct-commit, §0010)
+### Greenfield decision (Lead direct-commit, §0009)
 
-The {lead_role} drafts in `@ {unit_name}/{lead_role} @ {unit_name}/draft-logging-adr.md`, assigns the next §-number by checking `accepted/` (e.g. §0017), moves the file to `@ {unit_name}/1 | Canon/accepted/§0017-use-structured-logging.md`, sets `Status: accepted`, and commits `§0017: use structured logging`. Either Lead or Registrar updates the index — the Registrar will fix it at next audit if the Lead doesn't.
+The {lead_role} drafts in `@ {unit_name}/{lead_role} @ {unit_name}/draft-logging-adr.md`, assigns the next §-number by checking `accepted/` (e.g. §0042), moves the file to `@ {unit_name}/1 | Canon/accepted/§0042 | Use Structured Logging.md`, sets `Status: accepted`, and commits `§0042: use structured logging`. Either Lead or Registrar updates the index — the Registrar will fix it at next audit if the Lead doesn't.
 
-### Implementer draft with approval (§0011)
+### Implementer draft with approval (§0010)
 
 The {implementer_role} drafts in their own directory, moves the draft to `@ {unit_name}/1 | Canon/proposed/draft-correlation-id.md`, and messages the {lead_role}: *"Drafted ADR proposing correlation IDs in API error responses — context: repeated debugging difficulty tracing errors across services. Please review."* Lead responds: accept (move to `accepted/` with §-number), request revisions (stays in `proposed/`), or reject (Registrar moves to `rejected/` with §-number — rejections consume §-numbers too).
 
 ### Supersession
 
-Lead drafts a new ADR with `Supersedes: §0017`, commits to `accepted/` with the next §-number (say §0042). Either Lead or Registrar moves §0017 to `superseded/` (filename unchanged), updates §0017's `Status:` and `Superseded by:` fields, and appends a retrospective note. Commit cites both: `§0042: adopt observability v2; supersedes §0017`. Old citations to §0017 continue to resolve; readers see the retrospective note and follow forward.
+Lead drafts a new ADR with `Supersedes: §0042`, commits to `accepted/` with the next §-number (say §0061). Either Lead or Registrar moves §0042 to `superseded/` (filename unchanged), updates §0042's `Status:` and `Superseded by:` fields, and appends a retrospective note. Commit cites both: `§0061: adopt observability v2; supersedes §0042`. Old citations to §0042 continue to resolve; readers see the retrospective note and follow forward.
 
 ### Anti-pattern discovered post-adoption
 
-§0010 was adopted eight months ago and has caused repeated incidents. Three artifacts result:
+§0050 (a hypothetical "Use a shared cache across services" decision) was adopted eight months ago and has caused repeated incidents. Three artifacts result:
 
 - **Anti-pattern ADR** §0087 — names the failure mode as a reusable record (`§0087 | Avoid Shared Cache Across Services`), so future cache discussions don't re-derive the lesson.
-- **Superseding ADR** §0088 — records the new positive decision (service-local caches), with `Supersedes: §0010`.
-- **Retrospective note on §0010** — points forward to §0088 and cites §0087.
+- **Superseding ADR** §0088 — records the new positive decision (service-local caches), with `Supersedes: §0050`.
+- **Retrospective note on §0050** — points forward to §0088 and cites §0087.
 
-Without (a) the next cache discussion re-derives the lesson; without (b) there's no new binding decision; without (c) §0010 looks current to casual readers.
+Without (a) the next cache discussion re-derives the lesson; without (b) there's no new binding decision; without (c) §0050 looks current to casual readers.
 
 The discipline — preserve the original, don't edit — is about learning, not blame. The old ADR was the best available reasoning at the time. Preserving it intact lets future agents see the real arc: decision → outcome → anti-pattern record → superseded.
 
@@ -294,7 +295,7 @@ The discipline — preserve the original, don't edit — is about learning, not 
 - `foundations/05 | Legal Citation Tradition.md` — deep dive on §-numbering.
 - `foundations/07 | Canonical and Operational.md` — canon/operational split.
 - `../1 | Canon/_templates/` — the templates you'll use.
-- `../1 | Canon/accepted/§0010 | Registrar as Async Auditor.md` — why Lead commits direct.
-- `../1 | Canon/accepted/§0011 | User as Principal and Local Tier Numbering.md` — the Implementer-draft-with-approval path.
-- `../1 | Canon/accepted/§0012 | Canonical and Operational Artifacts.md` — the promotion rule and reference rule.
-- `../1 | Canon/accepted/§0014 | Update Audits Produce Audit ADRs.md` — the `:silcrow-update` audit-ADR pattern.
+- `../1 | Canon/accepted/§0009 | Registrar as Async Auditor.md` — why Lead commits direct.
+- `../1 | Canon/accepted/§0010 | User as Principal and Local Tier Numbering.md` — the Implementer-draft-with-approval path.
+- `../1 | Canon/accepted/§0011 | Canonical and Operational Artifacts.md` — the promotion rule and reference rule.
+- `../1 | Canon/accepted/§0013 | Update Audits Produce Audit ADRs.md` — the `:silcrow-update` audit-ADR pattern.

@@ -88,7 +88,7 @@ This means: years from now, a reference to §0042 in a message, in another ADR, 
 
 The scaffold uses four digits zero-padded (§0042, not §42). Two small reasons:
 
-- **Filesystem sorting.** A lexicographic sort of filenames puts §0001 before §0009 before §0100, which matches numeric order. Without padding, lexicographic sort produces §1, §10, §100, §2 — readable but annoying.
+- **Filesystem sorting.** A lexicographic sort of filenames puts §0001 before §0008 before §0100, which matches numeric order. Without padding, lexicographic sort produces §1, §10, §100, §2 — readable but annoying.
 - **Identifier aesthetics.** Zero-padded numbers feel like identifiers; unpadded numbers feel like offsets. Small, but it nudges the right mental model.
 
 Four digits supports up to 9999 ADRs per project, which is far more than any real project will produce. If you somehow reach §9999, that's a signal that something has gone wrong.
@@ -103,7 +103,7 @@ The scaffold rejects topic-based numbering for three reasons:
 2. **Multi-topic decisions.** Architectural decisions often span topics. "Use JWT for session identity" is both auth and identity and cross-cutting convention. A single topic forces a misleading categorization.
 3. **Sort order loses meaning.** With topic prefixes, §-numbers within each topic restart, and the global acceptance order is lost. History becomes harder to read.
 
-The scaffold compensates for the loss of topic-at-a-glance with the filename's short title: `§0012-use-structured-logging.md` tells you what it's about. The § gives stable identity; the kebab-title gives human-readable context.
+The scaffold compensates for the loss of topic-at-a-glance with the filename's short title: `§0011 | Use Structured Logging.md` tells you what it's about. The § gives stable identity; the Title Case title (separated from the §-number by a pipe) gives human-readable context.
 
 ## Debates and open questions
 

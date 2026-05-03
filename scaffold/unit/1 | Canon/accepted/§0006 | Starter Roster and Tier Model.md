@@ -50,7 +50,7 @@ Option (2) — two-tier — collapses architecture and execution into one role. 
 
 Option (4) — four-plus tiers from day one — is premature elaboration. Tiers exist for real work; inventing tiers before the work needs them creates roles that float without substance. The correct time to add a fourth tier is when the existing tiers' work has genuinely bifurcated into more-than-one-stratum spans.
 
-The Registrar is placed **outside** the decision hierarchy because their authority is procedural, not substantive. Putting them inside the tier structure would imply authority over decisions made at lower tiers, which is exactly what must not happen (see §0008).
+The Registrar is placed **outside** the decision hierarchy because their authority is procedural, not substantive. Putting them inside the tier structure would imply authority over decisions made at lower tiers, which is exactly what must not happen (see §0009).
 
 ### Consequences
 
@@ -92,7 +92,7 @@ The Registrar is placed **outside** the decision hierarchy because their authori
 
 - **Tier-skipping.** Two-stratum gaps (e.g., {user_role} giving direct feedback to {implementer_role} without going through {lead_role}) collapse the stratification. When tempted, route through tiers even when it feels slower.
 - **Premature tier expansion.** Adding a fourth tier because "we're growing" rather than because the work has actually bifurcated. Produces ceremonial roles. The trigger is *work span*, not *headcount*.
-- **Bundling {lead_role} and Registrar.** Combining form authority with substance authority collapses the separation §0008 depends on. Even in small projects, keep the roles distinct — one person can hold both hats, but the hats themselves should remain separate.
+- **Bundling {lead_role} and Registrar.** Combining form authority with substance authority collapses the separation §0009 depends on. Even in small projects, keep the roles distinct — one person can hold both hats, but the hats themselves should remain separate.
 
 ## Review trigger
 
@@ -109,6 +109,6 @@ In each case, the change is a new ADR superseding this one. Do not edit this rec
 - `../../3 | Silcrow Agency Reference/foundations/01 | Stratified Cognition.md` — full intellectual history.
 - `../../3 | Silcrow Agency Reference/foundations/02 | Subsidiarity.md` — why the tiered structure lets subsidiarity work.
 - `../../3 | Silcrow Agency Reference/foundations/06 | Registrar Pattern.md` — why the Registrar sits outside the hierarchy.
-- `../../` — the directories of the starter roster this ADR directly defines. Subsequent roster changes flow through `§0009`.
+- `../../` — the directories of the starter roster this ADR directly defines. Subsequent roster changes flow through `§0008`.
 - Jaques, E. (1996). *Requisite Organization* (2nd ed.). Cason Hall.
 - Jaques, E. (1990). "In Praise of Hierarchy." *HBR*, Jan–Feb.

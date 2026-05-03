@@ -25,12 +25,12 @@ Never delete archived messages.
 
 ```
 @ {unit_name}/1 | Canon/accepted/
-├── arch/§0012-...
+├── arch/§0011-...
 ├── data/§0088-...
 └── ops/§0101-...
 ```
 
-§-numbers stay globally unique. Topic folders are an organizational aid. Citations remain `§0012`; readers use the index to locate.
+§-numbers stay globally unique. Topic folders are an organizational aid. Citations remain `§0011`; readers use the index to locate.
 
 ## Additional Registrars
 

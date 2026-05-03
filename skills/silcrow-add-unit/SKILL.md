@@ -16,9 +16,9 @@ allowed-tools:
 
 # Agent Org Scaffold — Add Unit
 
-Add a new unit to an existing agency (or sub-unit to an existing unit). The skill authors the establishing ADR (per §0013) *and* runs the mechanical scaffolding in one motion. Lead or User invokes; Registrar audits afterwards.
+Add a new unit to an existing agency (or sub-unit to an existing unit). The skill authors the establishing ADR (per §0012) *and* runs the mechanical scaffolding in one motion. Lead or User invokes; Registrar audits afterwards.
 
-The new sub-unit is created nested inside the parent unit's directory as a sibling of the parent's agents, `1 | Canon`, `2 | Working Files`, and any other governance folders (per §0013's flat layout). `3 | Silcrow Agency Reference` stays at the root unit only; sub-units inherit it.
+The new sub-unit is created nested inside the parent unit's directory as a sibling of the parent's agents, `1 | Canon`, `2 | Working Files`, and any other governance folders (per §0012's flat layout). `3 | Silcrow Agency Reference` stays at the root unit only; sub-units inherit it.
 
 ## When to use
 
@@ -106,7 +106,7 @@ The script:
 - Authors `§NNNN | Establish Unit @ <Unit Name>.md` in `<parent_path>/1 | Canon/accepted/` using the `Establish Unit.md` template.
 - Creates `<parent_path>/@ <Unit Name>/`.
 - Scaffolds the new sub-unit's flat structure (`1 | Canon`, `2 | Working Files`, agent dirs, README; no `3 | Silcrow Agency Reference` — that's root-only).
-- Commits with `§NNNN: establish unit @ <Unit Name>` (per §0016), unless `--skip-commit` is passed.
+- Commits with `§NNNN: establish unit @ <Unit Name>` (per §0015), unless `--skip-commit` is passed.
 
 On success, prints a summary block:
 
@@ -115,7 +115,7 @@ On success, prints a summary block:
   Purpose: Owns patient-facing product direction and releases.
   Roles:   Director, Specialist, Registrar
   Parent:  /Users/trevorschoeny/Code/@ Pebble
-  Registering ADR: /Users/trevorschoeny/Code/@ Pebble/1 | Canon/accepted/§0019 | Establish Unit @ Pebble Core.md
+  Registering ADR: /Users/trevorschoeny/Code/@ Pebble/1 | Canon/accepted/§0018 | Establish Unit @ Pebble Core.md
 ```
 
 On failure, relay the error message and stop.
@@ -128,7 +128,7 @@ Echo the script's summary block, then output this locked scripted next-steps:
 
 > *The new unit is ready. Open a session inside `<parent_path>/@ <Unit Name>/<Lead Role> @ <Unit Name>/` to brief your unit lead. The unit's Registrar is already set up to audit its decision record.*
 >
-> *To verify the addition landed clean, ask the agency's Registrar to run an audit: they'll check that the ADR and directory agree, and flag any inconsistencies (§0010, §0013).*
+> *To verify the addition landed clean, ask the agency's Registrar to run an audit: they'll check that the ADR and directory agree, and flag any inconsistencies (§0009, §0012).*
 >
 > *The establishing ADR (`§NNNN | Establish Unit @ <Unit Name>.md`) has placeholders for deeper context (Why-statement reasoning, scope details, etc.). The unit's Lead or the agency Lead can edit it to fill them in — ADRs are immutable only after they're substantively complete; editing an auto-generated placeholder is part of finishing authorship.*
 

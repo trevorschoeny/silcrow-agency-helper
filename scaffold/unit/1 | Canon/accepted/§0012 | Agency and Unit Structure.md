@@ -1,4 +1,4 @@
-# §0013 | Agency and unit structure; flat `@ <Unit>/` convention
+# §0012 | Agency and unit structure; flat `@ <Unit>/` convention
 
 - **Status:** accepted
 - **Date:** {date}
@@ -6,24 +6,24 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every directory layout; every inbox path; every ADR-to-directory audit; the `:silcrow-init` skill; the `:silcrow-add-unit` skill; the `:silcrow-update` skill's structural migrations.
-- **Influenced by:** §0001, §0005, §0009, §0012
+- **Influenced by:** §0001, §0005, §0008, §0011
 
 ## Why-statement
 
 In the context of **agencies whose tree of units may range from a single root unit to arbitrarily-nested multi-unit structures, used by people across many domains — not just developers**,
 facing the need for a consistent, recursive structural convention that keeps governance distinguishable from operational work, makes units identifiable by tooling, stays shallow enough that agents — accessed daily — are reachable in fewer clicks, and reads naturally to non-technical users,
 we decided for **a flat unit layout with English Title-case names**: the unit's directory is `@ <Unit Name>/`, its top-level children are agent directories (`<Role> @ <Unit Name>/`), governance folders (`1 | Canon/`, `2 | Working Files/`, `3 | Silcrow Agency Reference/` at root only), sub-unit directories (`@ <Sub Unit Name>/`), and a `README.md`; unit and sub-unit directories carry the `@ ` prefix; agent directories carry their role name with `@` flanked by spaces; governance folders are constants (the same names in every unit, with numeric prefixes for visual ordering); and unit detection is by the `@` prefix on a directory name,
-and neglected a wrapper-folder layout, the older slug-based scheme (`@pebble/`, `lead@pebble/`, `CANON@pebble/`), suffix-on-governance for self-identification, and a sentinel-file marker for unit detection,
+and neglected a wrapper-folder layout, a slug-based scheme (`@pebble/`, `lead@pebble/`, `CANON@pebble/`), suffix-on-governance for self-identification, and a sentinel-file marker for unit detection,
 to achieve a structure that's shallow at the agent layer (inboxes are two directory levels from the unit's root, not four), recursively identical at every depth, programmatically identifiable (`@*` prefix on a directory = unit), readable to a non-developer at a glance, and visually ordered (sub-units sort first, numeric-prefixed governance next, agents alphabetically),
 accepting that paths now contain spaces, `@`, and `|` throughout — requiring rigorous quoting in every script and template — and that governance folders no longer self-identify through a per-unit suffix (the parent directory's `@ <Unit Name>` carries the unit identity instead),
-because (1) silcrow is for everyone, not just developers, and English Title-case names read better than developer-shorthand slugs; (2) shallow paths to frequently-accessed locations matter for daily operators; (3) the canon/operational split (§0012) doesn't require a wrapper folder — it requires a clear convention, which the numeric-prefix scheme provides; and (4) once the quoting cost is paid for any one directory with a space in its name, paying it everywhere yields a consistent, readable scaffold.
+because (1) silcrow is for everyone, not just developers, and English Title-case names read better than developer-shorthand slugs; (2) shallow paths to frequently-accessed locations matter for daily operators; (3) the canon/operational split (§0011) doesn't require a wrapper folder — it requires a clear convention, which the numeric-prefix scheme provides; and (4) once the quoting cost is paid for any one directory with a space in its name, paying it everywhere yields a consistent, readable scaffold.
 
 ## Context and problem statement
 
 The plugin needs a unit structure that:
 
 - **Stays shallow at the agent layer.** Operators interact with agents and their inboxes daily. A four-deep path imposes friction that compounds across an agency's lifetime.
-- **Distinguishes governance from operational without an extra folder level.** §0012's canon/operational split is load-bearing, but enforcing it through a wrapper directory adds depth.
+- **Distinguishes governance from operational without an extra folder level.** §0011's canon/operational split is load-bearing, but enforcing it through a wrapper directory adds depth.
 - **Identifies units programmatically.** Tooling — the registrar's audit, the `:silcrow-add-unit` skill's parent-walk, the `:silcrow-update` skill's tree traversal — needs to recognize what's a unit and what isn't.
 - **Recurses cleanly.** A sub-unit should be structurally identical to its parent. No special-casing depth.
 - **Reads naturally to a non-developer.** A wedding planner, a healthcare initiative, or a research lab using silcrow should not have to learn slug conventions or shell shorthand to navigate their own agency.
@@ -33,7 +33,7 @@ The plugin needs a unit structure that:
 
 - **Accessibility to non-developers.** The single largest driver. English Title-case names beat slug shorthand for the broad audience silcrow serves.
 - **Shallow paths to frequently-accessed locations.** Agents are touched constantly; inbox paths land two levels below the unit, not four.
-- **Visible canon/operational split (§0012) without an extra folder level.** Numeric-prefix naming replaces the wrapper.
+- **Visible canon/operational split (§0011) without an extra folder level.** Numeric-prefix naming replaces the wrapper.
 - **Programmatic unit identification.** A directory's `@` prefix in its own basename is the marker.
 - **Recursive pattern.** Every unit looks the same regardless of depth (with one exception for `3 | Silcrow Agency Reference`, below).
 - **Visually-ordered listings.** The numeric-prefix scheme plus `@` prefix for sub-units gives a deterministic three-tier sort in Finder and most IDEs.
@@ -55,7 +55,7 @@ The plugin needs a unit structure that:
 
 1. **A wrapper-folder layout where governance is nested one level deep behind a single governance directory.** Rejected: the wrapper costs an extra directory level on every path. Operators report friction navigating agent inboxes daily. The wrapper's purpose (visible canon/operational split) is accomplishable through naming convention without an extra folder.
 
-2. **Slug-based naming with `@<unit>` and `<role>@<unit>` directories, capitalization to distinguish governance** (the prior plugin convention before this rewrite). Rejected: developer-shorthand slugs do not serve silcrow's broader audience. Wedding planners, healthcare initiatives, and research labs should not have to learn that `CANON@pebble` is "the canonical decisions of the Pebble unit"; that's a developer's reading. English Title-case is more accessible at modest scripting cost.
+2. **Slug-based naming with `@<unit>` and `<role>@<unit>` directories, capitalization to distinguish governance.** Rejected: developer-shorthand slugs do not serve silcrow's broader audience. Wedding planners, healthcare initiatives, and research labs should not have to learn that `CANON@pebble` is "the canonical decisions of the Pebble unit"; that's a developer's reading. English Title-case is more accessible at modest scripting cost.
 
 3. **Flat layout with English Title-case names throughout, numeric-prefix governance, `@` prefix on units (chosen).** Agents reachable two levels below the unit (`@ Unit/Role @ Unit/inbox/`); canon/operational split visible through numeric-prefix governance plus `2 | Working Files/` as the operational container; sub-units, agents, governance, README all coexist under one roof in a deterministic visual order. Unit detection is the `@` prefix on a directory's own basename.
 
@@ -73,7 +73,7 @@ A unit's directory begins with `@` followed by a single space and the unit's Eng
 
 The agent's display role (e.g., `Lead`, `Trevor`, `Implementer`) is followed by ` @ ` (space, `@`, space) and the unit's name. The role is whatever the user chose at scaffolding; it's the literal directory name *and* the literal prose name (one concept, one form). Examples: `Lead @ Pebble`, `Implementer @ Pebble Core`, `Trevor @ Pebble`.
 
-The Registrar role name is fixed across every unit — `Registrar`, never renamed. Other roles are flexible at scaffold time and can be changed via the roster-change protocol (§0009).
+The Registrar role name is fixed across every unit — `Registrar`, never renamed. Other roles are flexible at scaffold time and can be changed via the roster-change protocol (§0008).
 
 #### Governance folders are constants with numeric prefixes
 
@@ -94,7 +94,7 @@ The sub-unit's existence is registered as an ADR in the parent unit's `1 | Canon
 1. An accepted ADR in the parent's `1 | Canon/accepted/`.
 2. The physical sub-unit directory `@ <Sub Unit Name>/` with its own flat structure.
 
-The Registrar audits the pair. A sub-unit directory without its registering ADR is flagged (orphaned implementation). An ADR declaring a sub-unit that has no directory is flagged (unexecuted decision). This is the canon/operational split (§0012) made structural — the ADR is the canonical fact; the directory is the operational manifestation.
+The Registrar audits the pair. A sub-unit directory without its registering ADR is flagged (orphaned implementation). An ADR declaring a sub-unit that has no directory is flagged (unexecuted decision). This is the canon/operational split (§0011) made structural — the ADR is the canonical fact; the directory is the operational manifestation.
 
 #### `3 | Silcrow Agency Reference/` is root-only; sub-units inherit by reference
 
@@ -110,7 +110,7 @@ Anti-patterns are recorded as regular ADRs alongside positive decisions — same
 
 #### `3 | Silcrow Agency Reference/` contains canonical procedural reference (mutable)
 
-Unlike ADRs, reference docs may be edited as procedures evolve. They are canon in the sense that they bind agents (§0012), but they are not point-in-time decision records under §0004's supersession rules. Edits to reference files are governance commits and follow §0016.
+Unlike ADRs, reference docs may be edited as procedures evolve. They are canon in the sense that they bind agents (§0011), but they are not point-in-time decision records under §0004's supersession rules. Edits to reference files are governance commits and follow §0015.
 
 #### `2 | Working Files/` is an open container for operational artifacts
 
@@ -167,7 +167,7 @@ Any directory whose own basename starts with `@` is a unit.
 ## Anti-patterns surfaced
 
 - **Operational content at the unit's top level (outside `2 | Working Files/`).** Code, project files, plans should live inside `2 | Working Files/`. The unit's top level is reserved for governance, agents, sub-units, and the README.
-- **Slug-style names instead of Title-case.** `@pebble/`, `lead@pebble/`, `canon@pebble/` are the prior convention; they should not appear in a current-version agency.
+- **Slug-style names instead of Title-case.** `@pebble/`, `lead@pebble/`, `canon@pebble/` are not the convention; they should not appear in an agency.
 - **Bare governance folder names (no numeric prefix).** `Canon/`, `Working Files/`, `Silcrow Agency Reference/` (without the `1 |`, `2 |`, `3 |` prefix) lose the visual ordering and don't match the audit conventions.
 - **Per-unit suffix on governance folders.** `Canon @ Pebble/`, `Working Files @ Pebble/` would re-introduce the slug-era self-identification trick that the new convention deliberately drops; governance folder names are constants.
 - **Sub-units nested inside governance folders.** Sub-units are unit-level peers of governance, not children of it.
@@ -193,6 +193,6 @@ Reconsider this ADR if:
 - `../_templates/Establish Unit.md` — the ADR template used when adding a new unit.
 - §0001 — the founding decision this structure implements.
 - §0005 — inboxes live at `@ <Unit Name>/<Role> @ <Unit Name>/inbox/` per this structure.
-- §0009 — roster change protocol; adding a unit triggers it.
-- §0012 — canon/operational split; this ADR is its structural expression.
-- §0018 — agency scope.
+- §0008 — roster change protocol; adding a unit triggers it.
+- §0011 — canon/operational split; this ADR is its structural expression.
+- §0017 — agency scope.

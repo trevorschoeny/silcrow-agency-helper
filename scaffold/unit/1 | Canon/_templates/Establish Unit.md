@@ -6,7 +6,7 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every subsequent operational artifact scoped to `@ {unit_name}`; every ADR authored inside `@ {unit_name}/1 | Canon/`.
-- **Influenced by:** §0009 (roster change protocol), §0018 (agency scope), §0013 (agency and unit structure).
+- **Influenced by:** §0008 (roster change protocol), §0017 (agency scope), §0012 (agency and unit structure).
 
 ## Why-statement
 
@@ -37,23 +37,23 @@ because **{driver — the area of concern has matured enough to warrant its own 
 
 ## Roster
 
-Every unit in the agency carries the same roles (§0013). `@ {unit_name}` gets:
+Every unit in the agency carries the same roles (§0012). `@ {unit_name}` gets:
 
 - **{lead_role} @ {unit_name}** — tier-1 of `@ {unit_name}`; reports up the tree to the {parent_lead_role} of `@ {parent_unit_name}`.
 - **{implementer_role} @ {unit_name}** — tier-2 of `@ {unit_name}`; reports to {lead_role} @ {unit_name}.
 - **Registrar @ {unit_name}** — audits `@ {unit_name}`'s decision record. Outside the unit's decision hierarchy.
 
-There is no User at this unit. There is one User across the agency, who is principal of every unit and lives at the agency's root unit (§0011).
+There is no User at this unit. There is one User across the agency, who is principal of every unit and lives at the agency's root unit (§0010).
 
 ## Reports to
 
 - Every ancestor unit's ADRs bind `@ {unit_name}` — `@ {parent_unit_name}`'s `1 | Canon/accepted/`, plus any further ancestors walking up to the agency's root.
 - `@ {unit_name}`'s own decisions live in `@ {unit_name}/1 | Canon/accepted/`.
-- Federation rule (§0013): `@ {unit_name}` does not adjudicate peer or cousin units; they don't adjudicate `@ {unit_name}`. Cross-unit issues route up the tree to the lowest common ancestor's Lead, or to {user_role}.
+- Federation rule (§0012): `@ {unit_name}` does not adjudicate peer or cousin units; they don't adjudicate `@ {unit_name}`. Cross-unit issues route up the tree to the lowest common ancestor's Lead, or to {user_role}.
 
 ## Directory structure
 
-When this ADR is accepted, the following directory is created nested inside `@ {parent_unit_name}/` (per §0013's flat layout):
+When this ADR is accepted, the following directory is created nested inside `@ {parent_unit_name}/` (per §0012's flat layout):
 
 ```
 {parent_path}/@ {unit_name}/
@@ -67,7 +67,7 @@ When this ADR is accepted, the following directory is created nested inside `@ {
 └── Registrar @ {unit_name}/                   ← Registrar agent (with inbox/archive/)
 ```
 
-Sub-units have no `3 | Silcrow Agency Reference/` of their own (§0013); foundational reference lives at the agency's root and is inherited by walking up. `@ {unit_name}` inherits every ancestor unit's ADRs by reference — its own `1 | Canon/accepted/` starts empty and fills only with decisions specific to `@ {unit_name}`.
+Sub-units have no `3 | Silcrow Agency Reference/` of their own (§0012); foundational reference lives at the agency's root and is inherited by walking up. `@ {unit_name}` inherits every ancestor unit's ADRs by reference — its own `1 | Canon/accepted/` starts empty and fills only with decisions specific to `@ {unit_name}`.
 
 ## Considered options
 
@@ -99,9 +99,9 @@ Reconsider `@ {unit_name}`'s establishment if:
 ## References
 
 - `§0001` — the founding scaffold decision.
-- `§0009` — roster change protocol (adding a unit creates new agents and roles).
-- `§0013` — agency and unit structure; this ADR implements the unit-addition pattern.
-- `§0018` — agency scope; `@ {unit_name}` operates within agency scope.
+- `§0008` — roster change protocol (adding a unit creates new agents and roles).
+- `§0012` — agency and unit structure; this ADR implements the unit-addition pattern.
+- `§0017` — agency scope; `@ {unit_name}` operates within agency scope.
 - `@ {parent_unit_name}`'s `README.md` — governance overview of the parent unit.
 - `silcrow:silcrow-add-unit` — the skill that orchestrated this establishment.
 

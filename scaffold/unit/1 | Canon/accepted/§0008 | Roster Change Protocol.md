@@ -1,4 +1,4 @@
-# §0009 | Roster change protocol
+# §0008 | Roster change protocol
 
 - **Status:** accepted
 - **Date:** {date}
@@ -37,7 +37,7 @@ Individual roster changes — add an agent, retire an agent, rename a role — e
 4. **Approve.** {user_role} approves (or rejects). Roster changes are tier-0 decisions — {user_role} owns the roster as a strategic/HR concern.
 5. **Execute.** On acceptance, the Registrar:
    - Assigns the next §-number and files the ADR in `1 | Canon/accepted/`.
-   - Performs any required directory-level actions, per §0013's flat layout (agents live as `<Role> @ {unit_name}/` siblings of `1 | Canon`, `2 | Working Files`, and (at the root only) `3 | Silcrow Agency Reference` inside `@ {unit_name}/`):
+   - Performs any required directory-level actions, per §0012's flat layout (agents live as `<Role> @ {unit_name}/` siblings of `1 | Canon`, `2 | Working Files`, and (at the root only) `3 | Silcrow Agency Reference` inside `@ {unit_name}/`):
      - **Add:** creates `<Role> @ {unit_name}/inbox/archive/` with a `.gitkeep`, plus an `AGENTS.md` for the new role.
      - **Retire:** moves the retired agent's directory `<Role> @ {unit_name}/` to `@ {unit_name}/.archive/<YYYY-MM-DD>/<Role> @ {unit_name}/` (creating `.archive/<YYYY-MM-DD>/` on first use that day). Inbox archives are preserved verbatim. The hidden `.archive/` location matches the convention used by `:silcrow-update` for archived removals (see `3 | Silcrow Agency Reference/Registrar Update Workflow.md` §7).
      - **Rename:** renames `<Old Role> @ {unit_name}/` to `<New Role> @ {unit_name}/` (the unit suffix stays the same; only the role-prefix changes). Cross-references in prose are the change-author's responsibility; the Registrar verifies they resolve before accepting.

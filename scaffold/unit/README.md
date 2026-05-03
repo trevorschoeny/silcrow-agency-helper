@@ -6,7 +6,7 @@
 
 ## What this is
 
-This directory (`@ {unit_name}/`) is the **root unit** of an agency, per §0013. The agency is the entire organizational tree; this directory is its topmost node. Every unit — root or sub-unit — is structurally identical: its own `1 | Canon/`, `2 | Working Files/`, agent directories, optional sub-units, and a README. The root unit additionally hosts the agency's `3 | Silcrow Agency Reference/` folder (foundational reference, root-only; sub-units inherit by reference).
+This directory (`@ {unit_name}/`) is the **root unit** of an agency, per §0012. The agency is the entire organizational tree; this directory is its topmost node. Every unit — root or sub-unit — is structurally identical: its own `1 | Canon/`, `2 | Working Files/`, agent directories, optional sub-units, and a README. The root unit additionally hosts the agency's `3 | Silcrow Agency Reference/` folder (foundational reference, root-only; sub-units inherit by reference).
 
 The agency is a **hierarchical agent organization** with built-in decision tracking (ADRs), actor-model message passing between agents, a registrar that audits the record, and a clean separation between canonical and operational artifacts. The structure was initialized by the `silcrow:silcrow-init` skill on {date}.
 
@@ -32,9 +32,9 @@ A new reader — human or agent — should read these in order:
 2. **`3 | Silcrow Agency Reference/Philosophy.md`** — the intellectual foundation for every part of the structure.
 3. **`3 | Silcrow Agency Reference/Decision Process.md`** — how ADRs are proposed, accepted, superseded.
 4. **`3 | Silcrow Agency Reference/Message Protocol.md`** — how agents communicate.
-5. **`<your-role>@ {unit_name}/AGENTS.md`** — if you are occupying a role, your specific duties.
-6. **`1 | Canon/accepted/§0006 | Starter Roster and Tier Model.md`** and **`§0011 | User as Principal and Local Tier Numbering.md`** — the tier model and its multi-unit refinements.
-7. **`1 | Canon/accepted/§0013 | Agency and Unit Structure.md`** — agency/unit vocabulary and structural conventions.
+5. **`<Your Role> @ {unit_name}/AGENTS.md`** — if you are occupying a role, your specific duties.
+6. **`1 | Canon/accepted/§0006 | Starter Roster and Tier Model.md`** and **`§0010 | User as Principal and Local Tier Numbering.md`** — the tier model and its multi-unit refinements.
+7. **`1 | Canon/accepted/§0012 | Agency and Unit Structure.md`** — agency/unit vocabulary and structural conventions.
 
 For deeper dives on any of the seven disciplines, `3 | Silcrow Agency Reference/foundations/` has per-thread treatments.
 
@@ -42,11 +42,11 @@ For deeper dives on any of the seven disciplines, `3 | Silcrow Agency Reference/
 
 ## Directory layout
 
-The unit's flat structure (§0013):
+The unit's flat structure (§0012):
 
 ```
 @ {unit_name}/                              ← unit directory (you are here)
-├── @ <sub-unit-name>/                       ← sub-units, if any (recursive; same shape)
+├── @ <Sub-Unit Name>/                       ← sub-units, if any (recursive; same shape)
 │   └── ...
 ├── 1 | Canon/                              ← decisions (per-unit; immutable per §0004)
 │   ├── README.md                           ← decision index
@@ -71,7 +71,7 @@ The unit's flat structure (§0013):
 └── Registrar @ {unit_name}/                ← outside hierarchy: record integrity (async auditor)
 ```
 
-Per §0013, the unit's directory is `@ <Unit Name>/` (the `@ ` prefix is load-bearing for unit detection). Governance folders use a numeric prefix and `|` separator (`1 | Canon`, `2 | Working Files`, `3 | Silcrow Agency Reference`) — these names are constants in every unit, not per-unit-suffixed. Agent directories are `<Role> @ <Unit Name>/` (Title-case role, spaces around `@`). Sub-folders deeper than the unit's top level (e.g., `accepted/`, `inbox/`, `foundations/`) carry no prefix.
+Per §0012, the unit's directory is `@ <Unit Name>/` (the `@ ` prefix is load-bearing for unit detection). Governance folders use a numeric prefix and `|` separator (`1 | Canon`, `2 | Working Files`, `3 | Silcrow Agency Reference`) — these names are constants in every unit, not per-unit-suffixed. Agent directories are `<Role> @ <Unit Name>/` (Title-case role, spaces around `@`). Sub-folders deeper than the unit's top level (e.g., `accepted/`, `inbox/`, `foundations/`) carry no prefix.
 
 Sub-units, when present, live as siblings of agents and governance folders inside `@ {unit_name}/`. They follow the same flat structure recursively. `3 | Silcrow Agency Reference/` exists only at the root; sub-units walk up to inherit it.
 
@@ -83,20 +83,20 @@ Sub-units, when present, live as siblings of agents and governance folders insid
 
 - **Decisions are immutable** (§0004). Accepted ADRs are never edited. They are superseded by new ADRs; both remain in the record.
 - **§-numbers are permanent** (§0003). Every accepted ADR gets a §-number. Numbers are sequential, monotonic, and never reused.
-- **Messages are first-class** (§0005). Communication between agents goes through inboxes (`<Role> @ <unit-name>/inbox/`) and is archived on read (`inbox/archive/`). No out-of-band communication.
-- **ADR acceptance is broadcast** (§0017). When an ADR lands in `accepted/`, the author sends a short notification to every agent in the accepting unit and every descendant sub-unit.
+- **Messages are first-class** (§0005). Communication between agents goes through inboxes (`<Role> @ <Unit Name>/inbox/`) and is archived on read (`inbox/archive/`). No out-of-band communication.
+- **ADR acceptance is broadcast** (§0016). When an ADR lands in `accepted/`, the author sends a short notification to every agent in the accepting unit and every descendant sub-unit.
 - **The {lead_role} writes briefs, not specs** (§0007). What and why, not how. The {implementer_role} retains agency over execution.
-- **The Registrar owns form, not substance** (§0010). They audit the record on demand, correct procedural issues, and surface substantive ones. They do not gate every commit.
+- **The Registrar owns form, not substance** (§0009). They audit the record on demand, correct procedural issues, and surface substantive ones. They do not gate every commit.
 - **Subsidiarity**. Decisions are made at the lowest tier capable of making them well.
-- **Canon vs operational** (§0012). ADRs are canonical (immutable, citable); plans/briefs/implementations are operational (mutable). Canon binds operational; never the reverse.
-- **The User is the principal** (§0011). Not a tier, but the one the agents serve. May act as the superior of any tier at any time.
-- **Every unit is a unit** (§0013). The agency is the whole tree; the root unit is its topmost node; sub-units live nested inside their parent. Every unit follows the same flat layout (with REFERENCE only at the root). The pattern is recursive at every depth.
+- **Canon vs operational** (§0011). ADRs are canonical (immutable, citable); plans/briefs/implementations are operational (mutable). Canon binds operational; never the reverse.
+- **The User is the principal** (§0010). Not a tier, but the one the agents serve. May act as the superior of any tier at any time.
+- **Every unit is a unit** (§0012). The agency is the whole tree; the root unit is its topmost node; sub-units live nested inside their parent. Every unit follows the same flat layout (with `3 | Silcrow Agency Reference/` only at the root). The pattern is recursive at every depth.
 
 ---
 
 ## The founding constitution
 
-The scaffold ships with **eighteen seeded ADRs** (§0001–§0018, with §0008 superseded by §0010). §0001 records the decision to adopt the scaffold itself. §0002 through §0017 are **constitutional decisions inherited through §0001** — they make the load-bearing choices of the pattern explicit and supersedable rather than leaving them as unrecorded convention. §0018 is a thin scope seed expected to be superseded early.
+The scaffold ships with **seventeen seeded ADRs** (§0001–§0017). §0001 records the decision to adopt the scaffold itself. §0002 through §0016 are **constitutional decisions inherited through §0001** — they make the load-bearing choices of the pattern explicit and supersedable rather than leaving them as unrecorded convention. §0017 is a thin scope seed expected to be superseded early.
 
 | § | Constitutional decision |
 |---|---|
@@ -107,17 +107,16 @@ The scaffold ships with **eighteen seeded ADRs** (§0001–§0018, with §0008 s
 | §0005 | Inter-agent communication via inboxes; no out-of-band channels |
 | §0006 | Starter roster and tier model |
 | §0007 | {lead_role} writes briefs, not specs |
-| §0008 | *(superseded by §0010)* Registrar authority is procedural, not substantive |
-| §0009 | Roster change protocol |
-| §0010 | Registrar operates as async auditor, not sync gatekeeper |
-| §0011 | User as principal; local tier numbering; Implementer drafts-with-approval |
-| §0012 | Canonical and operational artifacts: direction of constraint, promotion rule, reference rule |
-| §0013 | Agency and unit structure; flat `@ <Unit>/` convention |
-| §0014 | Update audits produce per-session audit ADRs |
-| §0015 | Agency default `.gitignore` — OS, editor, and secrets patterns only |
-| §0016 | Governance commits cite the governing §NNNN; operational commits are free-form |
-| §0017 | Decision-record acceptance is broadcast to every bound agent |
-| §0018 | Agency scope (seed — supersede early) |
+| §0008 | Roster change protocol |
+| §0009 | Registrar operates as async auditor with strictly procedural authority |
+| §0010 | User as principal; local tier numbering; Implementer drafts-with-approval |
+| §0011 | Canonical and operational artifacts: direction of constraint, promotion rule, reference rule |
+| §0012 | Agency and unit structure; flat `@ <Unit>/` convention |
+| §0013 | Update audits produce per-session audit ADRs |
+| §0014 | Agency default `.gitignore` — OS, editor, and secrets patterns only |
+| §0015 | Governance commits cite the governing §NNNN; operational commits are free-form |
+| §0016 | Decision-record acceptance is broadcast to every bound agent |
+| §0017 | Agency scope (seed — supersede early) |
 
 Each cites its foundation doc (`3 | Silcrow Agency Reference/foundations/0N-*.md`) for the full reasoning, and each lists real alternatives so it can be evaluated or superseded like any other ADR. The seed set serves as **both the working base of the agency's decision graph and a demonstration set** — showing new agents what proper ADRs look like.
 
@@ -127,9 +126,9 @@ Each cites its foundation doc (`3 | Silcrow Agency Reference/foundations/0N-*.md
 
 These are significant decisions, each governed by its own ADR.
 
-- **Roster changes** (adding, renaming, retiring agents) follow `1 | Canon/accepted/§0009 | Roster Change Protocol.md`.
-- **New units** — use the `silcrow:silcrow-add-unit` skill, which authors the establishing ADR and creates the sub-unit's flat structure in one motion (per §0013).
-- **Scaffold updates** (new ADRs, reorg, conventions shipped by the plugin) — use the `silcrow:silcrow-update` skill. The Registrar orchestrates; every change is user-approved; the session produces one audit ADR (§0014).
+- **Roster changes** (adding, renaming, retiring agents) follow `1 | Canon/accepted/§0008 | Roster Change Protocol.md`.
+- **New units** — use the `silcrow:silcrow-add-unit` skill, which authors the establishing ADR and creates the sub-unit's flat structure in one motion (per §0012).
+- **Scaffold updates** (new ADRs, reorg, conventions shipped by the plugin) — use the `silcrow:silcrow-update` skill. The Registrar orchestrates; every change is user-approved; the session produces one audit ADR (§0013).
 
 ---
 

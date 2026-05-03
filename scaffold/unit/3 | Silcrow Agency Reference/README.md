@@ -1,6 +1,6 @@
 # 3 | Silcrow Agency Reference — {agency_name}
 
-`3 | Silcrow Agency Reference/` is the agency's **procedural reference**. It holds the canonical procedural docs that explain how the agency runs: the philosophy, the decision process, the message protocol, the registrar's procedures, and the seven foundational disciplines. Per §0013, this folder lives **only at the agency's root unit**; sub-units inherit by reference (walk up the tree).
+`3 | Silcrow Agency Reference/` is the agency's **procedural reference**. It holds the canonical procedural docs that explain how the agency runs: the philosophy, the decision process, the message protocol, the registrar's procedures, and the seven foundational disciplines. Per §0012, this folder lives **only at the agency's root unit**; sub-units inherit by reference (walk up the tree).
 
 ## What's here
 
@@ -17,9 +17,9 @@
 ## How this folder differs from `1 | Canon/`
 
 - **`1 | Canon/`** holds **decisions** (ADRs). Subject to §0004's immutability — once accepted, never edited; superseded by new ADRs.
-- **`3 | Silcrow Agency Reference/`** holds **procedural reference**. Mutable. Procedures evolve as the agency learns; edits to these files are governance commits per §0016.
+- **`3 | Silcrow Agency Reference/`** holds **procedural reference**. Mutable. Procedures evolve as the agency learns; edits to these files are governance commits per §0015.
 
-Both are canon in the §0012 sense (they bind operational work). But they have different update disciplines.
+Both are canon in the §0011 sense (they bind operational work). But they have different update disciplines.
 
 ## How to use
 
@@ -33,5 +33,5 @@ Sub-units do not have their own `3 | Silcrow Agency Reference/`. Agents in sub-u
 
 ## See also
 
-- `../1 | Canon/accepted/§0013 | Agency and Unit Structure.md` — defines REFERENCE's location and root-only rule.
-- `../1 | Canon/accepted/§0012 | Canonical and Operational Artifacts.md` — the canon/operational distinction REFERENCE sits inside.
+- `../1 | Canon/accepted/§0012 | Agency and Unit Structure.md` — defines `3 | Silcrow Agency Reference/`'s location and root-only rule.
+- `../1 | Canon/accepted/§0011 | Canonical and Operational Artifacts.md` — the canon/operational distinction this folder sits inside.

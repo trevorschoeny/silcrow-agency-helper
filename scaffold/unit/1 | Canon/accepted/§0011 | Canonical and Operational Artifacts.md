@@ -1,4 +1,4 @@
-# §0012 | Canonical and operational artifacts: direction of constraint, promotion rule, reference rule
+# §0011 | Canonical and operational artifacts: direction of constraint, promotion rule, reference rule
 
 - **Status:** accepted
 - **Date:** {date}
@@ -139,7 +139,7 @@ Reconsider this ADR if:
 - `../../Registrar @ {unit_name}/AGENTS.md` — the unsafe-reference audit item and how the Registrar surfaces it.
 - §0004 — immutability discipline that this ADR protects against reference-based erosion.
 - §0007 — briefs-not-specs sits inside the operational side; this ADR governs its relation to canon.
-- §0010 — Registrar audit includes unsafe-reference detection.
+- §0009 — Registrar audit includes unsafe-reference detection.
 - Buchanan, J. M. & Tullock, G. (1962). *The Calculus of Consent.*
 - Hart, H. L. A. (1961). *The Concept of Law.*
 - Popper, K. (1945). *The Open Society and Its Enemies.*

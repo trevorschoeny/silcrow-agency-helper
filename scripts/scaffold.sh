@@ -8,7 +8,7 @@
 # argument. To scaffold somewhere else, cd there first.
 #
 # Agency = root unit + nested sub-units, following the @ <Unit Name>/
-# convention (§0013). This script scaffolds the agency's root unit. Sub-units
+# convention (§0012). This script scaffolds the agency's root unit. Sub-units
 # are added separately via scripts/add-unit.sh, orchestrated by the
 # :silcrow-add-unit skill.
 #
@@ -133,7 +133,7 @@ fi
 
 # --- Create the agency tree --------------------------------------------------
 #
-# Per §0013's flat layout: agents and governance folders all sit as direct
+# Per §0012's flat layout: agents and governance folders all sit as direct
 # children of `@ <Unit Name>/`. Agent dirs are `<Role> @ <Unit Name>/`.
 # Governance folders are constants (`1 | Canon`, `2 | Working Files`,
 # `3 | Silcrow Agency Reference`) — no per-unit suffix. Subfolders
@@ -232,7 +232,7 @@ done
 # README explaining its purpose; the unit fills it in over time.
 subst "$SRC/2 | Working Files/README.md" "$AGENCY_PATH/2 | Working Files/README.md"
 
-# --- Git initialization (§0014, §0015, §0016) --------------------------------
+# --- Git initialization (§0013, §0014, §0015) --------------------------------
 #
 # The agency is always its own self-contained git repo. All git operations
 # target AGENCY_PATH only — $PWD is never touched. We do not inspect $PWD's
@@ -244,7 +244,7 @@ if [ "$SKIP_GIT" -eq 0 ]; then
     # AGENCY_PATH (extremely unlikely on a fresh scaffold), it's a no-op.
     (cd "$AGENCY_PATH" && git init --quiet)
 
-    # Write the default .gitignore per §0015. Only write if not already
+    # Write the default .gitignore per §0014. Only write if not already
     # present (the user might have authored their own).
     if [ ! -f "$AGENCY_PATH/.gitignore" ]; then
         cat > "$AGENCY_PATH/.gitignore" <<'GITIGNORE'
@@ -270,7 +270,7 @@ credentials.json
 GITIGNORE
     fi
 
-    # Initial commit (§0016 — governance commits cite §NNNN). Only commit
+    # Initial commit (§0015 — governance commits cite §NNNN). Only commit
     # if the agency repo doesn't have a HEAD yet (i.e., we just initialized
     # it). Idempotent on re-runs.
     if ! (cd "$AGENCY_PATH" && git rev-parse --verify HEAD >/dev/null 2>&1); then

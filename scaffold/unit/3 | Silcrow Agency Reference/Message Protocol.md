@@ -10,15 +10,15 @@ The *why* is in `Philosophy.md` and `foundations/03 | Actor Model.md`. This doc 
 
 Every agent has:
 
-- A **private directory** — `@ <unit-name>/<Role> @ <unit-name>/`. Nothing in another agent's directory is citable or reviewable by anyone else. This is the actor's private state. You can draft, iterate, fail, and recover here without exposing half-formed thinking.
-- An **inbox** — `@ <unit-name>/<Role> @ <unit-name>/inbox/`. Other agents deposit messages here. This is your mailbox.
-- An **archive** — `@ <unit-name>/<Role> @ <unit-name>/inbox/archive/`. When you read a message, you move it here. Archives are **never deleted** (§0005). They are the historical record of every communication this agent received.
+- A **private directory** — `@ <Unit Name>/<Role> @ <Unit Name>/`. Nothing in another agent's directory is citable or reviewable by anyone else. This is the actor's private state. You can draft, iterate, fail, and recover here without exposing half-formed thinking.
+- An **inbox** — `@ <Unit Name>/<Role> @ <Unit Name>/inbox/`. Other agents deposit messages here. This is your mailbox.
+- An **archive** — `@ <Unit Name>/<Role> @ <Unit Name>/inbox/archive/`. When you read a message, you move it here. Archives are **never deleted** (§0005). They are the historical record of every communication this agent received.
 
 No agent reads another agent's directory or inbox without going through a message. No agent mutates another agent's archive. No agent deletes messages. These rules are load-bearing — they are what makes the system reconstructible.
 
 ### Agencies with multiple units
 
-In agencies that span multiple units (§0013), the same rules apply recursively at every depth. Every unit — root and sub-units alike — has its own `@ <unit-name>/<Role> @ <unit-name>/inbox/` for each role on its roster. Messages stay scoped to their unit unless explicitly addressed cross-unit. Cross-unit messages typically go through a Lead as the routing point — a sub-unit's Lead messages the Lead of its parent unit, who in turn messages a peer's Lead (or escalates to the {user_role}).
+In agencies that span multiple units (§0012), the same rules apply recursively at every depth. Every unit — root and sub-units alike — has its own `@ <Unit Name>/<Role> @ <Unit Name>/inbox/` for each role on its roster. Messages stay scoped to their unit unless explicitly addressed cross-unit. Cross-unit messages typically go through a Lead as the routing point — a sub-unit's Lead messages the Lead of its parent unit, who in turn messages a peer's Lead (or escalates to the {user_role}).
 
 ---
 
@@ -46,13 +46,13 @@ Examples (assume an agency whose root unit is `acme`):
 
 - `2026-04-19-lead@acme-brief-implement-structured-logging.md`
 - `2026-04-21-implementer@acme-plan-for-structured-logging.md`
-- `2026-04-21-registrar@acme-ack-§0017.md`
+- `2026-04-21-registrar@acme-ack-§0016.md`
 - `2026-04-22-{user_role}-approve-§0088.md`
 
 Rules:
 
 - **Date is the date of deposit**, not the date of drafting.
-- **Sender** is the slug of the sending agent — the same `<Role> @ <unit-name>` form as their directory name (e.g., `lead@acme`, `implementer@acme`, `registrar@acme`). The `{user_role}` is the principal's slug; it has no `@ <unit>` suffix because the principal sits above all units.
+- **Sender** is the kebab-cased slug of the sending agent — the role and unit name lowercased and joined with `@` (e.g., agent `Lead @ Acme` → slug `lead@acme`; `Implementer @ Pebble Core` → `implementer@pebble-core`). Filenames stay ASCII-safe and shell-friendly even though directories use Title Case with spaces. The `{user_role}` is the principal's slug; it has no `@ <unit>` suffix because the principal sits above all units.
 - **Subject** is short kebab-case, descriptive but not exhaustive. The body has the full subject line.
 - **No collisions.** If two messages would share a filename in the same inbox, add a disambiguating suffix: `-01`, `-02`, etc.
 
@@ -136,7 +136,7 @@ Structure:
 
 ### Proposal notice
 
-To the Registrar when an Implementer submits an ADR draft to `@ <unit-name>/1 | Canon/proposed/`. Short. Names the proposal file, the template used, and relevant context. The Implementer also sends a companion message to the Lead (or User) requesting approval.
+To the Registrar when an Implementer submits an ADR draft to `@ <Unit Name>/1 | Canon/proposed/`. Short. Names the proposal file, the template used, and relevant context. The Implementer also sends a companion message to the Lead (or User) requesting approval.
 
 ### Acknowledgment
 
@@ -152,7 +152,7 @@ Dropped into the Registrar's inbox by the `:silcrow-update` skill. Contains the 
 
 ### ADR acceptance notice
 
-Sent by the **author** of an ADR (Lead, User, or — for audit ADRs — the Registrar) to every agent in the accepting unit and every agent in every descendant sub-unit, the moment the ADR lands in `accepted/` (§0017). Short, pointer-style. The notice doesn't carry the ADR's content; it points the recipient at the canonical record they should read.
+Sent by the **author** of an ADR (Lead, User, or — for audit ADRs — the Registrar) to every agent in the accepting unit and every agent in every descendant sub-unit, the moment the ADR lands in `accepted/` (§0016). Short, pointer-style. The notice doesn't carry the ADR's content; it points the recipient at the canonical record they should read.
 
 Filename:
 
@@ -176,8 +176,8 @@ Body skeleton:
 - **References:** §NNNN
 - **Kind:** adr-acceptance-notice
 
-§NNNN was accepted in `@{accepting-unit}` on YYYY-MM-DD. This decision binds
-your unit by inheritance (per §0013).
+§NNNN was accepted in `@ <Accepting Unit>` on YYYY-MM-DD. This decision binds
+your unit by inheritance (per §0012).
 
 Read the ADR at `{relative path to §NNNN}` for the decision and reasoning.
 ```
@@ -186,7 +186,7 @@ Add lines as appropriate:
 
 - **Implementer-drafted ADRs** — name both author and approver: *"Drafted by {implementer_role} @ {unit_name}, approved by {lead_role} @ {unit_name}."*
 - **Supersession** — *"This ADR supersedes §00XX (now in `superseded/`)."*
-- **Audit ADRs (§0014)** — *"This is the audit ADR for the `:silcrow-update` session of YYYY-MM-DD; see it for the full list of changes in that session."*
+- **Audit ADRs (§0013)** — *"This is the audit ADR for the `:silcrow-update` session of YYYY-MM-DD; see it for the full list of changes in that session."*
 
 Recipients **archive on read** like any other message (§0005's `read = move` rule); the canonical record is the ADR itself, not the notice. The notice is just an alert.
 
@@ -196,16 +196,16 @@ You'll develop your own conventions over time. When a recurring message kind eme
 
 ---
 
-## 6a. Broadcast recipients — walking the tree (§0017)
+## 6a. Broadcast recipients — walking the tree (§0016)
 
 When you author an ADR that lands in `accepted/`, the broadcast goes to every agent in the accepting unit + every agent in every descendant sub-unit. The walk:
 
-1. **Start at the accepting unit.** That's the unit whose `@ <unit-name>/1 | Canon/accepted/` now contains the new ADR. Call it `<accepting-unit>`.
-2. **Enumerate the accepting unit's agents.** List `@ <accepting-unit>/<Role> @ <accepting-unit>/` directories. Each one is a recipient (skip yourself — you authored it).
-3. **Recurse into descendant units.** For each `@ <sub-unit>/` directory at the accepting unit's root level, repeat steps 2–3 inside that sub-unit. Continue recursively to every leaf.
+1. **Start at the accepting unit.** That's the unit whose `@ <Unit Name>/1 | Canon/accepted/` now contains the new ADR. Call it `<Accepting Unit>`.
+2. **Enumerate the accepting unit's agents.** List `@ <Accepting Unit>/<Role> @ <Accepting Unit>/` directories. Each one is a recipient (skip yourself — you authored it).
+3. **Recurse into descendant units.** For each `@ <Sub-Unit>/` directory at the accepting unit's root level, repeat steps 2–3 inside that sub-unit. Continue recursively to every leaf.
 4. **Deposit the notification** in each recipient's `inbox/` per the deposit procedure (§2).
 
-The recipient set respects inheritance (§0013): ADRs propagate downward, so broadcasts do too. **Don't broadcast to ancestor units, peer units, or cousin units** — they aren't bound by `<accepting-unit>`'s decisions.
+The recipient set respects inheritance (§0012): ADRs propagate downward, so broadcasts do too. **Don't broadcast to ancestor units, peer units, or cousin units** — they aren't bound by `<Accepting Unit>`'s decisions.
 
 Cost-wise: the walk is O(agents in subtree). For a single-root agency with 4 agents, it's 3 deposits (skipping self). For a multi-unit tree, it grows roughly linearly with agent count. Notifications are short pointer messages; the cost is bounded.
 
@@ -215,8 +215,8 @@ Cost-wise: the walk is O(agents in subtree). For a single-root agency with 4 age
 
 Everything you reference in a message should be cited by a stable, resolvable pointer. Good citations:
 
-- `§0012` — an accepted ADR.
-- `@ {unit_name}/1 | Canon/superseded/§0010 | Shared Cache.md` — a superseded ADR.
+- `§0011` — an accepted ADR.
+- `@ {unit_name}/1 | Canon/superseded/§0009 | Shared Cache.md` — a superseded ADR.
 - `§0042` — an anti-pattern recorded as a regular ADR (e.g., `§0042 | Avoid Shared Cache Across Services`).
 - `@ {agency_name}/3 | Silcrow Agency Reference/Philosophy.md#subsidiarity` — a section within a document.
 - `@ {unit_name}/{lead_role} @ {unit_name}/inbox/archive/2026-04-19-implementer-plan-for-logging.md` — a specific prior message.
@@ -255,7 +255,7 @@ In this scaffold:
 
 - If the {implementer_role} has been working on an approved plan longer than the plan estimated and the {lead_role} hasn't heard back, the {lead_role} sends a status-check.
 - If the {implementer_role} is stuck, the responsibility to surface that is theirs — send a progress message saying what's blocking.
-- If an agent is reliably non-responsive, that is a roster concern. {user_role} and {lead_role} address it through the ADR process (§0009 — roster changes are ADRs).
+- If an agent is reliably non-responsive, that is a roster concern. {user_role} and {lead_role} address it through the ADR process (§0008 — roster changes are ADRs).
 
 **"Let it crash."** Armstrong's principle: processes fail fast rather than muddle through a bad state. In our context: if you're stuck or the plan is wrong, say so quickly and clearly — don't silently improvise.
 
@@ -263,7 +263,7 @@ In this scaffold:
 
 ## 10. Git commits for inbox archives
 
-Inbox messages and archives are part of the agency's durable record, so they belong in version control. Per §0016:
+Inbox messages and archives are part of the agency's durable record, so they belong in version control. Per §0015:
 
 - Either the Lead or the Registrar can commit inbox archives (it's shared responsibility).
 - Commits on messages are free-form in subject — no §NNNN citation required unless the message itself references governance in a way that warrants citation.
@@ -289,5 +289,5 @@ If the archive ever gets large enough to cause navigation pain, the Registrar ca
 - `foundations/03 | Actor Model.md` — the full intellectual basis for this protocol.
 - `Decision Process.md` — proposals and acknowledgments are both message kinds in that flow.
 - `../Registrar @ {unit_name}/AGENTS.md` — how the Registrar processes incoming messages.
-- `../` — this unit's agent roster; each role has its own directory (named `<Role> @ <unit-name>/`), with its own `inbox/` and `AGENTS.md`.
+- `../` — this unit's agent roster; each role has its own directory (named `<Role> @ <Unit Name>/`), with its own `inbox/` and `AGENTS.md`.
 - `../1 | Canon/accepted/§0005 | Communication via Inboxes.md` — the canonical decision behind this protocol.

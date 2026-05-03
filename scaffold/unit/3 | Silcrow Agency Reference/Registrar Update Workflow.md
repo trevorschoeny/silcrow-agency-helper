@@ -15,11 +15,11 @@ Before diffing, find the path to the active plugin's `scaffold/unit/`:
 1. **Check `${CLAUDE_PLUGIN_ROOT}` first.** Read it from your session env. If set, verify `${CLAUDE_PLUGIN_ROOT}/scaffold/unit/` exists. If yes, that's your canonical source.
 2. **Fallback: walk the cache.** If `${CLAUDE_PLUGIN_ROOT}` is unset (or its `scaffold/unit/` doesn't exist), look at `~/.claude/plugins/cache/silcrow/`. Identify all version directories present. Pick the latest semver if exactly one is plausibly active.
 3. **Ambiguity: surface to {user_role}.** If multiple version directories are present in the cache and you can't tell which is active (no clear marker of which Claude Code is using), do not guess. Send a brief message to {user_role} naming the candidates and ask which to sync against. Resume only after they confirm.
-4. **Record the resolution.** Whichever path you ended up using and how you chose it goes in the audit ADR's reasoning section (§0014 record). Future readers can trace what was canonical at audit time.
+4. **Record the resolution.** Whichever path you ended up using and how you chose it goes in the audit ADR's reasoning section (§0013 record). Future readers can trace what was canonical at audit time.
 
 This step exists because `${CLAUDE_PLUGIN_ROOT}` resolution is session-bound; if the `:silcrow-update` skill resolved it for you in its own session and wrote a path into the message, that path could be pointing at a cache entry no longer active by the time you read it. Resolving here, in your audit session, with your own env, eliminates that drift.
 
-## 2. Scan past audit ADRs (§0014)
+## 2. Scan past audit ADRs (§0013)
 
 Before diffing, read all past audit ADRs in `@ {unit_name}/1 | Canon/accepted/`. They'll have titles like *"Update audit, YYYY-MM-DD"*. From these:
 
@@ -32,7 +32,7 @@ Before diffing, read all past audit ADRs in `@ {unit_name}/1 | Canon/accepted/`.
 Walk both trees:
 
 - Plugin source: the path you resolved in Step 1a.
-- Agency: the `@ {unit_name}/` of the unit you are operating in, plus the `@ <sub-unit-name>/` of every sub-unit nested below it (the audit's reach is the subtree rooted at your unit; if you are the root unit's Registrar, that's the whole agency).
+- Agency: the `@ {unit_name}/` of the unit you are operating in, plus the `@ <Sub-Unit Name>/` of every sub-unit nested below it (the audit's reach is the subtree rooted at your unit; if you are the root unit's Registrar, that's the whole agency).
 
 Classify each file:
 
@@ -49,7 +49,7 @@ For equality checks, hash files; for content differences, read them. Whichever i
 For each non-match, write a single sentence capturing what it is and why it matters. Examples:
 
 - *"New ADR: Registrar operates as async auditor, not sync gatekeeper."*
-- *"Your customized lead instructions reference an inbox path that has drifted from §0013's flat layout."*
+- *"Your customized lead instructions reference an inbox path that has drifted from §0012's flat layout."*
 - *"Agency has `docs/old-process.md` that the plugin no longer ships — likely safe to archive."*
 - *"Plugin ships a new foundation doc (07 | Canonical and Operational.md); your agency doesn't have one."*
 
@@ -85,7 +85,7 @@ REMOVALS
        → Archive / Keep / Defer
 
 CONFLICTS
-  [C1] Plugin §00YY conflicts with your §0013 (both supersede §0008 with different approaches).
+  [C1] Plugin §00YY conflicts with your §0033 (both supersede §0050 with different approaches).
        → Options: adopt plugin, keep yours, merge, defer
 
 Previously rejected items still present in plugin (skipped):
@@ -115,7 +115,7 @@ For each approved item:
 - **Removals** — never delete. Archive to `@ {unit_name}/.archive/<date>/` with a note explaining why.
 - **Conflicts** — never choose between local and plugin versions yourself. Present options and execute what the user picks. On request, you may draft a merged option (c) as a starting point.
 
-## 8. Author the audit ADR (§0014)
+## 8. Author the audit ADR (§0013)
 
 After executing, write one audit ADR summarizing the session:
 
@@ -139,15 +139,15 @@ File-level changes applied:
 
 Place in `@ {unit_name}/1 | Canon/accepted/` with the next §-number. This is the canonical record of the audit session and will be consulted on future `:silcrow-update` runs.
 
-## 8a. Broadcast the audit ADR (§0017)
+## 8a. Broadcast the audit ADR (§0016)
 
-You authored the audit ADR, so you broadcast its acceptance per §0017. Walk down the tree from `@ {unit_name}` (this unit + every descendant sub-unit), and deposit an `adr-acceptance-notice` message in every agent's inbox. Skip yourself.
+You authored the audit ADR, so you broadcast its acceptance per §0016. Walk down the tree from `@ {unit_name}` (this unit + every descendant sub-unit), and deposit an `adr-acceptance-notice` message in every agent's inbox. Skip yourself.
 
 The audit-ADR notice gets the standard skeleton (per `./Message Protocol.md` §6) plus the audit-specific line:
 
 > *"This is the audit ADR for the `:silcrow-update` session of YYYY-MM-DD; see it for the full list of changes in that session."*
 
-Rationale: every agent bound by this unit's record needs to know an update audit happened — that's what makes the difference between "the record was updated" and "the agents know about the update." The actor-model channel (§0005) does the work, and the broadcast rule (§0017) makes it routine instead of a special-case `:silcrow-update`-only mechanism.
+Rationale: every agent bound by this unit's record needs to know an update audit happened — that's what makes the difference between "the record was updated" and "the agents know about the update." The actor-model channel (§0005) does the work, and the broadcast rule (§0016) makes it routine instead of a special-case `:silcrow-update`-only mechanism.
 
 If the audit accepted multiple new ADRs (each landing in `accepted/`), the **substantive authors of those individual ADRs** broadcast them — not you. Your broadcast is for the audit ADR specifically. In practice, most updates that author non-audit ADRs do so via the User or Lead approving content rewrites; those approvers broadcast their own. You broadcast only what you authored: the audit summary.
 
@@ -157,7 +157,7 @@ Send a short message to both {user_role} and {lead_role}:
 
 > *"Update audit complete. §00XX records the session. Accepted: N; rejected: K; deferred: J. File changes committed in one structured commit."*
 
-Commit the entire update's changes in **one commit** (§0016):
+Commit the entire update's changes in **one commit** (§0015):
 
 ```
 §00XX: update audit — accepted A, rejected B, deferred C
@@ -166,7 +166,7 @@ Accepted:
   - §00YY: <descriptor>
 
 File-level changes:
-  - Moved customized agent dirs into §0013's flat layout
+  - Moved customized agent dirs into §0012's flat layout
   - Updated lead/AGENTS.md (sections 2-4)
   - Archived docs/old-process.md
 

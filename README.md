@@ -52,7 +52,7 @@ git clone https://github.com/trevorschoeny/silcrow-agency-helper
 
 Run in the directory you want to scaffold the agency inside. The skill peeks silently, delivers a short intro, and then converses naturally to gather agency name, description, your role details, any role renames, and any sub-units to seed alongside the root unit. It runs `scripts/scaffold.sh` to create the root unit's `@ <Agency Name>/` directory inside the current working directory, initializes git with a minimal `.gitignore`, and commits. If sub-units were named, it then runs `scripts/add-unit.sh` once per sub-unit.
 
-The generated agency ships a **founding record of 18 ADRs** (§0001 + 17 constitutional decisions §0002–§0018, with §0008 superseded by §0010). Each ADR cites a foundation doc; each can be superseded like any other.
+The generated agency ships a **founding record of 17 ADRs** (§0001 + 16 constitutional decisions §0002–§0017). Each ADR cites a foundation doc; each can be superseded like any other.
 
 ### `:silcrow-add-unit` — add a sub-unit
 
@@ -60,7 +60,7 @@ Run inside any existing unit's directory (root or otherwise) to add a sub-unit b
 
 ### `:silcrow-update` — reconcile with the plugin's current state
 
-Intentionally thin. Confirms an agency exists, drops one message in the Registrar's inbox pointing at `${CLAUDE_PLUGIN_ROOT}/scaffold/unit/`, and exits. The Registrar does the real work: dynamic diff, per-item approval dialogue with User and Lead, execution of approved changes, one audit ADR (§0014) summarizing accepts/rejects/deferrals, one structured commit (§0016). No version tracking — every invocation diffs against current plugin state.
+Intentionally thin. Confirms an agency exists, drops one message in the Registrar's inbox pointing at `${CLAUDE_PLUGIN_ROOT}/scaffold/unit/`, and exits. The Registrar does the real work: dynamic diff, per-item approval dialogue with User and Lead, execution of approved changes, one audit ADR (§0013) summarizing accepts/rejects/deferrals, one structured commit (§0015). No version tracking — every invocation diffs against current plugin state.
 
 ---
 
@@ -86,7 +86,7 @@ Every generated agency includes `@ <Agency Name>/3 | Silcrow Agency Reference/Ph
 │   └── ...
 ├── 1 | Canon/                                  ← decisions (per-unit; immutable)
 │   ├── accepted/, proposed/, superseded/, rejected/, _templates/
-│   │   └── accepted/ ships §0001–§0018 (§0008 in superseded/)
+│   │   └── accepted/ ships §0001–§0017
 │   └── README.md                               ← decision index
 ├── 2 | Working Files/                          ← operational artifacts (per-unit; open container)
 │   └── README.md
@@ -102,7 +102,7 @@ Every generated agency includes `@ <Agency Name>/3 | Silcrow Agency Reference/Ph
 └── Registrar @ <Agency Name>/                  ← Registrar (fixed name)
 ```
 
-Every unit follows §0013's flat layout. Unit and sub-unit directories carry the `@ ` prefix. Governance folders use the numeric-prefix `1 | / 2 | / 3 | ` scheme — same names in every unit, no per-unit suffix. Agent directories are `<Role> @ <Unit Name>/`. `3 | Silcrow Agency Reference/` lives only at the root unit; sub-units inherit by reference. The pattern is identical at every depth.
+Every unit follows §0012's flat layout. Unit and sub-unit directories carry the `@ ` prefix. Governance folders use the numeric-prefix `1 | / 2 | / 3 | ` scheme — same names in every unit, no per-unit suffix. Agent directories are `<Role> @ <Unit Name>/`. `3 | Silcrow Agency Reference/` lives only at the root unit; sub-units inherit by reference. The pattern is identical at every depth.
 
 Sort at any unit's root: `@ <Sub Units>/` → `1 | Canon/` → `2 | Working Files/` → `3 | Silcrow Agency Reference/` (root only) → `<Role> @ <Unit>/` (alphabetical) → `README.md` (file).
 

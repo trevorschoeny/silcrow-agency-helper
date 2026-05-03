@@ -6,7 +6,7 @@ You are the human principal of **{agency_name}** — the agency as a whole tree,
 
 ## You are not a tier; you are the principal
 
-The tier model (§0006, extended by §0011) describes cognitive horizons and default reporting chains for the **agent roles**. It does not describe you.
+The tier model (§0006, extended by §0010) describes cognitive horizons and default reporting chains for the **agent roles**. It does not describe you.
 
 - You sit **outside** the tier lattice.
 - You may act as the superior of any agent at any tier in any unit at any time — the Lead of the root unit, the Lead of any sub-unit, any Implementer at any depth.
@@ -19,9 +19,9 @@ The agency's tier model constrains the agents. It does not constrain you.
 
 You have **first-class ADR authority**. You may author, commit, supersede, or revise ADRs directly in any unit's `@ {agency_name}/1 | Canon/accepted/`. No approval is needed — you are the principal.
 
-Per §0010, direct commit to `accepted/` is the default path for first-class authors. The `@ {agency_name}/1 | Canon/proposed/` directory is available if you want Registrar pre-review, but it's optional for you.
+Per §0009, direct commit to `accepted/` is the default path for first-class authors. The `@ {agency_name}/1 | Canon/proposed/` directory is available if you want Registrar pre-review, but it's optional for you.
 
-## Broadcast on ADR acceptance (§0017)
+## Broadcast on ADR acceptance (§0016)
 
 When you author an ADR that lands in `accepted/`, you broadcast a short notification to every agent in the accepting unit and every agent in every descendant sub-unit. The principle is the same one Lead and Registrar follow: the actor-model record (§0005) is the channel through which bound agents become aware of decisions that bind them.
 
@@ -32,7 +32,7 @@ You may also delegate the mechanical broadcast to Registrar @ {agency_name} as a
 ## Owned decisions
 
 - Strategic direction for the agency — what it's for, who it serves, what success looks like.
-- Agent-roster changes (hiring, retiring, restructuring tiers, renaming roles). See §0009.
+- Agent-roster changes (hiring, retiring, restructuring tiers, renaming roles). See §0008.
 - Existential questions about the agency itself.
 - Approving or rejecting proposals from any Lead that cross into strategic territory.
 - Approving Implementer-drafted ADRs in any unit's `proposed/` when you choose (the Implementer's default is to ask their local Lead; you can act as superior too).
@@ -46,13 +46,13 @@ None. You are the principal.
 
 - **Write briefs, not specs.** When you give work to a Lead — whether at the root unit or a sub-unit — communicate what you need and why. Let them decide how it's shaped. See §0007.
 - **Approve or reject cleanly.** When a proposal reaches you, respond with a decision. "I need to think about it" is valid — leave a note so the proposal doesn't rot in the inbox.
-- **Roster changes go through ADRs.** Adding, retiring, or restructuring an agent or unit is a significant decision. Follow §0009 (roster change protocol). For adding a unit specifically, the `:silcrow-add-unit` skill orchestrates the whole workflow.
+- **Roster changes go through ADRs.** Adding, retiring, or restructuring an agent or unit is a significant decision. Follow §0008 (roster change protocol). For adding a unit specifically, the `:silcrow-add-unit` skill orchestrates the whole workflow.
 - **You may skip tiers and units.** Tier-skipping rules are for the agents, not you. If you have feedback for an Implementer in any unit, you may give it directly. Use judgment — most feedback still routes more efficiently through the local Lead, but the option is yours.
 - **Invoke skills at any time.** `:silcrow-init` (already run), `:silcrow-add-unit` (new units), `:silcrow-update` (bring the agency into alignment with the plugin's current scaffold state).
 
 ## First tasks
 
-- **Supersede §0018 (agency scope) — don't edit it.** The scaffold seeded `@ {agency_name}/1 | Canon/accepted/§0018 | Agency Scope.md` with a minimal scope statement. One of your earliest collaborative tasks with {lead_role} @ {agency_name} is to *supersede* §0018 (per §0004) with a richer version: what the agency is for, who it serves, what's in scope, what's out, what "done" looks like. The seed lives at the end of the founding set deliberately — it's positioned to be the next ADR you author against, your first lesson in the supersession discipline that governs every binding decision in this agency. Author a new ADR with `Supersedes: §0018` in its header; the Lead or Registrar handles the file move from `accepted/` to `superseded/`. The new ADR becomes the north star every downstream decision cites.
+- **Supersede §0017 (agency scope) — don't edit it.** The scaffold seeded `@ {agency_name}/1 | Canon/accepted/§0017 | Agency Scope.md` with a minimal scope statement. One of your earliest collaborative tasks with {lead_role} @ {agency_name} is to *supersede* §0017 (per §0004) with a richer version: what the agency is for, who it serves, what's in scope, what's out, what "done" looks like. The seed lives at the end of the founding set deliberately — it's positioned to be the next ADR you author against, your first lesson in the supersession discipline that governs every binding decision in this agency. Author a new ADR with `Supersedes: §0017` in its header; the Lead or Registrar handles the file move from `accepted/` to `superseded/`. The new ADR becomes the north star every downstream decision cites.
 
 ## Inbox conventions
 
@@ -68,15 +68,15 @@ None. You are the principal.
 
 ## Git notes
 
-- The scaffold initialized git at the agency root (§0015, §0016).
+- The scaffold initialized git at the agency root (§0014, §0015).
 - You may commit anything at any time; there's no gating on your commits.
-- Governance commits cite §NNNN (per §0016); operational commits are free-form.
+- Governance commits cite §NNNN (per §0015); operational commits are free-form.
 
 ## Key references
 
 - `@ {agency_name}/3 | Silcrow Agency Reference/Decision Process.md` — how ADRs flow through the system.
-- `@ {agency_name}/1 | Canon/README.md` — index of all decisions (starting points: §0018 scope seed, §0011 principal framing, §0009 roster changes).
-- `@ {agency_name}/` — the root unit's roster. Sub-unit agents live at `@ <sub-unit>/<Role> @ <sub-unit>/`, recursively at any depth (sub-units nest as siblings of the parent unit's agents).
+- `@ {agency_name}/1 | Canon/README.md` — index of all decisions (starting points: §0017 scope seed, §0010 principal framing, §0008 roster changes).
+- `@ {agency_name}/` — the root unit's roster. Sub-unit agents live at `@ <Sub-Unit>/<Role> @ <Sub-Unit>/`, recursively at any depth (sub-units nest as siblings of the parent unit's agents).
 
 ## Principles to reason from (load when needed)
 

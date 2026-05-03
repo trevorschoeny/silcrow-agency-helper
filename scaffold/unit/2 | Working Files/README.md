@@ -1,6 +1,6 @@
 # 2 | Working Files — {agency_name}
 
-`2 | Working Files/` is this unit's **operational catch-all** — the open container for everything operational at the unit level. Per §0013, every unit has one.
+`2 | Working Files/` is this unit's **operational catch-all** — the open container for everything operational at the unit level. Per §0012, every unit has one.
 
 ## What goes here
 
@@ -28,6 +28,6 @@ This folder does not prescribe sub-structure. Organize as the unit's work demand
 
 ## See also
 
-- `../1 | Canon/accepted/§0013 | Agency and Unit Structure.md` — defines OPS's role.
-- `../1 | Canon/accepted/§0012 | Canonical and Operational Artifacts.md` — the canon/operational distinction.
-- `../1 | Canon/accepted/§0005 | Communication via Inboxes.md` — actor-model discipline; why agent-private state and OPS-published state are separate.
+- `../1 | Canon/accepted/§0012 | Agency and Unit Structure.md` — defines `2 | Working Files/`'s role as the unit's operational catch-all.
+- `../1 | Canon/accepted/§0011 | Canonical and Operational Artifacts.md` — the canon/operational distinction.
+- `../1 | Canon/accepted/§0005 | Communication via Inboxes.md` — actor-model discipline; why agent-private state and `2 | Working Files/`-published state are separate.

@@ -5,7 +5,7 @@
 - **Authors:** {user_role} (approving authority); skill-generated draft
 - **Supersedes:** —
 - **Superseded by:** —
-- **Influences:** §0002, §0003, §0004, §0005, §0006, §0007, §0008 (superseded by §0010), §0009, §0010, §0011, §0012, §0013, §0014, §0015, §0016, §0017, §0018 (founding constitutional decisions inherited through this ADR); all future ADRs in this agency (structural).
+- **Influences:** §0002, §0003, §0004, §0005, §0006, §0007, §0008, §0009, §0010, §0011, §0012, §0013, §0014, §0015, §0016, §0017 (founding constitutional decisions inherited through this ADR); all future ADRs in this agency (structural).
 - **Influenced by:** — (this is §0001)
 
 ## Why-statement
@@ -120,5 +120,5 @@ In each case, write a superseding ADR referencing this one. Do not edit this rec
 - `3 | Silcrow Agency Reference/Philosophy.md` — the full rationale for every element of this scaffold.
 - `3 | Silcrow Agency Reference/Decision Process.md` — the lifecycle of ADRs, including this one.
 - `3 | Silcrow Agency Reference/foundations/` — per-thread intellectual history for the six foundational disciplines.
-- `../../` — the directories of the starter roster this ADR implicitly defines (the `<role>@ {unit_name}/` siblings of CANON, OPS, REFERENCE per §0013).
+- `../../` — the directories of the starter roster this ADR implicitly defines (the `<Role> @ {unit_name}/` siblings of `1 | Canon/`, `2 | Working Files/`, and (root only) `3 | Silcrow Agency Reference/` per §0012).
 - Source: initialized via the Silcrow plugin ({date}).

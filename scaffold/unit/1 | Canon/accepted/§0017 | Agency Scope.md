@@ -1,4 +1,4 @@
-# §0018 | Agency scope
+# §0017 | Agency scope
 
 - **Status:** accepted
 - **Date:** {date}
@@ -6,25 +6,25 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every decision that references agency scope or north star; most prominently, the first {lead_role}-tier architectural ADRs at the root unit; every unit-establishing ADR (scope violations caught during Registrar audit).
-- **Influenced by:** §0001, §0013
+- **Influenced by:** §0001, §0012
 
 ## Seed notice — DO NOT EDIT THIS ADR; SUPERSEDE IT
 
 **This ADR is a seed. The thin body below is intentional — it is the agency's *first lesson* in the supersession discipline that governs every ADR in this scaffold.**
 
-To replace §0018 with a richer scope statement, *supersede* it via §0004:
+To replace §0017 with a richer scope statement, *supersede* it via §0004:
 
-1. Author a new ADR with the next available §-number — typically §0021 if no ADRs have been authored yet beyond the founding scaffold set.
-2. In the new ADR's header, set `Supersedes: §0018`.
-3. Move §0018 from `accepted/` to `superseded/` (filename unchanged) and update its `Superseded by:` to point to the new ADR.
-4. Append a one-paragraph retrospective note at the bottom of §0018 explaining the supersession (this is the only permitted post-acceptance body change per §0004).
+1. Author a new ADR with the next available §-number — typically §0018 if no ADRs have been authored yet beyond the founding scaffold set.
+2. In the new ADR's header, set `Supersedes: §0017`.
+3. Move §0017 from `accepted/` to `superseded/` (filename unchanged) and update its `Superseded by:` to point to the new ADR.
+4. Append a one-paragraph retrospective note at the bottom of §0017 explaining the supersession (this is the only permitted post-acceptance body change per §0004).
 5. The Registrar handles steps 3–4 mechanically if the Lead asks; or the Lead can do them directly.
 
-**Editing §0018 in place violates §0004's immutability discipline.** It also loses the supersession chain — the readable narrative of how the agency's scope sharpened or shifted over time. Every future scope-related decision will cite back through the chain; breaking it once breaks it permanently.
+**Editing §0017 in place violates §0004's immutability discipline.** It also loses the supersession chain — the readable narrative of how the agency's scope sharpened or shifted over time. Every future scope-related decision will cite back through the chain; breaking it once breaks it permanently.
 
-This pattern (seed → supersession) is the same one used for every binding decision the agency will ever make. §0018 is positioned at the end of the founding set deliberately — it is the next ADR you author against, not part of the immutable constitutional core. By superseding it as your first collaborative act, you teach the agency how decisions evolve here. Mess up the supersession ceremony on §0018 and you'll learn the discipline on a low-stakes ADR; nail it, and you've built the muscle for every supersession that follows.
+This pattern (seed → supersession) is the same one used for every binding decision the agency will ever make. §0017 is positioned at the end of the founding set deliberately — it is the next ADR you author against, not part of the immutable constitutional core. By superseding it as your first collaborative act, you teach the agency how decisions evolve here. Mess up the supersession ceremony on §0017 and you'll learn the discipline on a low-stakes ADR; nail it, and you've built the muscle for every supersession that follows.
 
-The body below captures what was said at scaffold time. One of the first collaborative tasks for {user_role} and the {lead_role} is to supersede §0018 with a richer scope statement: what the agency is for, who it serves, what is and isn't in scope, what "done" looks like in the near and medium term.
+The body below captures what was said at scaffold time. One of the first collaborative tasks for {user_role} and the {lead_role} is to supersede §0017 with a richer scope statement: what the agency is for, who it serves, what is and isn't in scope, what "done" looks like in the near and medium term.
 
 ## Context and problem statement
 
@@ -32,7 +32,7 @@ The body below captures what was said at scaffold time. One of the first collabo
 
 Every architectural and implementation decision made in this agency cites back — directly or transitively — to agency scope. Without a citable scope statement, later decisions lack a resolvable north star, and the question "was this in scope?" has no authoritative answer. This ADR establishes the seat where that answer lives, from Day 1, even before the scope is fully articulated.
 
-In agencies with sub-units (§0013), agency scope — the root unit's §0018 — binds every unit in the tree. A sub-unit decision that exceeds agency scope is a scope violation, which that sub-unit's Registrar surfaces during audit (§0010). Sub-units may have their own scope ADRs that further narrow within agency scope, but they may never widen it.
+In agencies with sub-units (§0012), agency scope — the root unit's §0017 — binds every unit in the tree. A sub-unit decision that exceeds agency scope is a scope violation, which that sub-unit's Registrar surfaces during audit (§0009). Sub-units may have their own scope ADRs that further narrow within agency scope, but they may never widen it.
 
 ## Initial scope
 
@@ -77,6 +77,6 @@ Subsequent reviews when:
 - `../../README.md` — the agency's orientation doc; describes structure but defers scope to this ADR.
 - `§0001` — the founding decision that establishes this agency and references the original scope phrase in context.
 - `§0004` — the immutability discipline that makes supersession the update mechanism.
-- `§0010` — Registrar's audit checklist includes scope-violation detection.
-- `§0013` — agency and unit structure; agency scope binds every unit in the tree.
+- `§0009` — Registrar's audit checklist includes scope-violation detection.
+- `§0012` — agency and unit structure; agency scope binds every unit in the tree.
 - `../../3 | Silcrow Agency Reference/Decision Process.md` — operational supersession rules.

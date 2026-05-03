@@ -10,9 +10,9 @@ allowed-tools:
 
 # Agent Org Scaffold — Init
 
-Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0018, with §0008 superseded by §0010) that capture the pattern's load-bearing decisions.
+Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0017) that capture the pattern's load-bearing decisions.
 
-An **agency** is the whole organizational tree. Its top-level node is the **root unit**, which shares the agency's name. The tree may stop there (a single root unit, one cohesive body of work) or extend into nested **sub-units** — each itself a full unit, recursively, with its own governance and agents (§0013). The scaffold supports both shapes.
+An **agency** is the whole organizational tree. Its top-level node is the **root unit**, which shares the agency's name. The tree may stop there (a single root unit, one cohesive body of work) or extend into nested **sub-units** — each itself a full unit, recursively, with its own governance and agents (§0012). The scaffold supports both shapes.
 
 ## One-shot skill
 
@@ -109,7 +109,7 @@ Quote every argument so values with spaces pass through cleanly.
 
 The script:
 - Prints `✓ Scaffolded <agency_name> at <cwd>/@ <agency_name>` on success.
-- Creates `@ <agency_name>/` inside the current working directory, containing the unit's flat layout (`1 | Canon`, `2 | Working Files`, `3 | Silcrow Agency Reference`, agent dirs, README) per §0013.
+- Creates `@ <agency_name>/` inside the current working directory, containing the unit's flat layout (`1 | Canon`, `2 | Working Files`, `3 | Silcrow Agency Reference`, agent dirs, README) per §0012.
 - Initializes git **inside the agency directory** as its own self-contained repo, with a default `.gitignore` and an initial commit (§0001). The CWD itself is never touched — no `.git/`, no `.gitignore`, no rename, no commit.
 - Exits 3 if `<cwd>/@ <agency_name>/` is already a scaffolded unit (`1 | Canon` exists inside). Unrelated `@ */` siblings in the CWD are not conflicts. Relay the error if it fires.
 
@@ -185,7 +185,7 @@ Output this wording exactly, substituting agency name, user's name, role names, 
 >
 > *Agents work together by sending messages to each other's inboxes — small markdown files dropped into the receiving agent's `inbox/` directory. Each agent already knows where its own inbox lives, who it takes messages from, who it sends messages to, and how to archive what it's read. You don't need to configure any of that — it's baked into every agent's `AGENTS.md`.*
 >
-> *When you're ready to start working, close this session. Open a new one inside `@ <Agency Name>/<Lead Role> @ <Agency Name>/` — that's your agency's lead, and the first conversation you want is planning-level: superseding §0018 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
+> *When you're ready to start working, close this session. Open a new one inside `@ <Agency Name>/<Lead Role> @ <Agency Name>/` — that's your agency's lead, and the first conversation you want is planning-level: superseding §0017 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
 >
 > *You can start a session with any agent the same way — open it inside that agent's directory (two levels below the agency root, e.g. `@ <Agency Name>/<Role> @ <Agency Name>/`, or for sub-unit agents `@ <Agency Name>/@ <Sub Unit>/<Role> @ <Sub Unit>/`). The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
 >

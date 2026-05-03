@@ -1,4 +1,4 @@
-# §0011 | User as principal; local tier numbering; Implementer drafts-with-approval
+# §0010 | User as principal; local tier numbering; Implementer drafts-with-approval
 
 - **Status:** accepted
 - **Date:** {date}
@@ -6,7 +6,7 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every tier-based interpretation; every ADR authoring flow; multi-unit agencies.
-- **Influenced by:** §0001, §0006, §0009
+- **Influenced by:** §0001, §0006, §0008
 
 ## Why-statement
 
@@ -20,13 +20,13 @@ because subsidiarity (lowest competent level) plus principal authority (the User
 
 ## Context and problem statement
 
-§0006 established the starter roster and tier model — User (tier 0), Lead (tier 1), Implementer (tier 2), plus an outside-hierarchy Registrar. That model was written assuming a single-unit organization. As agencies grow into trees of nested units (a sub-unit per product line, per research thread, per team, etc.; see §0013), three questions arise that §0006 did not answer cleanly:
+§0006 established the starter roster and tier model — User (tier 0), Lead (tier 1), Implementer (tier 2), plus an outside-hierarchy Registrar. That model was written assuming a single-unit organization. As agencies grow into trees of nested units (a sub-unit per product line, per research thread, per team, etc.; see §0012), three questions arise that §0006 did not answer cleanly:
 
 1. **Where does the User sit in a tree of units?** Literally reading §0006, the User is tier-0 of the agency. But in a nested-unit structure there are potentially many Leads — the root unit's Lead, plus a Lead in every sub-unit. Does the User sit above only the root unit's Lead? May a sub-unit's Lead message the User directly? Does the User bypass tiers?
 
 2. **What do tier numbers mean across units?** Is the root unit's Lead tier-1 and every sub-unit's Lead tier-2? That reading collapses the one-stratum rule §0006 relies on — a sub-unit Lead's work is full tier-1 work for their unit's scope, not tier-2 work under the root unit's scope.
 
-3. **May an Implementer author ADRs?** §0006 assigns ADR authoring to Lead-and-up by default, but the `:silcrow-update` flow, §0010's audit flow, and the general principle of subsidiarity all invite cases where an Implementer has hands-on knowledge that earns ADR treatment. Blocking Implementer authorship entirely loses that signal; leaving it fully open collapses the authority split.
+3. **May an Implementer author ADRs?** §0006 assigns ADR authoring to Lead-and-up by default, but the `:silcrow-update` flow, §0009's audit flow, and the general principle of subsidiarity all invite cases where an Implementer has hands-on knowledge that earns ADR treatment. Blocking Implementer authorship entirely loses that signal; leaving it fully open collapses the authority split.
 
 This ADR answers all three with three companion refinements.
 
@@ -99,7 +99,7 @@ Authorship authority by role (the same rule applies in every unit; the User is u
 - **Lead @ <unit>** — first-class. May draft, commit, and supersede ADRs directly in their unit's `@ {unit_name}/1 | Canon/accepted/`. No approval needed.
 - **User** — first-class. May act as superior of any agent in any unit; authoring ADRs is within that scope.
 - **Implementer @ <unit>** — drafts only. Commits require their Lead's or the User's approval via the `proposed/` channel.
-- **Registrar @ <unit>** — no authoring; no substantive changes. Registrar flags; Lead or User acts (see §0010).
+- **Registrar @ <unit>** — no authoring; no substantive changes. Registrar flags; Lead or User acts (see §0009).
 
 ### Consequences
 
@@ -115,7 +115,7 @@ Authorship authority by role (the same rule applies in every unit; the User is u
 - **Treating the User as tier-0 only of the root unit.** In a tree of units this blocks direct User communication with agents in sub-units, which contradicts the principal framing — the User is principal of every unit.
 - **Assigning global tier numbers across units.** If you find yourself saying "a sub-unit's Lead is tier-2", the frame has slipped. Every unit's Lead is tier-1-of-their-unit, regardless of where their unit sits in the tree.
 - **Implementer commits-to-accepted without approval.** The draft-with-approval path is the authorized channel. Implementers committing directly to `accepted/` without Lead or User approval collapses the authority split.
-- **Lead bottleneck on Implementer drafts.** Lead should respond to Implementer drafts promptly. If Implementer drafts pile up unreviewed, the Lead is creating the very latency §0010 was built to remove.
+- **Lead bottleneck on Implementer drafts.** Lead should respond to Implementer drafts promptly. If Implementer drafts pile up unreviewed, the Lead is creating the very latency §0009 was built to remove.
 
 ## Review trigger
 
@@ -134,6 +134,6 @@ Reconsider this ADR if:
 - `../../lead@ {unit_name}/AGENTS.md` — Lead's first-class ADR authority.
 - `../../implementer@ {unit_name}/AGENTS.md` — Implementer's draft-with-approval path.
 - §0006 (intact) — the starter tier model this ADR extends.
-- §0009 — roster change protocol; applies to adding tiers or roles.
-- §0010 — Registrar as async auditor; related role-authority refinement.
-- §0013 — agency and unit structure; the multi-unit context this ADR was written to serve.
+- §0008 — roster change protocol; applies to adding tiers or roles.
+- §0009 — Registrar as async auditor; related role-authority refinement.
+- §0012 — agency and unit structure; the multi-unit context this ADR was written to serve.

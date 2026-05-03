@@ -1,4 +1,4 @@
-# §0015 | Agency default `.gitignore` — OS, editor, and secrets patterns only
+# §0014 | Agency default `.gitignore` — OS, editor, and secrets patterns only
 
 - **Status:** accepted
 - **Date:** {date}
@@ -6,11 +6,11 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every agency's initial `.gitignore`; the discipline of what's tracked by default; how gitignore changes are governed.
-- **Influenced by:** §0001, §0012
+- **Influenced by:** §0001, §0011
 
 ## Why-statement
 
-In the context of **agencies that use git for version control and audit history** (§0016, §0018 continue this integration),
+In the context of **agencies that use git for version control and audit history** (§0015, §0017 continue this integration),
 facing the question of what the scaffold's default `.gitignore` should exclude,
 we decided for **a minimal default covering only OS noise, editor artifacts, and common secret-file patterns** — nothing operational is ignored by default —
 and neglected a large preset of language-specific patterns (`node_modules/`, `target/`, `__pycache__/`, `.venv/`), gitignoring working folders by default, and shipping no `.gitignore` at all,
@@ -33,7 +33,7 @@ The right default is small enough to apply to every agency regardless of domain 
 - **Tracked-by-default for operational work.** Plans, briefs, inbox archives, research reports, working documents — all should be tracked unless the user explicitly excludes them. Durability depends on it.
 - **Canonical content never ignored.** `@ {unit_name}/` is governance; nothing inside it should ever be in `.gitignore`. Audit history depends on this.
 - **User extension is easy.** Whatever the default is, users should be able to add patterns trivially.
-- **Governance changes flow through canon.** Additions that affect `@ {unit_name}/` tracking are governance decisions and need an ADR (see §0012 direction-of-constraint).
+- **Governance changes flow through canon.** Additions that affect `@ {unit_name}/` tracking are governance decisions and need an ADR (see §0011 direction-of-constraint).
 
 ## Considered options
 
@@ -83,7 +83,7 @@ Three sections:
 ### Gitignore changes become ADRs when they touch governance
 
 - **Governance-scope gitignore additions** — anything that affects what's tracked inside `@ {unit_name}/` (an unusual case; usually `@ {unit_name}/` contents should all be tracked). Requires an ADR proposed by the Registrar or Lead.
-- **Operational-scope gitignore additions** — Lead's call; no ADR required. The Lead commits the `.gitignore` change like any other operational commit (per §0016, operational commits are free-form).
+- **Operational-scope gitignore additions** — Lead's call; no ADR required. The Lead commits the `.gitignore` change like any other operational commit (per §0015, operational commits are free-form).
 - **Initial default** — this ADR. Future changes to the default supersede this ADR.
 
 ### Consequences
@@ -116,6 +116,6 @@ Reconsider this ADR if:
 
 - `../../Registrar @ {unit_name}/AGENTS.md` — the Registrar's git-advisory role includes flagging uncommitted governance content.
 - §0001 — founding scaffold decision.
-- §0012 — canon/operational split; governance-scope gitignore changes are canonical.
-- §0016 — commit message convention; operational commits are free-form.
+- §0011 — canon/operational split; governance-scope gitignore changes are canonical.
+- §0015 — commit message convention; operational commits are free-form.
 - Git documentation: `gitignore(5)` man page.

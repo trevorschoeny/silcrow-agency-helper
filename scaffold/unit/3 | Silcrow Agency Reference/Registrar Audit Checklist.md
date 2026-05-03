@@ -10,8 +10,8 @@ Read this file **when you're invoked to audit the record** (by User, Lead, or vi
 - [ ] All required sections are present per template.
 - [ ] Why-statement is present on full MADR ADRs and contains all six elements (context, problem, chosen option, alternatives rejected, desired outcome, tradeoff, underlying reason).
 - [ ] Status field correctly matches the ADR's folder (`accepted` in `accepted/`, `superseded-by-§NNNN` in `superseded/`, `rejected` in `rejected/`).
-- [ ] Filename follows `§NNNN-short-kebab-title.md`.
-- [ ] Filename §-number matches the `# §NNNN — Title` heading line.
+- [ ] Filename follows `§NNNN | Title in Title Case.md`.
+- [ ] Filename §-number matches the `# §NNNN | Title` heading line.
 
 ## B. §-numbering
 
@@ -41,17 +41,17 @@ Read this file **when you're invoked to audit the record** (by User, Lead, or vi
 
 - [ ] Flag ADRs with empty `Influences` AND empty `Influenced by` fields. Not necessarily wrong, but worth noting.
 
-## G. Scope (§0018)
+## G. Scope (§0017)
 
-- [ ] Every accepted ADR falls within this unit's scope as stated in §0018 (or the current scope ADR). Scope violations — surface to {user_role}.
+- [ ] Every accepted ADR falls within this unit's scope as stated in §0017 (or the current scope ADR). Scope violations — surface to {user_role}.
 - [ ] In agencies with multiple units: a unit's ADRs don't exceed that unit's scope or any ancestor unit's scope. (Each unit's ADRs are bound by every ancestor's ADRs walking up to the root.)
 
-## H. Federation (§0013)
+## H. Federation (§0012)
 
 - [ ] No ancestor unit's ADR attempts to adjudicate matters that should be local to a descendant unit.
 - [ ] No unit's ADR attempts to set policy for a peer or cousin unit (one outside its own subtree).
 
-## I. Unsafe references (§0012)
+## I. Unsafe references (§0011)
 
 For every reference from an ADR to an operational artifact:
 
@@ -60,10 +60,10 @@ For every reference from an ADR to an operational artifact:
 
 If *no* to either, flag as unsafe and surface to {lead_role}.
 
-## J. Unit↔ADR consistency (§0013)
+## J. Unit↔ADR consistency (§0012)
 
-- [ ] Every `@ <unit-name>/` directory has a registering ADR in the parent's `@ <parent-unit-name>/1 | Canon/accepted/`.
-- [ ] Every unit-establishing ADR has a corresponding `@ <unit-name>/` directory with its own `@ <unit-name>/`.
+- [ ] Every `@ <Unit Name>/` directory has a registering ADR in the parent's `@ <Parent Unit Name>/1 | Canon/accepted/`.
+- [ ] Every unit-establishing ADR has a corresponding `@ <Unit Name>/` directory with its own `@ <Unit Name>/`.
 
 Flag orphans (unregistered units or unexecuted ADRs) to {lead_role}.
 
@@ -78,7 +78,7 @@ Report as informational; never blocking. Operational git hygiene is outside your
 
 Per §0005's "reading is moving" rule, an agent's `inbox/` should hold only unread or in-flight messages; everything else belongs in `inbox/archive/`. Stale messages in the inbox suggest the discipline is slipping.
 
-- [ ] Walk every agent's `inbox/` (not `inbox/archive/`) under `@ {unit_name}/<role>@ {unit_name}/inbox/`.
+- [ ] Walk every agent's `inbox/` (not `inbox/archive/`) under `@ {unit_name}/<Role> @ {unit_name}/inbox/`.
 - [ ] Flag any message file with a deposit date older than ~24 hours that's still in `inbox/` (not yet archived).
 - [ ] For each flagged file, name the agent and the filename in the audit report.
 
@@ -94,16 +94,16 @@ After walking the checklist, send one report to appropriate inboxes:
 Audit report — YYYY-MM-DD
 
 PROCEDURAL CORRECTIONS MADE (direct fixes)
-  [P1] Fixed broken citation in §0034 Influences → §0010 (was pointing at §0008).
+  [P1] Fixed broken citation in §0034 Influences → §0042 (was pointing at §0041).
   [P2] Moved §0042 from proposed/ to accepted/; it had been approved in a past message but never filed.
 
 SUBSTANTIVE ISSUES FOR {lead_role}
   [L1] §0088 cites plans/cache-refactor.md as load-bearing — unsafe reference
-       per §0012. Recommend rewrite to embed decision content.
+       per §0011. Recommend rewrite to embed decision content.
 
 SUBSTANTIVE ISSUES FOR {user_role}
   [U1] §0101 establishes a practice ("we only take enterprise clients")
-       that appears to exceed current agency scope (§0018). Scope clarification needed.
+       that appears to exceed current agency scope (§0017). Scope clarification needed.
 
 INFORMATIONAL
   [I1] 2 uncommitted governance files; 1 unpushed governance commit.
