@@ -46,9 +46,9 @@ None. You are the principal.
 
 - **Write briefs, not specs.** When you give work to a Lead — whether at the root unit or a sub-unit — communicate what you need and why. Let them decide how it's shaped. See §0007.
 - **Approve or reject cleanly.** When a proposal reaches you, respond with a decision. "I need to think about it" is valid — leave a note so the proposal doesn't rot in the inbox.
-- **Roster changes go through ADRs.** Adding, retiring, or restructuring an agent or unit is a significant decision. Follow §0008 (roster change protocol). For adding a unit specifically, the `:silcrow-add-unit` skill orchestrates the whole workflow.
+- **Roster changes go through ADRs.** Adding, retiring, or restructuring an agent or unit is a significant decision. Follow §0008 (roster change protocol). For adding a unit specifically, the `:silcrow-add-unit` skill orchestrates the whole workflow; for adding an agent within a unit, the `:silcrow-add-agent` skill (Lead-only) does the same.
 - **You may skip tiers and units.** Tier-skipping rules are for the agents, not you. If you have feedback for an Implementer in any unit, you may give it directly. Use judgment — most feedback still routes more efficiently through the local Lead, but the option is yours.
-- **Invoke skills at any time.** `:silcrow-init` (already run), `:silcrow-add-unit` (new units), `:silcrow-update` (bring the agency into alignment with the plugin's current scaffold state).
+- **Invoke skills at any time.** `:silcrow-init` (already run), `:silcrow-add-unit` (new units), `:silcrow-add-agent` (new agents within a unit, from that unit's Lead session), `:silcrow-update` (bring the agency into alignment with the plugin's current scaffold state).
 
 ## First tasks
 

@@ -16,7 +16,7 @@ An **agency** is the whole organizational tree. Its top-level node is the **root
 
 ## One-shot skill
 
-Run this skill **once**, at agency initialization. After scaffolding completes, the generated structure carries all conventions forward. **Do not re-invoke `:silcrow-init`** to modify an existing agency — use `:silcrow-add-unit` for new units or `:silcrow-update` to bring the agency in line with the current scaffold release.
+Run this skill **once**, at agency initialization. After scaffolding completes, the generated structure carries all conventions forward. **Do not re-invoke `:silcrow-init`** to modify an existing agency — use `:silcrow-add-unit` for new units, `:silcrow-add-agent` for new agents within an existing unit, or `:silcrow-update` to bring the agency in line with the current scaffold release.
 
 If the user asks to "re-run" `:silcrow-init` on an existing agency, stop and explain. Redirect them to `:silcrow-update` (for plugin-driven changes) or manual editing (for their own conventions).
 
@@ -190,7 +190,7 @@ Output this wording exactly, substituting agency name, user's name, role names, 
 >
 > *You can start a session with any agent the same way — open it inside that agent's directory (two levels below the agency root, e.g. `@ <Agency Name>/<Role> @ <Agency Name>/`, or for sub-unit agents `@ <Agency Name>/@ <Sub Unit>/<Role> @ <Sub Unit>/`). The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
 >
-> *You can run the `:silcrow-add-unit` skill at any time to add a new unit, or the `:silcrow-update` skill to bring this agency into alignment with the latest plugin updates. The registrar assists with both.*
+> *You can run the `:silcrow-add-unit` skill at any time to add a new unit, the `:silcrow-add-agent` skill (from a unit's Lead session) to add a new agent to a unit, or the `:silcrow-update` skill to bring this agency into alignment with the latest plugin updates. The registrar assists with all three.*
 >
 > *Good luck with <Agency Name>! Let me know if you have any questions. Otherwise, I'll enjoy my retirement when you close this session. :)*
 

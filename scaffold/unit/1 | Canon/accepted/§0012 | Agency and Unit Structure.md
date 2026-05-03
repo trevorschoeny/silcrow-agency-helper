@@ -5,7 +5,7 @@
 - **Authors:** scaffold initialization (inherited via §0001)
 - **Supersedes:** —
 - **Superseded by:** —
-- **Influences:** every directory layout; every inbox path; every ADR-to-directory audit; the `:silcrow-init` skill; the `:silcrow-add-unit` skill; the `:silcrow-update` skill's structural migrations.
+- **Influences:** every directory layout; every inbox path; every ADR-to-directory audit; the `:silcrow-init` skill; the `:silcrow-add-unit` skill; the `:silcrow-add-agent` skill; the `:silcrow-update` skill's structural migrations.
 - **Influenced by:** §0001, §0005, §0008, §0011
 
 ## Why-statement
@@ -24,7 +24,7 @@ The plugin needs a unit structure that:
 
 - **Stays shallow at the agent layer.** Operators interact with agents and their inboxes daily. A four-deep path imposes friction that compounds across an agency's lifetime.
 - **Distinguishes governance from operational without an extra folder level.** §0011's canon/operational split is load-bearing, but enforcing it through a wrapper directory adds depth.
-- **Identifies units programmatically.** Tooling — the registrar's audit, the `:silcrow-add-unit` skill's CWD-must-be-a-unit check, the `:silcrow-update` skill's same check — needs to recognize what's a unit and what isn't.
+- **Identifies units programmatically.** Tooling — the registrar's audit, the silcrow skills' unit-detection logic — needs to recognize what's a unit and what isn't.
 - **Recurses cleanly.** A sub-unit should be structurally identical to its parent. No special-casing depth.
 - **Reads naturally to a non-developer.** A wedding planner, a healthcare initiative, or a research lab using silcrow should not have to learn slug conventions or shell shorthand to navigate their own agency.
 - **Self-identifies enough that the parent context is recoverable.** Opening a folder standalone in an editor or file manager should reveal the unit it belongs to (via the parent dir's name, since the governance folders themselves are constants).

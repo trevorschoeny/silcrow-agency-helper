@@ -56,7 +56,7 @@ When an ADR you authored or approved lands in `accepted/`, **you broadcast a sho
 
 - ADRs you draft and commit directly to `accepted/` (your first-class authority, §0009).
 - ADRs {implementer_role} @ {unit_name} drafted into `proposed/` and you approved — *you* exercised the authoring authority that brought it across the line, so *you* broadcast. The notice names both: drafted by them, approved by you.
-- Establishing ADRs from `:silcrow-add-unit` you ran or co-authored.
+- Establishing ADRs from `:silcrow-add-unit` or `:silcrow-add-agent` you ran or co-authored.
 
 You **don't** broadcast for:
 

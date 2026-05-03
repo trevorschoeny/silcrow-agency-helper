@@ -58,6 +58,10 @@ The generated agency ships a **founding record of 17 ADRs** (§0001 + 16 constit
 
 Run inside an existing unit's directory (the one named `@ <Unit Name>/`, root or otherwise) to add a sub-unit nested inside it. The skill reads the unit's `silcrow-meta` README anchor for the agency name and role values, converses to gather the sub-unit's details, and runs `scripts/add-unit.sh` — which authors an establishing ADR in the parent's `1 | Canon/accepted/` and scaffolds the sub-unit's flat structure (`1 | Canon`, `2 | Working Files`, agent dirs, README) nested inside the parent unit.
 
+### `:silcrow-add-agent` — add an agent to a unit
+
+Run inside the **Lead's directory** of any unit (e.g., `<Lead Role> @ <Unit Name>/`) to add a new agent (role) to that unit. Adding an agent is a roster change (§0008): it requires an establishing ADR, redistribution of work from existing agents, and updates to the unit's coordination structure. The skill converses to gather the new agent's purpose, responsibilities, and reporting line; composes the new agent's `AGENTS.md` plus trims/additions to existing agents' `AGENTS.md`; and shows everything as one consolidated diff before applying. On approval it runs `scripts/add-agent.sh` for the mechanics (directory + establishing ADR), applies the substantive `AGENTS.md` edits, and commits as one governance commit per §0015. Refuses if invoked from any other agent's session — Registrar audits afterwards, but only the Lead can author the redistribution.
+
 ### `:silcrow-update` — reconcile with the plugin's current state
 
 Intentionally thin. Confirms an agency exists, drops one message in the Registrar's inbox pointing at `${CLAUDE_PLUGIN_ROOT}/scaffold/unit/`, and exits. The Registrar does the real work: dynamic diff, per-item approval dialogue with User and Lead, execution of approved changes, one audit ADR (§0013) summarizing accepts/rejects/deferrals, one structured commit (§0015). No version tracking — every invocation diffs against current plugin state.

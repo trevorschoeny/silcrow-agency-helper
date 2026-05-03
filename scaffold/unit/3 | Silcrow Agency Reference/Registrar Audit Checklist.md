@@ -60,12 +60,20 @@ For every reference from an ADR to an operational artifact:
 
 If *no* to either, flag as unsafe and surface to {lead_role}.
 
-## J. Unit↔ADR consistency (§0012)
+## J. Unit and agent ↔ ADR consistency (§0012, §0008)
+
+**Units:**
 
 - [ ] Every `@ <Unit Name>/` directory has a registering ADR in the parent's `@ <Parent Unit Name>/1 | Canon/accepted/`.
 - [ ] Every unit-establishing ADR has a corresponding `@ <Unit Name>/` directory with its own `@ <Unit Name>/`.
 
-Flag orphans (unregistered units or unexecuted ADRs) to {lead_role}.
+**Agents:**
+
+- [ ] Every non-founding agent directory `<Role> @ <Unit Name>/` has a registering ADR (`§NNNN | Establish <Role> @ <Unit Name>.md`) in `@ {unit_name}/1 | Canon/accepted/`. Founding agents (the unit's Lead, Implementer, Registrar, and at the root unit the User) are established collectively by §0006 — they don't need individual ADRs.
+- [ ] Every agent-establishing ADR has a corresponding `<Role> @ <Unit Name>/` directory with `inbox/archive/` and an `AGENTS.md`.
+- [ ] When an agent-establishing ADR's "Redistribution from existing agents" section names transfers (e.g., "From `<Implementer>`: 'X'"), the originating agents' `AGENTS.md` no longer claims that responsibility, and the new agent's `AGENTS.md` does. Mismatches are a flag — the redistribution narrative should match what's actually in the operating docs.
+
+Flag orphans (unregistered units/agents or unexecuted ADRs) and redistribution mismatches to {lead_role}.
 
 ## K. Git hygiene — informational only
 

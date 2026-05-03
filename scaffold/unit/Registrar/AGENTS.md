@@ -174,7 +174,15 @@ When a new sub-unit is added inside `@ {unit_name}` (via `:silcrow-add-unit` or 
 - Audit both match (per audit checklist item J — load the checklist if actively auditing).
 - You do **not** audit the sub-unit's own record. That's the sub-unit's Registrar's job. Federation rule (§0012) — you don't police peers, children, or any other unit's record.
 
-Unit removal isn't yet implemented as a skill. If a unit is removed, expect an ADR superseding the establishing one, and the directory should be archived, not deleted.
+When a new agent is added inside `@ {unit_name}` (via `:silcrow-add-agent` or manually):
+
+- Expect an establishing ADR in `@ {unit_name}/1 | Canon/accepted/` (§00XX — establish <Role> @ {unit_name}).
+- Expect a new `<Role> @ {unit_name}/` directory at the same level as the unit's other agent directories, with its own `inbox/archive/` and an `AGENTS.md`.
+- Expect edits to existing agents' `AGENTS.md` reflecting the work redistribution called out in the establishing ADR. The skill applies these as one consolidated edit; if the redistribution narrative in the ADR doesn't match the actual `AGENTS.md` changes, that's a flag.
+- If the unit is a sub-unit (its `README.md` has a `## This unit's roles` section), expect that section to include the new agent.
+- Audit the ADR-and-directory pair plus the AGENTS.md changes together.
+
+Unit and agent removal aren't yet implemented as skills. If either is removed, expect an ADR superseding the establishing one, and the directory should be archived, not deleted.
 
 ---
 
