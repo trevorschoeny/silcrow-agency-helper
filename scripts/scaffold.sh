@@ -7,35 +7,29 @@
 # is always created inside $PWD — the script does not accept a destination
 # argument. To scaffold somewhere else, cd there first.
 #
-# Agency = root unit + nested sub-units, following the flat @<unit-name>/
-# convention (§0014). This script scaffolds the agency's root unit. Sub-units
+# Agency = root unit + nested sub-units, following the @ <Unit Name>/
+# convention (§0013). This script scaffolds the agency's root unit. Sub-units
 # are added separately via scripts/add-unit.sh, orchestrated by the
 # :silcrow-add-unit skill.
 #
 # Usage:
 #   scaffold.sh <agency_name> <agency_description> \
-#               <user_dir> <user_role> <lead_dir> <lead_role> \
-#               <implementer_dir> <implementer_role> \
-#               [--agency-dir <slug>] [--skip-git]
+#               <user_role> <lead_role> <implementer_role> \
+#               [--skip-git]
 #
 # Arguments:
-#   agency_name         Display name for the agency (e.g. "Acme Co"). The
-#                       agency's directory slug is derived from this by
-#                       default (lowercase, spaces → hyphens, slug-safe);
-#                       override with --agency-dir.
+#   agency_name         Display name for the agency (e.g. "Pebble"). Used as
+#                       both directory name (`@ Pebble/`) and display in prose.
 #   agency_description  One-paragraph description of the agency's purpose.
-#   user_dir            Directory name for the User (e.g. "trevor").
-#   user_role           Display name for the User role (e.g. "Trevor").
-#   lead_dir            Directory name for the Lead (e.g. "lead").
-#   lead_role           Display name for the Lead role (e.g. "Lead").
-#   implementer_dir     Directory name for the Implementer (e.g. "implementer").
-#   implementer_role    Display name for the Implementer role (e.g. "Implementer").
+#   user_role           The user's name or role (e.g. "Trevor", "Director").
+#                       Used for the user's directory (`Trevor @ Pebble/`)
+#                       and prose references.
+#   lead_role           Display name for the Lead role (e.g. "Lead", "Director").
+#                       Defaults to "Lead" when the user accepts the default.
+#   implementer_role    Display name for the Implementer role (e.g. "Implementer",
+#                       "Specialist"). Defaults to "Implementer".
 #
 # Options:
-#   --agency-dir <slug> Override the auto-derived agency directory slug. Use
-#                       when the user wants a different slug than slugifying
-#                       the agency name produces (e.g. display "Acme Corp"
-#                       with dir @acme/).
 #   --skip-git          Skip git init, .gitignore creation, and initial commit.
 #                       Useful for power users invoking the script directly
 #                       inside an environment where git is unwanted.
@@ -44,15 +38,14 @@
 #   0   Success.
 #   1   Scaffold source not found (plugin misconfiguration).
 #   2   Argument error.
-#   3   $PWD already contains an @<agency-dir>/ unit directory at the slug
-#       derived from the agency name (or the explicit --agency-dir override).
+#   3   $PWD already contains an `@ <Agency Name>/` directory at the slug
+#       derived from the agency name.
 
 set -euo pipefail
 
 # --- Argument parsing --------------------------------------------------------
 
 SKIP_GIT=0
-AGENCY_DIR_OVERRIDE=""
 POSITIONAL=()
 
 while [ "$#" -gt 0 ]; do
@@ -60,10 +53,6 @@ while [ "$#" -gt 0 ]; do
         --skip-git)
             SKIP_GIT=1
             shift
-            ;;
-        --agency-dir)
-            AGENCY_DIR_OVERRIDE="$2"
-            shift 2
             ;;
         --)
             shift
@@ -83,45 +72,24 @@ while [ "$#" -gt 0 ]; do
     esac
 done
 
-if [ "${#POSITIONAL[@]}" -ne 8 ]; then
+if [ "${#POSITIONAL[@]}" -ne 5 ]; then
     cat >&2 <<'USAGE'
 Usage: scaffold.sh <agency_name> <agency_description> \
-                   <user_dir> <user_role> <lead_dir> <lead_role> \
-                   <implementer_dir> <implementer_role> \
-                   [--agency-dir <slug>] [--skip-git]
+                   <user_role> <lead_role> <implementer_role> \
+                   [--skip-git]
 USAGE
     exit 2
 fi
 
 AGENCY_NAME="${POSITIONAL[0]}"
 AGENCY_DESC="${POSITIONAL[1]}"
-USER_DIR="${POSITIONAL[2]}"
-USER_ROLE="${POSITIONAL[3]}"
-LEAD_DIR="${POSITIONAL[4]}"
-LEAD_ROLE="${POSITIONAL[5]}"
-IMPL_DIR="${POSITIONAL[6]}"
-IMPL_ROLE="${POSITIONAL[7]}"
+USER_ROLE="${POSITIONAL[2]}"
+LEAD_ROLE="${POSITIONAL[3]}"
+IMPL_ROLE="${POSITIONAL[4]}"
 DATE="$(date -u +%Y-%m-%d)"
 
-# Compute the agency directory slug. By default, derive it from the agency
-# display name: lowercase, whitespace → hyphens, strip everything outside
-# §0014's unit-name slug constraints (alphanumeric, hyphens, underscores, dots).
-# The skill can override via --agency-dir if the user wants a different slug
-# than the auto-derivation produces.
-if [ -n "$AGENCY_DIR_OVERRIDE" ]; then
-    AGENCY_DIR="$AGENCY_DIR_OVERRIDE"
-else
-    AGENCY_DIR="$(echo "$AGENCY_NAME" \
-        | tr '[:upper:]' '[:lower:]' \
-        | tr -s ' \t' '-' \
-        | sed -E 's/[^a-z0-9._-]//g' \
-        | sed -E 's/-+/-/g' \
-        | sed -E 's/^-+|-+$//g')"
-fi
-
-if [ -z "$AGENCY_DIR" ]; then
-    echo "Error: agency name '$AGENCY_NAME' produced an empty slug." >&2
-    echo "Pass --agency-dir <slug> with an explicit slug, or pick a different agency name." >&2
+if [ -z "$AGENCY_NAME" ]; then
+    echo "Error: agency_name must be non-empty." >&2
     exit 2
 fi
 
@@ -129,7 +97,7 @@ fi
 # scaffolding, git operations, and the initial commit happen inside this
 # path — never in $PWD itself, which may be a shared directory containing
 # unrelated projects.
-AGENCY_PATH="$PWD/@$AGENCY_DIR"
+AGENCY_PATH="$PWD/@ $AGENCY_NAME"
 
 # --- Locate the plugin's scaffold source -------------------------------------
 
@@ -153,62 +121,57 @@ fi
 # --- Pre-flight conflict check -----------------------------------------------
 
 # Refuse to overwrite an existing scaffold. The check is narrow on purpose:
-# only the SPECIFIC @<agency-dir>/ we're about to create matters. Unrelated
-# @*/ siblings in $PWD (other agencies, archives, etc.) are not conflicts.
-# A scaffolded unit always has its CANON@<unit>/ subdirectory; we use that
+# only the SPECIFIC `@ <Agency Name>/` we're about to create matters. Unrelated
+# `@ */` siblings in $PWD (other agencies, archives, etc.) are not conflicts.
+# A scaffolded unit always has its `1 | Canon/` subdirectory; we use that
 # as the marker.
-if [ -d "$AGENCY_PATH/CANON@$AGENCY_DIR" ]; then
+if [ -d "$AGENCY_PATH/1 | Canon" ]; then
     echo "Error: $AGENCY_PATH is already a scaffolded unit." >&2
-    echo "Refusing to overwrite. Pick a different agency name (or pass --agency-dir <slug>)." >&2
+    echo "Refusing to overwrite. Pick a different agency name." >&2
     exit 3
 fi
 
 # --- Create the agency tree --------------------------------------------------
 #
-# Per §0014's flat layout: agents, CANON, OPS, REFERENCE all sit as direct
-# children of @<unit-name>/, each carrying the @<unit-name> suffix. Subfolders
-# (accepted/, foundations/, inbox/, etc.) do not carry the suffix.
+# Per §0013's flat layout: agents and governance folders all sit as direct
+# children of `@ <Unit Name>/`. Agent dirs are `<Role> @ <Unit Name>/`.
+# Governance folders are constants (`1 | Canon`, `2 | Working Files`,
+# `3 | Silcrow Agency Reference`) — no per-unit suffix. Subfolders
+# (accepted/, foundations/, inbox/, etc.) carry no suffix either.
 
 mkdir -p \
-    "$AGENCY_PATH/$USER_DIR@$AGENCY_DIR/inbox/archive" \
-    "$AGENCY_PATH/$LEAD_DIR@$AGENCY_DIR/inbox/archive" \
-    "$AGENCY_PATH/$IMPL_DIR@$AGENCY_DIR/inbox/archive" \
-    "$AGENCY_PATH/registrar@$AGENCY_DIR/inbox/archive" \
-    "$AGENCY_PATH/CANON@$AGENCY_DIR/_templates" \
-    "$AGENCY_PATH/CANON@$AGENCY_DIR/accepted" \
-    "$AGENCY_PATH/CANON@$AGENCY_DIR/proposed" \
-    "$AGENCY_PATH/CANON@$AGENCY_DIR/superseded" \
-    "$AGENCY_PATH/CANON@$AGENCY_DIR/rejected" \
-    "$AGENCY_PATH/CANON@$AGENCY_DIR/anti-patterns" \
-    "$AGENCY_PATH/OPS@$AGENCY_DIR" \
-    "$AGENCY_PATH/REFERENCE@$AGENCY_DIR/foundations"
+    "$AGENCY_PATH/$USER_ROLE @ $AGENCY_NAME/inbox/archive" \
+    "$AGENCY_PATH/$LEAD_ROLE @ $AGENCY_NAME/inbox/archive" \
+    "$AGENCY_PATH/$IMPL_ROLE @ $AGENCY_NAME/inbox/archive" \
+    "$AGENCY_PATH/Registrar @ $AGENCY_NAME/inbox/archive" \
+    "$AGENCY_PATH/1 | Canon/_templates" \
+    "$AGENCY_PATH/1 | Canon/accepted" \
+    "$AGENCY_PATH/1 | Canon/proposed" \
+    "$AGENCY_PATH/1 | Canon/superseded" \
+    "$AGENCY_PATH/1 | Canon/rejected" \
+    "$AGENCY_PATH/2 | Working Files" \
+    "$AGENCY_PATH/3 | Silcrow Agency Reference/foundations"
 
 # --- Substitution helper -----------------------------------------------------
-
-# Writes a copy of src to dst with placeholders replaced.
-# Uses | as the sed delimiter so values containing / don't break it.
-# Escapes any | characters in values to avoid delimiter confusion.
 #
-# Agent identity follows the role@unit-name convention (§0014). At the agency
-# level, {unit_name} = AGENCY_DIR and {unit_display} = AGENCY_NAME because the
-# root unit shares the agency's name. add-unit.sh overrides these for sub-units.
+# Writes a copy of src to dst with placeholders replaced. Uses | as the sed
+# delimiter so values containing / don't break it. Escapes any | characters
+# in values to avoid delimiter confusion.
+#
+# At the agency's root unit, {unit_name} = AGENCY_NAME (the root unit shares
+# the agency's name). add-unit.sh overrides {unit_name} for sub-units.
 subst() {
     local src="$1"
     local dst="$2"
-    # Escape | for sed safety (rare but possible in descriptions).
+    # Escape | for sed safety (rare but possible in user-supplied descriptions).
     local an_esc="${AGENCY_NAME//|/\\|}"
     local ad_esc="${AGENCY_DESC//|/\\|}"
     sed \
         -e "s|{agency_name}|$an_esc|g" \
         -e "s|{agency_description}|$ad_esc|g" \
-        -e "s|{agency_dir}|$AGENCY_DIR|g" \
-        -e "s|{unit_name}|$AGENCY_DIR|g" \
-        -e "s|{unit_display}|$an_esc|g" \
-        -e "s|{user_dir}|$USER_DIR|g" \
+        -e "s|{unit_name}|$an_esc|g" \
         -e "s|{user_role}|$USER_ROLE|g" \
-        -e "s|{lead_dir}|$LEAD_DIR|g" \
         -e "s|{lead_role}|$LEAD_ROLE|g" \
-        -e "s|{implementer_dir}|$IMPL_DIR|g" \
         -e "s|{implementer_role}|$IMPL_ROLE|g" \
         -e "s|{date}|$DATE|g" \
         "$src" > "$dst"
@@ -217,71 +180,59 @@ subst() {
 # --- Empty placeholder files (.gitkeep) --------------------------------------
 
 touch \
-    "$AGENCY_PATH/$USER_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$AGENCY_PATH/$LEAD_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$AGENCY_PATH/$IMPL_DIR@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$AGENCY_PATH/registrar@$AGENCY_DIR/inbox/archive/.gitkeep" \
-    "$AGENCY_PATH/CANON@$AGENCY_DIR/proposed/.gitkeep" \
-    "$AGENCY_PATH/CANON@$AGENCY_DIR/superseded/.gitkeep" \
-    "$AGENCY_PATH/CANON@$AGENCY_DIR/rejected/.gitkeep"
+    "$AGENCY_PATH/$USER_ROLE @ $AGENCY_NAME/inbox/archive/.gitkeep" \
+    "$AGENCY_PATH/$LEAD_ROLE @ $AGENCY_NAME/inbox/archive/.gitkeep" \
+    "$AGENCY_PATH/$IMPL_ROLE @ $AGENCY_NAME/inbox/archive/.gitkeep" \
+    "$AGENCY_PATH/Registrar @ $AGENCY_NAME/inbox/archive/.gitkeep" \
+    "$AGENCY_PATH/1 | Canon/proposed/.gitkeep" \
+    "$AGENCY_PATH/1 | Canon/superseded/.gitkeep" \
+    "$AGENCY_PATH/1 | Canon/rejected/.gitkeep"
 
 # --- Copy and substitute files -----------------------------------------------
 
 # Top-level unit README
 subst "$SRC/README.md" "$AGENCY_PATH/README.md"
 
-# Agent instructions. Per §0014's agent-identity convention, every agent's
-# directory is named <role-dir>@<unit-name>/. At the agency level the unit-name
-# is the agency's slug (AGENCY_DIR), so directories look like trevor@acme/,
-# lead@acme/, etc. The Registrar role-dir is fixed as "registrar".
-#
-# Each agent directory gets two files: AGENTS.md (the canonical instructions,
-# auto-loaded by Codex/Cursor/Copilot/etc.) and CLAUDE.md (a one-line pointer,
-# `@AGENTS.md`, that Claude Code auto-loads and recursively imports).
-subst "$SRC/user/AGENTS.md"         "$AGENCY_PATH/$USER_DIR@$AGENCY_DIR/AGENTS.md"
-subst "$SRC/lead/AGENTS.md"         "$AGENCY_PATH/$LEAD_DIR@$AGENCY_DIR/AGENTS.md"
-subst "$SRC/implementer/AGENTS.md"  "$AGENCY_PATH/$IMPL_DIR@$AGENCY_DIR/AGENTS.md"
-subst "$SRC/registrar/AGENTS.md"    "$AGENCY_PATH/registrar@$AGENCY_DIR/AGENTS.md"
+# Agent instructions. Each agent directory gets only AGENTS.md — the universal
+# cross-tool convention. Claude Code auto-loads it natively; Codex/Cursor/Copilot
+# already used it.
+subst "$SRC/User/AGENTS.md"         "$AGENCY_PATH/$USER_ROLE @ $AGENCY_NAME/AGENTS.md"
+subst "$SRC/Lead/AGENTS.md"         "$AGENCY_PATH/$LEAD_ROLE @ $AGENCY_NAME/AGENTS.md"
+subst "$SRC/Implementer/AGENTS.md"  "$AGENCY_PATH/$IMPL_ROLE @ $AGENCY_NAME/AGENTS.md"
+subst "$SRC/Registrar/AGENTS.md"    "$AGENCY_PATH/Registrar @ $AGENCY_NAME/AGENTS.md"
 
-for dir in "$USER_DIR@$AGENCY_DIR" "$LEAD_DIR@$AGENCY_DIR" "$IMPL_DIR@$AGENCY_DIR" "registrar@$AGENCY_DIR"; do
-    printf '@AGENTS.md\n' > "$AGENCY_PATH/$dir/CLAUDE.md"
+# Canon: README, templates, accepted, superseded
+subst "$SRC/1 | Canon/README.md" "$AGENCY_PATH/1 | Canon/README.md"
+
+for f in "$SRC/1 | Canon/_templates"/*.md; do
+    subst "$f" "$AGENCY_PATH/1 | Canon/_templates/$(basename "$f")"
 done
 
-# CANON tree: README, templates, accepted, superseded, anti-patterns
-subst "$SRC/CANON/README.md"                     "$AGENCY_PATH/CANON@$AGENCY_DIR/README.md"
-subst "$SRC/CANON/anti-patterns/README.md"       "$AGENCY_PATH/CANON@$AGENCY_DIR/anti-patterns/README.md"
-
-for f in "$SRC/CANON/_templates"/*.md; do
-    subst "$f" "$AGENCY_PATH/CANON@$AGENCY_DIR/_templates/$(basename "$f")"
+for f in "$SRC/1 | Canon/accepted"/*.md; do
+    subst "$f" "$AGENCY_PATH/1 | Canon/accepted/$(basename "$f")"
 done
 
-for f in "$SRC/CANON/accepted"/*.md; do
-    subst "$f" "$AGENCY_PATH/CANON@$AGENCY_DIR/accepted/$(basename "$f")"
+for f in "$SRC/1 | Canon/superseded"/*.md; do
+    [ -f "$f" ] && subst "$f" "$AGENCY_PATH/1 | Canon/superseded/$(basename "$f")"
 done
 
-for f in "$SRC/CANON/superseded"/*.md; do
-    # Only copy if present (scaffold may ship superseded/§0008 or none).
-    [ -f "$f" ] && subst "$f" "$AGENCY_PATH/CANON@$AGENCY_DIR/superseded/$(basename "$f")"
-done
+# Silcrow Agency Reference (root unit only): top-level docs + foundations
+subst "$SRC/3 | Silcrow Agency Reference/README.md" "$AGENCY_PATH/3 | Silcrow Agency Reference/README.md"
 
-# REFERENCE tree (root unit only): top-level docs + foundations
-subst "$SRC/REFERENCE/README.md" "$AGENCY_PATH/REFERENCE@$AGENCY_DIR/README.md"
-
-for f in "$SRC/REFERENCE"/*.md; do
-    # Skip the README we already copied to avoid double-substitution.
+for f in "$SRC/3 | Silcrow Agency Reference"/*.md; do
     [ "$(basename "$f")" = "README.md" ] && continue
-    subst "$f" "$AGENCY_PATH/REFERENCE@$AGENCY_DIR/$(basename "$f")"
+    subst "$f" "$AGENCY_PATH/3 | Silcrow Agency Reference/$(basename "$f")"
 done
 
-for f in "$SRC/REFERENCE/foundations"/*.md; do
-    subst "$f" "$AGENCY_PATH/REFERENCE@$AGENCY_DIR/foundations/$(basename "$f")"
+for f in "$SRC/3 | Silcrow Agency Reference/foundations"/*.md; do
+    subst "$f" "$AGENCY_PATH/3 | Silcrow Agency Reference/foundations/$(basename "$f")"
 done
 
-# OPS — open container for operational artifacts. Ships only a README explaining
-# its purpose; the unit fills it in over time.
-subst "$SRC/OPS/README.md" "$AGENCY_PATH/OPS@$AGENCY_DIR/README.md"
+# Working Files — open container for operational artifacts. Ships only a
+# README explaining its purpose; the unit fills it in over time.
+subst "$SRC/2 | Working Files/README.md" "$AGENCY_PATH/2 | Working Files/README.md"
 
-# --- Git initialization (§0016, §0017) ---------------------------------------
+# --- Git initialization (§0014, §0015, §0016) --------------------------------
 #
 # The agency is always its own self-contained git repo. All git operations
 # target AGENCY_PATH only — $PWD is never touched. We do not inspect $PWD's
@@ -293,7 +244,7 @@ if [ "$SKIP_GIT" -eq 0 ]; then
     # AGENCY_PATH (extremely unlikely on a fresh scaffold), it's a no-op.
     (cd "$AGENCY_PATH" && git init --quiet)
 
-    # Write the default .gitignore per §0016. Only write if not already
+    # Write the default .gitignore per §0015. Only write if not already
     # present (the user might have authored their own).
     if [ ! -f "$AGENCY_PATH/.gitignore" ]; then
         cat > "$AGENCY_PATH/.gitignore" <<'GITIGNORE'
@@ -319,13 +270,13 @@ credentials.json
 GITIGNORE
     fi
 
-    # Initial commit (§0017 — governance commits cite §NNNN). Only commit
+    # Initial commit (§0016 — governance commits cite §NNNN). Only commit
     # if the agency repo doesn't have a HEAD yet (i.e., we just initialized
     # it). Idempotent on re-runs.
     if ! (cd "$AGENCY_PATH" && git rev-parse --verify HEAD >/dev/null 2>&1); then
         (cd "$AGENCY_PATH" && \
             git add . && \
-            git commit --quiet -m "Initialize agency @$AGENCY_NAME (§0001)")
+            git commit --quiet -m "Initialize agency @ $AGENCY_NAME (§0001)")
     fi
 fi
 

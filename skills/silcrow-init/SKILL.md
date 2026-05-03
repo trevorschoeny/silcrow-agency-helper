@@ -10,9 +10,9 @@ allowed-tools:
 
 # Agent Org Scaffold — Init
 
-Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0020, with §0008 superseded by §0011) that capture the pattern's load-bearing decisions.
+Initialize a disciplined **agency** — a hierarchical agent organization with built-in decision tracking, actor-model messaging, and registrar-enforced record integrity. The scaffold ships a founding set of constitutional ADRs (§0001–§0018, with §0008 superseded by §0010) that capture the pattern's load-bearing decisions.
 
-An **agency** is the whole organizational tree. Its top-level node is the **root unit**, which shares the agency's name. The tree may stop there (a single root unit, one cohesive body of work) or extend into nested **sub-units** — each itself a full unit, recursively, with its own governance and agents (§0014). The scaffold supports both shapes.
+An **agency** is the whole organizational tree. Its top-level node is the **root unit**, which shares the agency's name. The tree may stop there (a single root unit, one cohesive body of work) or extend into nested **sub-units** — each itself a full unit, recursively, with its own governance and agents (§0013). The scaffold supports both shapes.
 
 ## One-shot skill
 
@@ -22,7 +22,7 @@ If the user asks to "re-run" `:silcrow-init` on an existing agency, stop and exp
 
 ## How this skill works
 
-The skill follows a six-phase flow: **silent peek → locked intro → natural conversation → run scaffold script → report → locked next-steps**. Two bundled bash scripts do the mechanical work: `scripts/scaffold.sh` for the agency, and `scripts/add-unit.sh` for each additional unit (if any). Your job is to gather the inputs conversationally and invoke the scripts.
+Six phases: **silent peek → locked intro → natural conversation → run scaffold script → report → locked next-steps**. Two bundled bash scripts do the mechanical work: `scripts/scaffold.sh` for the agency, and `scripts/add-unit.sh` for each additional unit (if any). Your job is to gather inputs conversationally and invoke the scripts.
 
 The scaffold script always creates the agency directory inside the current working directory. There is no destination argument — the script operates in `$PWD` and that is the only place an agency can be created. If the user wants the agency somewhere else, that's their decision to make by `cd`-ing there before invoking the skill; it is not a parameter you negotiate.
 
@@ -60,36 +60,29 @@ Output this, then drop out of scripted mode.
 
 ## Phase 3 — Natural conversation
 
-Now converse naturally. Be conversational, not formulaic. No forms, no numbered phases. Gather what the script needs in whatever order feels natural — the order below lists the script's positional and option arguments, not the conversation's required sequence.
+Now converse naturally. Be conversational, not formulaic. No forms, no numbered phases. Gather what the script needs in whatever order feels natural.
 
 ### Information to gather
 
 **Agency-level (for `scripts/scaffold.sh`):**
 
-- Agency name (display form, e.g. "Acme Co" or "Wedding"). Ask the user; don't suggest one.
-- Agency directory slug (default: derived from the agency name — lowercase, spaces → hyphens, slug-safe). Show the user the proposed slug; they can override if they want a different one (e.g., display "Acme Corporation" with dir `@acme/`).
-- Agency description (one sentence, one paragraph — whatever feels right).
-- The user's name if you couldn't detect it from the global CLAUDE.md / env. Confirm.
-- User directory name (kebab-case, lowercase; default `user` or the user's first name).
-- User display name (title-case, e.g. "Trevor" or "User").
-- Lead directory name (default `lead`).
-- Lead display name (default `Lead`; user may rename to Director, Architect, Editor, etc.).
-- Implementer directory name (default `implementer`).
-- Implementer display name (default `Implementer`; may rename to Specialist, Engineer, Associate, etc.).
-- Single-unit or multi-unit. Ask. If multi-unit, gather unit names and purposes.
+- **Agency name** — Title-case, English, can have spaces (e.g., `Pebble`, `Pebble Core`, `Acme Co`). Used for both the directory (`@ <Agency Name>/`) and prose throughout. Ask the user; don't suggest one.
+- **Agency description** — one sentence to one paragraph; whatever feels right.
+- **User role** — what the user wants to be called in the agency (e.g., the user's actual name like `Trevor`, or an abstract role like `User`, `Director`). Used for both directory (`<User Role> @ <Agency Name>/`) and prose. Pull from the global CLAUDE.md / env if available; otherwise ask.
+- **Lead role** — display name for the Lead position. Default `Lead`; user may rename to `Director`, `Architect`, `Editor`, etc.
+- **Implementer role** — display name for the Implementer position. Default `Implementer`; user may rename to `Specialist`, `Engineer`, `Associate`, etc.
+- **Single-unit or multi-unit?** Ask. If multi-unit, gather unit names and purposes.
 
 **Per unit (only if multi-unit; `scripts/add-unit.sh` invoked for each):**
 
-- Unit name (kebab-case, lowercase; will be prefixed with `@`).
-- Unit purpose (one sentence).
-- Lead directory + display name for this unit (default inherits agency; may override).
-- Implementer directory + display name for this unit (default inherits agency; may override).
-- Mode: `directory` (default) or `submodule` (§0018 — for units with independent versioning).
-- If submodule, submodule source (remote URL, local path, or blank for fresh init).
+- **Unit name** — Title-case, English, can have spaces (e.g., `Pebble Core`, `Research`, `Operations`).
+- **Unit purpose** — one sentence describing what the unit owns.
+- **Lead role for this unit** — default inherits the agency's; user may override.
+- **Implementer role for this unit** — default inherits the agency's; user may override.
 
 ### Role rename guidance
 
-The `Registrar` name is part of the pattern — don't rename it. User, Lead, and Implementer are flexible display names. When a user wants domain-specific vocabulary, ask for both the display name (e.g., "Director") and whether they want a different directory name (by default, derive `director` from `Director` via kebab-case).
+The `Registrar` name is part of the pattern — don't rename it. User, Lead, and Implementer are flexible role names. When a user wants domain-specific vocabulary, ask once (one name per role; the directory name *is* the display name now).
 
 ### When you have enough, run the scaffold
 
@@ -101,73 +94,49 @@ No "shall I run it?" confirmation. If the answers are well-formed, proceed to Ph
 
 ### Agency first
 
-Invoke `scripts/scaffold.sh` with eight positional arguments. The script always creates the agency directory inside the current working directory; there is no parent-directory argument. Pass `--agency-dir <slug>` if the user picked a slug different from the auto-derived one.
+Invoke `scripts/scaffold.sh` with five positional arguments:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh" \
     "<agency_name>" \
     "<agency_description>" \
-    "<user_dir>" \
     "<user_role>" \
-    "<lead_dir>" \
     "<lead_role>" \
-    "<implementer_dir>" \
-    "<implementer_role>" \
-    [--agency-dir "<slug>"]
+    "<implementer_role>"
 ```
 
 Quote every argument so values with spaces pass through cleanly.
 
 The script:
-- Prints `✓ Scaffolded <agency_name> at <cwd>/@<agency-dir>` on success.
-- Creates `@<agency-dir>/` inside the current working directory, containing the unit's flat layout (CANON@, OPS@, REFERENCE@, agent dirs, README) per §0014.
-- The agency dir slug defaults to `<agency_name>` slugified (lowercase, spaces → hyphens, slug-safe per §0014); pass `--agency-dir <slug>` to override.
+- Prints `✓ Scaffolded <agency_name> at <cwd>/@ <agency_name>` on success.
+- Creates `@ <agency_name>/` inside the current working directory, containing the unit's flat layout (`1 | Canon`, `2 | Working Files`, `3 | Silcrow Agency Reference`, agent dirs, README) per §0013.
 - Initializes git **inside the agency directory** as its own self-contained repo, with a default `.gitignore` and an initial commit (§0001). The CWD itself is never touched — no `.git/`, no `.gitignore`, no rename, no commit.
-- Exits 3 if `<cwd>/@<agency-dir>/` is already a scaffolded unit (CANON@ exists inside). Unrelated `@*/` siblings in the CWD are not conflicts. Relay the error if it fires.
+- Exits 3 if `<cwd>/@ <agency_name>/` is already a scaffolded unit (`1 | Canon` exists inside). Unrelated `@ */` siblings in the CWD are not conflicts. Relay the error if it fires.
 
 ### Units next (if multi-unit)
 
-For each declared unit, invoke `scripts/add-unit.sh`. The first positional argument is the parent unit's path — at init time, that's the agency root unit `<cwd>/@<agency-dir>/`:
+For each declared unit, invoke `scripts/add-unit.sh`. The first positional argument is the parent unit's path — at init time, that's the agency root unit `<cwd>/@ <agency_name>/`:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/add-unit.sh" \
-    "<cwd>/@<agency-dir>" \
+    "<cwd>/@ <agency_name>" \
     "<unit_name>" \
     "<unit_purpose>" \
-    "<unit_lead_dir>" \
     "<unit_lead_role>" \
-    "<unit_implementer_dir>" \
     "<unit_implementer_role>" \
     --user-role "<user_role>" \
-    --user-dir "<user_dir>" \
-    --parent-lead-role "<lead_role>" \
-    [--unit-display "<unit_display>"] \
-    [--agency-dir "<agency_dir>"] \
-    [--agency-name "<agency_name>"] \
-    [--mode directory|submodule] \
-    [--submodule-source <url_or_path>]
+    --parent-lead-role "<lead_role>"
 ```
 
-The first argument is the **parent unit's directory** — its basename starts with `@`. The new sub-unit will be created nested inside it as a sibling of the parent's agents, CANON, OPS, etc. The scaffold script's success line gave you the absolute agency path; substitute that here.
+The first argument is the **parent unit's directory** — its basename starts with `@`. The new sub-unit will be created nested inside it as a sibling of the parent's agents and governance folders. The scaffold script's success line gave you the absolute agency path; substitute that here.
 
-Pass `--user-role`, `--user-dir`, and `--parent-lead-role` so the unit's
-establishing ADR and templates render with the agency's actual role and
-directory names (for references like "route through the agency Lead or User").
-
-`--agency-dir` and `--agency-name` are **optional** — by default the script
-walks up from the parent path to find the agency's root unit (the outermost
-`@<unit-name>/` in the tree) and reads the agency name from there. Pass them
-explicitly only if you need to override the auto-detection.
-
-`--unit-display` is also **optional** — if omitted, the script title-cases
-`<unit_name>` (e.g. `pebble-core` → `Pebble Core`). Pass it when you want a
-display form that differs from the auto-cased default.
+Pass `--user-role` and `--parent-lead-role` so the unit's establishing ADR and templates render with the agency's actual role names (for references like "route through the agency Lead or User").
 
 Each invocation:
-- Authors an establishing ADR in the parent unit's `CANON@<parent-unit-name>/accepted/`.
-- Creates the sub-unit directory `@<unit_name>/` nested inside the parent unit (or `git submodule add` if submodule mode).
-- Scaffolds the sub-unit's flat structure (CANON@, OPS@, agent dirs, README; no REFERENCE — that's root-only).
-- Commits with `§NNNN: establish unit @<name>`.
+- Authors an establishing ADR in the parent unit's `1 | Canon/accepted/`.
+- Creates the sub-unit directory `@ <unit_name>/` nested inside the parent unit.
+- Scaffolds the sub-unit's flat structure (`1 | Canon`, `2 | Working Files`, agent dirs, README; no `3 | Silcrow Agency Reference` — that's root-only).
+- Commits with `§NNNN: establish unit @ <unit_name>`.
 
 If any unit fails, relay the error and stop. Do not continue to further units until the user resolves the issue.
 
@@ -175,16 +144,16 @@ If any unit fails, relay the error and stop. Do not continue to further units un
 
 ## Phase 5 — Ontology report
 
-After all scripts complete, output a structured block describing what was built. The "Agency lives at:" line uses the absolute path the scaffold script printed in its success line. Pattern:
+After all scripts complete, output a structured block describing what was built. The "Agency lives at:" line uses the absolute path the scaffold script printed in its success line.
 
 ### Single-unit — example
 
 ```
-Agency: Acme Co
-Description: A coding project that coordinates product experimentation and release.
-User directory: trevor (display: Trevor)
+Agency: Pebble
+Description: A healthcare platform that puts patients in command of their own care.
+User: Trevor
 Agency roles: Lead, Implementer
-Agency lives at: /Users/trevorschoeny/Code/@acme
+Agency lives at: /Users/trevorschoeny/Code/@ Pebble
 ```
 
 ### Multi-unit — example
@@ -192,22 +161,19 @@ Agency lives at: /Users/trevorschoeny/Code/@acme
 ```
 Agency: Acme Org
 Description: Coordinating product, research, and ops across the team.
-User directory: trevor (display: Trevor)
+User: Trevor
 Agency roles: Lead, Implementer
 Units:
-  - @product    purpose: Owns product strategy and roadmap.
+  - @ Product   purpose: Owns product strategy and roadmap.
                 roles:   Director, Specialist
-                mode:    directory
-  - @research   purpose: Owns experimentation and new-area exploration.
+  - @ Research  purpose: Owns experimentation and new-area exploration.
                 roles:   Lead, Implementer (inherited)
-                mode:    directory
-  - @ops        purpose: Owns infrastructure and day-to-day operations.
+  - @ Ops       purpose: Owns infrastructure and day-to-day operations.
                 roles:   Architect, Engineer
-                mode:    submodule
-Agency lives at: /Users/trevorschoeny/Code/@acme
+Agency lives at: /Users/trevorschoeny/Code/@ Acme Org
 ```
 
-Role names reflect whatever was chosen during onboarding. Unit roles are tagged `(inherited)` when they match the agency's; otherwise the unit's own role names are listed. Unit mode is always shown. The "Agency lives at" line is the only path in the ontology report — navigation to specific agent directories belongs to the next-steps block.
+Unit roles are tagged `(inherited)` when they match the agency's; otherwise the unit's own role names are listed. The "Agency lives at" line is the only path in the ontology report — navigation to specific agent directories belongs to the next-steps block.
 
 ---
 
@@ -215,19 +181,19 @@ Role names reflect whatever was chosen during onboarding. Unit roles are tagged 
 
 Output this wording exactly, substituting agency name, user's name, role names, and §-numbers where needed.
 
-> *If you want to ground in the theory behind this scaffold before diving in, read `@<agency-name>/REFERENCE@<agency-name>/philosophy.md` first, then `@<agency-name>/REFERENCE@<agency-name>/decision-process.md` for how ADRs flow, and `@<agency-name>/REFERENCE@<agency-name>/message-protocol.md` for how agents talk to each other. `@<agency-name>/REFERENCE@<agency-name>/foundations/` has deeper reading on stratified cognition, subsidiarity, the actor model, ADRs as a tradition, legal-citation inheritance, the registrar pattern, and the canon/operational split — each one short, each one standalone.*
+> *If you want to ground in the theory behind this scaffold before diving in, read `@ <Agency Name>/3 | Silcrow Agency Reference/Philosophy.md` first, then `@ <Agency Name>/3 | Silcrow Agency Reference/Decision Process.md` for how ADRs flow, and `@ <Agency Name>/3 | Silcrow Agency Reference/Message Protocol.md` for how agents talk to each other. `@ <Agency Name>/3 | Silcrow Agency Reference/foundations/` has deeper reading on stratified cognition, subsidiarity, the actor model, ADRs as a tradition, legal-citation inheritance, the registrar pattern, and the canon/operational split — each one short, each one standalone.*
 >
 > *Agents work together by sending messages to each other's inboxes — small markdown files dropped into the receiving agent's `inbox/` directory. Each agent already knows where its own inbox lives, who it takes messages from, who it sends messages to, and how to archive what it's read. You don't need to configure any of that — it's baked into every agent's `AGENTS.md`.*
 >
-> *When you're ready to start working, close this session. Open a new one inside `@<agency-name>/<lead-dir>@<agency-name>/` — that's your agency's lead, and the first conversation you want is planning-level: superseding §0020 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
+> *When you're ready to start working, close this session. Open a new one inside `@ <Agency Name>/<Lead Role> @ <Agency Name>/` — that's your agency's lead, and the first conversation you want is planning-level: superseding §0018 (agency scope) from its thin seed into a real scope statement. The lead will take it from there.*
 >
-> *You can start a session with any agent the same way — open it inside that agent's directory (two levels below the agency root, e.g. `@<agency-name>/<role>@<agency-name>/`, or for sub-unit agents `@<agency-name>/@<sub-unit>/<role>@<sub-unit>/`). The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
+> *You can start a session with any agent the same way — open it inside that agent's directory (two levels below the agency root, e.g. `@ <Agency Name>/<Role> @ <Agency Name>/`, or for sub-unit agents `@ <Agency Name>/@ <Sub Unit>/<Role> @ <Sub Unit>/`). The agent you open will read its own `AGENTS.md` and the surrounding context automatically.*
 >
 > *You can run the `:silcrow-add-unit` skill at any time to add a new unit, or the `:silcrow-update` skill to bring this agency into alignment with the latest plugin updates. The registrar assists with both.*
 >
-> *Good luck with {agency_name}! Let me know if you have any questions. Otherwise, I'll enjoy my retirement when you close this session. :)*
+> *Good luck with <Agency Name>! Let me know if you have any questions. Otherwise, I'll enjoy my retirement when you close this session. :)*
 
-Substitute the angle-bracketed tokens (`<lead-dir>`, etc.) with the actual values chosen during conversation.
+Substitute the angle-bracketed tokens with the actual values chosen during conversation.
 
 ---
 
