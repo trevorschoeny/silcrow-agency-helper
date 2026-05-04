@@ -2,6 +2,8 @@
 
 - **Status:** accepted <!-- populated by :silcrow-add-agent -->
 - **Date:** {date}
+- **Agency:** {agency_name}
+- **Unit:** {unit_name}
 - **Authors:** {lead_role} @ {unit_name} (via `silcrow:silcrow-add-agent`); {user_role} (approving)
 - **Supersedes:** —
 - **Superseded by:** —

@@ -371,12 +371,16 @@ subst() {
     local dst="$2"
     local an_esc="${AGENCY_NAME//|/\\|}"
     local un_esc="${UNIT_NAME//|/\\|}"
+    local pun_esc="${PARENT_UNIT_NAME//|/\\|}"
+    local plead="${PARENT_LEAD_ROLE_ARG:-Lead}"
     sed \
         -e "s|{agency_name}|$an_esc|g" \
         -e "s|{unit_name}|$un_esc|g" \
+        -e "s|{parent_unit_name}|$pun_esc|g" \
         -e "s|{user_role}|$USER_ROLE_ARG|g" \
         -e "s|{lead_role}|$LEAD_ROLE|g" \
         -e "s|{implementer_role}|$IMPL_ROLE|g" \
+        -e "s|{parent_lead_role}|$plead|g" \
         -e "s|{date}|$DATE|g" \
         "$src" > "$dst"
 }
@@ -384,6 +388,19 @@ subst() {
 subst "$TEMPLATE_LEAD" "$UNIT_PATH/$LEAD_ROLE @ $UNIT_NAME/AGENTS.md"
 subst "$TEMPLATE_IMPL" "$UNIT_PATH/$IMPL_ROLE @ $UNIT_NAME/AGENTS.md"
 subst "$TEMPLATE_REG"  "$UNIT_PATH/Registrar @ $UNIT_NAME/AGENTS.md"
+
+# --- Copy ADR templates into sub-unit's _templates/ with substitutions -------
+#
+# Mirrors scaffold.sh's pattern for the root unit. Each unit ships with its
+# own copies of MADR Full/Minimal, Establish Unit/Agent, and the seed templates
+# (Adopt Parent Unit, Unit Scope) — substituted with this unit's values so a
+# Lead authoring an ADR locally finds correct Agency/Unit metadata pre-filled.
+
+PLUGIN_TEMPLATES_DIR="$PLUGIN_ROOT/scaffold/unit/1 | Canon/_templates"
+for tmpl in "$PLUGIN_TEMPLATES_DIR"/*.md; do
+    [ -f "$tmpl" ] || continue
+    subst "$tmpl" "$UNIT_PATH/1 | Canon/_templates/$(basename "$tmpl")"
+done
 
 # --- Render the establishing ADR ---------------------------------------------
 

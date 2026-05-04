@@ -2,6 +2,8 @@
 
 - **Status:** proposed <!-- proposed | accepted | rejected | superseded-by-§XXXX -->
 - **Date:** YYYY-MM-DD
+- **Agency:** {agency_name}
+- **Unit:** {unit_name}
 - **Authors:** {agent(s)}
 - **Supersedes:** — <!-- or: §XXXX -->
 - **Superseded by:** — <!-- left blank on creation; Registrar fills if this ADR is later superseded -->

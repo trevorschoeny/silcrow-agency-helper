@@ -166,13 +166,20 @@ subst() {
     # Escape | for sed safety (rare but possible in user-supplied descriptions).
     local an_esc="${AGENCY_NAME//|/\\|}"
     local ad_esc="${AGENCY_DESC//|/\\|}"
+    # At the root unit, {parent_unit_name} resolves to the agency name itself —
+    # the root is its own "parent" from the perspective of any sub-unit it
+    # establishes (the sub-unit's parent is the root). Templates that don't
+    # apply to root (Adopt Parent Unit, Unit Scope) get this substitution too;
+    # they're inert at root but the placeholder still renders cleanly.
     sed \
         -e "s|{agency_name}|$an_esc|g" \
         -e "s|{agency_description}|$ad_esc|g" \
         -e "s|{unit_name}|$an_esc|g" \
+        -e "s|{parent_unit_name}|$an_esc|g" \
         -e "s|{user_role}|$USER_ROLE|g" \
         -e "s|{lead_role}|$LEAD_ROLE|g" \
         -e "s|{implementer_role}|$IMPL_ROLE|g" \
+        -e "s|{parent_lead_role}|$LEAD_ROLE|g" \
         -e "s|{date}|$DATE|g" \
         "$src" > "$dst"
 }

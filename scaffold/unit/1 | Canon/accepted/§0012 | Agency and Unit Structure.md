@@ -2,6 +2,8 @@
 
 - **Status:** accepted
 - **Date:** {date}
+- **Agency:** {agency_name}
+- **Unit:** {unit_name}
 - **Authors:** scaffold initialization (inherited via §0001)
 - **Supersedes:** —
 - **Superseded by:** —

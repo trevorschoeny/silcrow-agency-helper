@@ -241,7 +241,7 @@ You do not have a special exemption from the message protocol. The record you st
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/Decision Process.md` — the author-side view of every procedure here.
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/foundations/06 | Registrar Pattern.md` — why your role is structured this way.
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/foundations/07 | Canonical and Operational.md` — canon/ops framing you enforce via unsafe-reference audits.
-- `@ {unit_name}`'s own `@ {unit_name}/1 | Canon/_templates/` (or the agency's `@ {agency_name}/1 | Canon/_templates/` for sub-units that don't ship their own) — the templates you validate against.
+- `@ {unit_name}`'s own `@ {unit_name}/1 | Canon/_templates/` — the templates you validate against. Every unit ships with its own copies (substituted with this unit's Agency/Unit values at scaffold time).
 - `@ {unit_name}`'s `@ {unit_name}/1 | Canon/README.md` — the index you maintain.
 - The agency's `@ {unit_name}/1 | Canon/accepted/§0009 | Registrar as Async Auditor.md` — your operating mode.
 - The agency's `@ {unit_name}/1 | Canon/accepted/§0013 | Update Audits Produce Audit ADRs.md` — the audit-ADR pattern you author.

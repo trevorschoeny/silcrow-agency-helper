@@ -2,6 +2,8 @@
 
 - **Status:** accepted
 - **Date:** {date}
+- **Agency:** {agency_name}
+- **Unit:** {unit_name}
 - **Authors:** {user_role} (approving authority); skill-generated draft
 - **Supersedes:** —
 - **Superseded by:** —

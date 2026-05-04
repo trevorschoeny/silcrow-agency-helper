@@ -2,6 +2,8 @@
 
 - **Status:** proposed
 - **Date:** YYYY-MM-DD
+- **Agency:** {agency_name}
+- **Unit:** {unit_name}
 - **Authors:** {agent(s)}
 
 ## Context and problem statement

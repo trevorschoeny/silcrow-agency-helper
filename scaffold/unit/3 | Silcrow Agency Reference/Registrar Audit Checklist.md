@@ -10,6 +10,7 @@ Read this file **when you're invoked to audit the record** (by User, Lead, or vi
 - [ ] All required sections are present per template.
 - [ ] Why-statement is present on full MADR ADRs and contains all six elements (context, problem, chosen option, alternatives rejected, desired outcome, tradeoff, underlying reason).
 - [ ] Status field correctly matches the ADR's folder (`accepted` in `accepted/`, `superseded-by-§NNNN` in `superseded/`, `rejected` in `rejected/`).
+- [ ] **Agency** and **Unit** metadata fields are present and filled in (no literal `{agency_name}` or `{unit_name}` placeholders). The Unit value matches the unit whose canon hosts the ADR (not the unit the ADR is *about* — that's in the title).
 - [ ] Filename follows `§NNNN | Title in Title Case.md`.
 - [ ] Filename §-number matches the `# §NNNN | Title` heading line.
 

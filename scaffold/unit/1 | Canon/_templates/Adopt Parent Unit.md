@@ -2,6 +2,8 @@
 
 - **Status:** accepted
 - **Date:** {date}
+- **Agency:** {agency_name}
+- **Unit:** {unit_name}
 - **Authors:** scaffold initialization (via `silcrow:silcrow-add-unit`)
 - **Supersedes:** —
 - **Superseded by:** —

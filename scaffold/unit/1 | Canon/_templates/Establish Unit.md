@@ -2,6 +2,8 @@
 
 - **Status:** accepted <!-- populated by :silcrow-add-unit -->
 - **Date:** {date}
+- **Agency:** {agency_name}
+- **Unit:** {parent_unit_name}
 - **Authors:** {authoring_lead_or_user} (via `silcrow:silcrow-add-unit`)
 - **Supersedes:** —
 - **Superseded by:** —
