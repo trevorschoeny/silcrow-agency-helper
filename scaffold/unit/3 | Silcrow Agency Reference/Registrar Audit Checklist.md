@@ -27,7 +27,7 @@ Per §0012's federation rule, your audit scope is `@ {unit_name}` and any sub-un
 - [ ] **Agency** and **Unit** metadata fields are present and filled in (no literal `{agency_name}` or `{unit_name}` placeholders). The Unit value matches the unit whose canon hosts the ADR (not the unit the ADR is *about* — that's in the title).
 - [ ] Filename follows `§NNNN | Title in Title Case.md`.
 - [ ] Filename §-number matches the `# §NNNN | Title` heading line.
-- [ ] **Root unit only:** `@ {agency_name}/3 | Silcrow Agency Reference/Plugin Version.md` exists and contains a parseable `**Currently synced with:** silcrow X.Y.Z` line. Missing or unparseable — flag to {user_role}; the file is informational but its absence suggests the agency hasn't been synced since 0.26.0 shipped.
+- [ ] **Root unit only:** `@ {agency_name}/3 | Silcrow Agency Reference/Plugin Version.md` exists and contains parseable `**Currently synced with:** silcrow at commit \`<sha>\`` and `**Sync date:** YYYY-MM-DD` lines. Missing or unparseable — flag to {user_role}; the file is informational but its absence suggests the agency hasn't been synced recently. (Note: the format changed in the SHA-based versioning shift — agencies last synced before that change may have a `silcrow X.Y.Z` line instead; flag for migration to the SHA format.)
 - [ ] **Root unit only:** `@ {agency_name}/3 | Silcrow Agency Reference/changelog/` exists with at least one entry. Missing — flag; the agency may need `:silcrow-update` to backfill.
 
 ## B. §-numbering

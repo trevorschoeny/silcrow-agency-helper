@@ -118,21 +118,22 @@ if [ ! -d "$SRC" ]; then
     exit 1
 fi
 
-# --- Read plugin version from plugin.json ------------------------------------
+# --- Read plugin's git commit SHA --------------------------------------------
 #
-# The version is substituted into Plugin Version.md so fresh agencies start
-# with the correct version recorded. sed extracts the value of the "version"
-# key without depending on jq (not always installed).
+# silcrow uses commit-SHA-based versioning (no `version` field in plugin.json)
+# so the Claude Code plugin cache invalidates on every commit automatically.
+# The SHA is substituted into Plugin Version.md so fresh agencies record which
+# commit they were scaffolded from.
 
-PLUGIN_JSON="$PLUGIN_ROOT/.claude-plugin/plugin.json"
-if [ ! -f "$PLUGIN_JSON" ]; then
-    echo "Error: plugin.json not found at $PLUGIN_JSON" >&2
+if [ ! -d "$PLUGIN_ROOT/.git" ]; then
+    echo "Error: plugin source at $PLUGIN_ROOT is not a git repository" >&2
+    echo "scaffold.sh needs to read the plugin's commit SHA to record in Plugin Version.md." >&2
     exit 1
 fi
 
-PLUGIN_VERSION=$(sed -n 's/.*"version":[[:space:]]*"\([^"]*\)".*/\1/p' "$PLUGIN_JSON" | head -1)
+PLUGIN_VERSION=$(git -C "$PLUGIN_ROOT" rev-parse --short HEAD 2>/dev/null)
 if [ -z "$PLUGIN_VERSION" ]; then
-    echo "Error: could not parse version from $PLUGIN_JSON" >&2
+    echo "Error: could not read git commit SHA from $PLUGIN_ROOT" >&2
     exit 1
 fi
 
