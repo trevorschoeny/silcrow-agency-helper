@@ -118,6 +118,24 @@ if [ ! -d "$SRC" ]; then
     exit 1
 fi
 
+# --- Read plugin version from plugin.json ------------------------------------
+#
+# The version is substituted into Plugin Version.md so fresh agencies start
+# with the correct version recorded. sed extracts the value of the "version"
+# key without depending on jq (not always installed).
+
+PLUGIN_JSON="$PLUGIN_ROOT/.claude-plugin/plugin.json"
+if [ ! -f "$PLUGIN_JSON" ]; then
+    echo "Error: plugin.json not found at $PLUGIN_JSON" >&2
+    exit 1
+fi
+
+PLUGIN_VERSION=$(sed -n 's/.*"version":[[:space:]]*"\([^"]*\)".*/\1/p' "$PLUGIN_JSON" | head -1)
+if [ -z "$PLUGIN_VERSION" ]; then
+    echo "Error: could not parse version from $PLUGIN_JSON" >&2
+    exit 1
+fi
+
 # --- Pre-flight conflict check -----------------------------------------------
 
 # Refuse to overwrite an existing scaffold. The check is narrow on purpose:
@@ -150,7 +168,8 @@ mkdir -p \
     "$AGENCY_PATH/1 | Canon/superseded" \
     "$AGENCY_PATH/1 | Canon/rejected" \
     "$AGENCY_PATH/2 | Working Files" \
-    "$AGENCY_PATH/3 | Silcrow Agency Reference/foundations"
+    "$AGENCY_PATH/3 | Silcrow Agency Reference/foundations" \
+    "$AGENCY_PATH/3 | Silcrow Agency Reference/changelog"
 
 # --- Substitution helper -----------------------------------------------------
 #
@@ -181,6 +200,7 @@ subst() {
         -e "s|{implementer_role}|$IMPL_ROLE|g" \
         -e "s|{parent_lead_role}|$LEAD_ROLE|g" \
         -e "s|{date}|$DATE|g" \
+        -e "s|{plugin_version}|$PLUGIN_VERSION|g" \
         "$src" > "$dst"
 }
 
@@ -233,6 +253,10 @@ done
 
 for f in "$SRC/3 | Silcrow Agency Reference/foundations"/*.md; do
     subst "$f" "$AGENCY_PATH/3 | Silcrow Agency Reference/foundations/$(basename "$f")"
+done
+
+for f in "$SRC/3 | Silcrow Agency Reference/changelog"/*.md; do
+    [ -f "$f" ] && subst "$f" "$AGENCY_PATH/3 | Silcrow Agency Reference/changelog/$(basename "$f")"
 done
 
 # Working Files — open container for operational artifacts. Ships only a
