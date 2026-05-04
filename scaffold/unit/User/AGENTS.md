@@ -40,7 +40,7 @@ When you author an ADR that lands in `accepted/`, you broadcast a short notifica
 
 The mechanics are in `@ {agency_name}/3 | Silcrow Agency Reference/Message Protocol.md` §6 and §6a — message kind `adr-acceptance-notice`, filename convention, body skeleton, and the recipient-walk algorithm.
 
-You may also delegate the mechanical broadcast to Registrar @ {agency_name} as a courtesy if you'd rather not handle the file deposits yourself; in that case, message the Registrar with the §-number and ADR path and ask them to broadcast on your behalf. The substantive responsibility (you authored it) stays yours; the file moves are theirs.
+You may also delegate the mechanical broadcast to Registrar @ {agency_name} as a courtesy if you'd rather not handle the file deposits yourself; in that case, deposit a message in Registrar @ {agency_name}'s inbox with the §-number and ADR path, requesting they broadcast on your behalf. The Registrar will handle it in their own session (when you next open one) — this is a one-way deposit, not a synchronous request. The substantive responsibility (you authored it) stays yours; the file moves are theirs.
 
 ## Owned decisions
 
@@ -78,6 +78,10 @@ None. You are the principal.
 **Substantial inputs you receive outside the inbox.** When you paste a report, drop in an image, attach a document, or otherwise hand substantial input directly to one of your agents (whether to a Lead, Implementer, or any other role) — instruct that agent to save it to their `inbox/archive/` with a dated, subject-tagged filename. The agents already carry this rule, but the principal noticing whether the practice is followed is part of how the discipline holds. The archive is the durable record of what shaped this agency's work; don't let pasted artifacts orphan it.
 
 **Drafting outgoing messages.** Draft in `@ {agency_name}/{user_role} @ {agency_name}/` before depositing in a recipient's inbox. See `@ {agency_name}/3 | Silcrow Agency Reference/Message Protocol.md` for the filename convention.
+
+**You're the scheduler (Message Protocol §1a).** As principal, you're not just an agent in this system — you're the runtime. Agents only run when you open a session in their directory. Inter-agent coordination doesn't happen automatically: when one agent deposits a message in another's inbox, that recipient never reads it until you activate them. Pay attention to the **end-of-turn handoff pointers (§2a)** that agents output — those tell you who needs to be activated next to keep the work moving. If you don't see one and an agent just deposited a message, that's a discipline gap; you may need to nudge them.
+
+**Tone (§4a).** When you talk to an agent in chat, you can be terse — they're listening to you specifically. The reverse expectation also applies: agents should give you concise chat responses, with substance saved for the artifacts they write to disk. If an agent's chat with you is bloated, push back.
 
 ## Git notes
 

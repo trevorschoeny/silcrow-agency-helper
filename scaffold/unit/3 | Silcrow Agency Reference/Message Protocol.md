@@ -22,6 +22,28 @@ In agencies that span multiple units (§0012), the same rules apply recursively 
 
 ---
 
+## 1a. The user is the scheduler
+
+In silcrow's actor model, agents are not continuously running entities that talk to each other in real time. Each agent is **state-on-disk** (their `AGENTS.md`, their inbox, their archive), instantiated only when the human user opens a session in their directory. Outside a session, an agent is just a folder of files — no persistent memory, no inner monologue, no awareness of inbound messages.
+
+This means **the human user is the scheduler.** Inter-agent communication doesn't trigger anything by itself:
+
+1. Agent A is alive in a session. They write a message and deposit it in Agent B's `inbox/`. A's session ends.
+2. The message sits there. B has no idea it's been received — B isn't running.
+3. Some time later, the user navigates to B's directory and opens a session. *That* is when B comes alive.
+4. B (per their Session start in `AGENTS.md`) checks inbox, finds the message, processes it.
+
+In a classic actor system, a runtime decides which actor runs next based on inbound messages. In silcrow, the human IS the runtime. They decide who runs next by choosing which directory to open a session in. Without the user activating an agent, that agent never reads its inbox.
+
+### What this means in practice
+
+- **No "let me check with the {lead_role}" mid-response.** You can't actually consult another agent in real time. You can deposit a message in their inbox; the conversation resumes when the user later opens a session with them.
+- **No simulating dialogue with another agent.** Whatever you imagine another agent would say is fiction — you don't have access to their reasoning. Send the message, stop, wait for the user to facilitate the next exchange.
+- **Every inter-agent message is a one-way send + asynchronous handoff.** Your job in this session ends at "deposit message + tell the user who to activate next" (see §2a).
+- **Language matters.** "I'll talk to the {implementer_role}" implies real-time; it's wrong-shaped. "I'm depositing a brief in the {implementer_role}'s inbox; the user will need to open a session there next" matches reality. Use the latter.
+
+---
+
 ## 2. Depositing a message
 
 To send a message to another agent:
@@ -31,6 +53,34 @@ To send a message to another agent:
 3. Delete or keep the draft in your own directory, as you prefer. Drafts are not part of the permanent record.
 
 **Never** edit a message already deposited in someone else's inbox. If you need to retract or correct, send a second message.
+
+---
+
+## 2a. End-of-turn handoff pointer
+
+**Whenever you deposit a message in another agent's inbox during a session, end your response to the user with a concise pointer naming the recipient(s).** The user is the scheduler (§1a) — they need to know who to activate next. Without an explicit pointer, the next-action gets lost in long responses, and the recipient agent never sees the message because no session is opened for them.
+
+### Format
+
+Always at the **very end** of your response. Italic or bold so it's visually distinct.
+
+Single recipient:
+
+> *Next: `{implementer_role} @ {unit_name}` — brief in their inbox.*
+
+Multiple recipients:
+
+> *Next: messages deposited in `{lead_role} @ {unit_name}`, `{implementer_role} @ {unit_name}`, `Registrar @ {unit_name}`. Open whichever you want first.*
+
+Keep it tight. One line per recipient, or a short comma-separated list. The pointer is the operator console — the user scans it, picks who to activate, navigates there.
+
+### When this applies
+
+- Any session where you deposit a message via the procedure in §2.
+- Including broadcast cases (§9a) — list every agent who got a notice deposit, or summarize as "broadcast to all unit agents" if many.
+- Including ADR-acceptance broadcasts, audit reports, plan-replies, brief-handoffs.
+
+If your response in this session does NOT deposit any inter-agent message, no pointer is needed.
 
 ---
 
@@ -79,6 +129,29 @@ A message body is Markdown. Use this skeleton:
 ```
 
 The `References` field is the mechanism by which messages tie into the shared record. Every work artifact should be cited by relative path (from the agency root) or by §-number. Never paraphrase when you can cite.
+
+---
+
+## 4a. Tone — verbose for agents, concise for the user
+
+You communicate in two modes during a session, with different registers:
+
+- **Agent-to-agent (filesystem deposits)** — verbose, technical, complete-context. The recipient agent has no shared memory; everything they need to act has to be in the file. Brief + reasoning + scope + cross-references — all written out. Erring verbose is cheap; erring terse compounds (more inbox round-trips, more user-facilitated handoffs to clarify).
+- **Agent-to-user (chat in your active session)** — concise, simple, action-oriented. The user is making decisions, navigating, deciding who to activate next (per §1a). Long messages in chat slow them down, hide the next-action pointer, and make sessions harder to skim afterward.
+
+It's the same agent doing both, in the same session — they just write different things to different places, in different registers.
+
+### The corollary
+
+When you've just written a verbose artifact (brief, ADR, plan, audit report, redistribution edits), the chat response about it should be a **concise summary plus the end-of-turn pointer (§2a)**. Don't paste the full artifact into chat. The artifact is on disk; chat just announces it.
+
+Example:
+
+> Drafted §0042 (data-retention policy) and committed to `accepted/`. Why-statement: shifts retention from 30 to 90 days for compliance. Three options considered.
+>
+> *Next: notice broadcast deposited in `{lead_role} @ {unit_name}`, `{implementer_role} @ {unit_name}`, `{user_role} @ {unit_name}`. Open whichever you want first.*
+
+Five lines. Substance is in the ADR. Chat tells you it landed and what to do next.
 
 ---
 

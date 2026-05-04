@@ -82,11 +82,27 @@ Three operational consequences matter:
 
 **The ADR tree is the shared ledger.** Actors don't share memory, but they need to agree on *something* — the outcomes of decisions. The ADR tree is the one shared mutable artifact in the scaffold, and its mutations are mediated by the Registrar (who, in actor-model terms, is the transaction coordinator for shared state). The Registrar's role exists because you need exactly one point of coordination for the shared ledger; otherwise you get write-write conflicts and a corrupted record.
 
+## The silcrow twist: the human user is the scheduler
+
+Classic actor systems include a runtime — a process that watches mailboxes, schedules which actor runs next when a message arrives, and ensures messages are processed. Erlang's BEAM does this; Akka's dispatcher does this; Orleans's silo does this.
+
+**Silcrow does not have such a runtime.** Each agent is state-on-disk (their AGENTS.md, their inbox, their archive), instantiated only when the human user opens a session in their directory. Outside a session, an agent is just a folder of files — no process, no thread, no awareness of inbound messages.
+
+This means **the human user is the runtime.** They decide which agent runs next by choosing which directory to open a session in. A message deposited in agent B's inbox triggers nothing automatically — it sits there until the user navigates to B's directory and starts a session.
+
+The implications are operational:
+
+- **Inter-agent messages are one-way sends, period.** The sender deposits and stops; the recipient processes whenever the user gets around to opening their session. There's no synchronous "wait for reply" because there's no runtime to give one.
+- **The session-end discipline matters.** When you (as an agent in a session) deposit a message and need a response, you have to clearly hand off scheduling responsibility to the human. You stop your work; you tell the user explicitly who they need to activate next; you trust the discipline to bring the conversation back when the user opens that other agent's session. The "end-of-turn handoff pointer" rule (see `../Message Protocol.md` §2a) operationalizes this.
+- **Real-time coordination is impossible in this model.** Agents can't "talk to" each other in any session. They can only deposit and stop. Anything else is simulating dialogue — which is fiction, since you don't actually have access to the other agent's reasoning.
+
+This is a deliberate constraint, not a bug. The human-as-scheduler keeps the system inspectable (every coordination event is visible in the filesystem), durable (the user's sessions and the inbox archives together preserve everything), and tractable (no runtime to debug). The cost is that the human has to do more orchestration work than they would in a system with an automated runtime.
+
 ## Operational discipline
 
 The actor model imposes several disciplines that are worth making explicit:
 
-**Do not read other actors' private state.** No agent reads another agent's directory. If you need information from another agent, send a message and wait for a reply. Reading someone else's private draft is the organizational equivalent of a shared-memory race condition.
+**Do not read other actors' private state.** No agent reads another agent's directory. If you need information from another agent, deposit a message in their inbox and stop — your session ends or you move to other work. The reply comes when the human user (the scheduler — see §"The silcrow twist" above) opens a session with that agent and they process and respond. Reading someone else's private draft is the organizational equivalent of a shared-memory race condition.
 
 **Do not edit messages once sent.** A message deposited in another agent's inbox is no longer yours to change. If you need to correct, send a follow-up. Mutation of sent messages breaks the archival discipline that makes the system reconstructible.
 
