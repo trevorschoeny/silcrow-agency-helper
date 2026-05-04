@@ -166,11 +166,15 @@ else
 fi
 
 ESTABLISH_TEMPLATE="$PLUGIN_ROOT/scaffold/unit/1 | Canon/_templates/Establish Unit.md"
+ADOPT_PARENT_TEMPLATE="$PLUGIN_ROOT/scaffold/unit/1 | Canon/_templates/Adopt Parent Unit.md"
+UNIT_SCOPE_TEMPLATE="$PLUGIN_ROOT/scaffold/unit/1 | Canon/_templates/Unit Scope.md"
 
-if [ ! -f "$ESTABLISH_TEMPLATE" ]; then
-    echo "Error: Establish Unit template not found at $ESTABLISH_TEMPLATE" >&2
-    exit 1
-fi
+for tmpl in "$ESTABLISH_TEMPLATE" "$ADOPT_PARENT_TEMPLATE" "$UNIT_SCOPE_TEMPLATE"; do
+    if [ ! -f "$tmpl" ]; then
+        echo "Error: template not found at $tmpl" >&2
+        exit 1
+    fi
+done
 
 # --- Verify PARENT_PATH itself is a unit (basename starts with @) ------------
 
@@ -407,6 +411,45 @@ sed \
     -e "s|{authoring_lead_or_user}|Lead or User|g" \
     "$ESTABLISH_TEMPLATE" > "$ADR_FILE"
 
+# --- Seed the sub-unit's own canon with §0001 and §0002 ----------------------
+#
+# Every silcrow unit, root or sub, has a §0001 founding ADR in its local canon.
+# At the agency level, that's "Adopt the Silcrow Agency"; for a sub-unit, the
+# parallel is "Adopt @ <Parent> as parent unit" — making the federation rule
+# (§0012) explicit in this sub-unit's own record.
+#
+# §0002 is the unit's scope seed, paralleling the agency's §0017 (Agency Scope).
+# Same supersession discipline lesson: the Lead's first authoring exercise.
+
+SUB_UNIT_ACCEPTED="$UNIT_PATH/1 | Canon/accepted"
+
+ADOPT_PARENT_FILE="$SUB_UNIT_ACCEPTED/§0001 | Adopt @ $PARENT_UNIT_NAME as parent unit.md"
+UNIT_SCOPE_FILE="$SUB_UNIT_ACCEPTED/§0002 | @ $UNIT_NAME Scope.md"
+
+sed \
+    -e "s|{unit_name}|$un_esc|g" \
+    -e "s|{parent_unit_name}|$pun_esc|g" \
+    -e "s|{agency_name}|$an_esc|g" \
+    -e "s|{date}|$DATE|g" \
+    -e "s|{user_role}|$USER_ROLE_ARG|g" \
+    -e "s|{lead_role}|$LEAD_ROLE|g" \
+    -e "s|{parent_lead_role}|$PARENT_LEAD_ROLE|g" \
+    "$ADOPT_PARENT_TEMPLATE" > "$ADOPT_PARENT_FILE"
+
+sed \
+    -e "s|{unit_name}|$un_esc|g" \
+    -e "s|{parent_unit_name}|$pun_esc|g" \
+    -e "s|{agency_name}|$an_esc|g" \
+    -e "s|{date}|$DATE|g" \
+    -e "s|{unit_purpose}|$up_esc|g" \
+    -e "s|{user_role}|$USER_ROLE_ARG|g" \
+    -e "s|{lead_role}|$LEAD_ROLE|g" \
+    -e "s|{parent_lead_role}|$PARENT_LEAD_ROLE|g" \
+    "$UNIT_SCOPE_TEMPLATE" > "$UNIT_SCOPE_FILE"
+
+# Remove the .gitkeep placeholder now that accepted/ has real content.
+rm -f "$SUB_UNIT_ACCEPTED/.gitkeep"
+
 # --- Update the ADR index (parent's `1 | Canon/README.md`) -------------------
 #
 # Append a hint at the end of the index. The Registrar's audit normalizes
@@ -437,5 +480,8 @@ cat <<SUMMARY
   Purpose: $UNIT_PURPOSE
   Roles:   $LEAD_ROLE, $IMPL_ROLE, Registrar
   Parent:  $PARENT_PATH
-  Registering ADR: $ADR_FILE
+  Registering ADR (in parent's canon): $ADR_FILE
+  Sub-unit's local canon seeded with:
+    §0001 | Adopt @ $PARENT_UNIT_NAME as parent unit
+    §0002 | @ $UNIT_NAME Scope (seed — supersede early)
 SUMMARY

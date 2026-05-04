@@ -57,7 +57,7 @@ When this ADR is accepted, the following directory is created nested inside `@ {
 
 ```
 {parent_path}/@ {unit_name}/
-├── 1 | Canon/                                 ← empty; @ {unit_name}'s ADRs land here
+├── 1 | Canon/                                 ← seeded with §0001 (adopt parent) and §0002 (scope seed)
 │   ├── accepted/, proposed/, superseded/, rejected/, _templates/
 │   └── README.md
 ├── 2 | Working Files/                         ← operational artifacts (open container)
@@ -67,7 +67,7 @@ When this ADR is accepted, the following directory is created nested inside `@ {
 └── Registrar @ {unit_name}/                   ← Registrar agent (with inbox/archive/)
 ```
 
-Sub-units have no `3 | Silcrow Agency Reference/` of their own (§0012); foundational reference lives at the agency's root and every unit inherits it by reference to that path. `@ {unit_name}` inherits every ancestor unit's ADRs by reference — its own `1 | Canon/accepted/` starts empty and fills only with decisions specific to `@ {unit_name}`.
+Sub-units have no `3 | Silcrow Agency Reference/` of their own (§0012); foundational reference lives at the agency's root and every unit inherits it by reference to that path. `@ {unit_name}` inherits every ancestor unit's ADRs by reference — its own `1 | Canon/accepted/` ships with two seeded ADRs (§0001 adopting `@ {parent_unit_name}` as parent, paralleling the agency's own §0001; and §0002 a scope seed paralleling the agency's §0017) and fills with subsequent decisions specific to `@ {unit_name}`. The Lead's first authoring exercise is typically to supersede §0002 with a richer scope statement.
 
 ## Considered options
 

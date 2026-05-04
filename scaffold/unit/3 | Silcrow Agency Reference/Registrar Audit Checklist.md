@@ -66,6 +66,7 @@ If *no* to either, flag as unsafe and surface to {lead_role}.
 
 - [ ] Every `@ <Unit Name>/` directory has a registering ADR in the parent's `@ <Parent Unit Name>/1 | Canon/accepted/`.
 - [ ] Every unit-establishing ADR has a corresponding `@ <Unit Name>/` directory with its own `@ <Unit Name>/`.
+- [ ] Every sub-unit's own `1 | Canon/accepted/` contains a §0001 founding ADR (adopting the parent unit) and a §0002 scope seed (or its supersession chain). Sub-units missing one or both are missing their local founding/scope anchor — flag to {lead_role}.
 
 **Agents:**
 
