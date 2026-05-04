@@ -190,23 +190,14 @@ Rationale: multiple small commits per change would make `:silcrow-update` slow a
 
 ## 10. Update `Plugin Version.md`
 
-After the commit lands, update the agency's `@ {agency_name}/3 | Silcrow Agency Reference/Plugin Version.md` to reflect the commit you just synced to. Read the plugin's current commit SHA from the source you resolved in Step 1a:
+After the commit lands, update the agency's `@ {agency_name}/3 | Silcrow Agency Reference/Plugin Version.md` to reflect the version you just synced to. Read the version from the plugin source you resolved in Step 1a (its `plugin.json` has the canonical `"version"` field), and update the line:
 
 ```
-SHA=$(git -C "<plugin_source>" rev-parse --short HEAD)
+**Currently synced with:** silcrow <new_version>
 ```
 
-Update the file's first two lines:
-
-```
-**Currently synced with:** silcrow at commit `<SHA>`
-**Sync date:** YYYY-MM-DD
-```
-
-The plugin no longer uses a `version` field in `plugin.json` — it's commit-SHA-based versioning, so `<SHA>` here is the canonical identifier of "what got synced." See the changelog (`./changelog/`) for human-readable labels and summaries of recent change sets.
-
-This is informational, not load-bearing — `:silcrow-update`'s sync flow remains dynamic-diff (§0013), so the next invocation will diff again regardless of what's recorded here. The SHA and date exist so humans (and future audits) can quickly see "where this agency stands" without scraping git history.
+This is informational, not load-bearing — `:silcrow-update`'s sync flow remains dynamic-diff (§0013), so the next invocation will diff again regardless of what's recorded here. The version field exists so humans (and future audits) can quickly see "where this agency stands" without scraping git history.
 
 If the agency was scaffolded before 0.26.0 and `Plugin Version.md` doesn't exist yet, create it (the plugin source has the template at `scaffold/unit/3 | Silcrow Agency Reference/Plugin Version.md`). Same goes for the `changelog/` folder if missing — propose adding both as part of the audit's additions.
 
-This update happens *outside* the §00XX audit ADR commit (the commit already landed in step 9). Make it a separate commit, citing §0015 form: `update plugin version tracker to commit <SHA>`.
+This update happens *outside* the §00XX audit ADR commit (the commit already landed in step 9). Make it a separate commit, citing §0015 form: `update plugin version tracker to <new_version>`.
