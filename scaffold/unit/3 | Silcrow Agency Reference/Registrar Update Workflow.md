@@ -2,6 +2,8 @@
 
 This is the Registrar's most elaborate workflow. Read this file **only when a message from the `:silcrow-update` skill lands in your inbox**; don't preemptively load it. The core operational reference is the agency's `@ {agency_name}/Registrar @ {agency_name}/AGENTS.md`; this file is the detailed procedure for one specific trigger.
 
+**This workflow runs at the agency's root Registrar only.** The `:silcrow-update` skill enforces that — a sub-unit Registrar will never see the trigger message. The audit scope is therefore the **entire agency** (root unit + every sub-unit), not the subtree rooted at the invoking unit. This is a deliberate departure from §0012's standard federation rule (where sub-unit Registrars audit only their own subtrees) — it exists because the plugin defines agency-wide canonical state, and reconciling against it requires a single agent with agency-wide reach.
+
 ---
 
 ## 1. Identify the request
@@ -37,7 +39,7 @@ find "@ {unit_name}" -type f -not -path '*/.git/*' | sort > /tmp/agency-tree.txt
 ```
 
 - Plugin source: the path you resolved in Step 1a.
-- Agency: the `@ {unit_name}/` of the unit you are operating in, plus the `@ <Sub-Unit Name>/` of every sub-unit nested below it (the audit's reach is the subtree rooted at your unit; if you are the root unit's Registrar, that's the whole agency).
+- Agency: the entire agency tree — `@ {agency_name}/` and every sub-unit nested at any depth. As the root Registrar, your audit scope for this workflow is the whole agency (see the introduction above for why).
 
 Classify each file:
 
