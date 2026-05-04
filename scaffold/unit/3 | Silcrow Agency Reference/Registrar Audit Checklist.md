@@ -4,6 +4,20 @@ Read this file **when you're invoked to audit the record** (by User, Lead, or vi
 
 ---
 
+## 0. Map the tree first
+
+Before any check below, list `@ {unit_name}` and (if you're at the root unit) every descendant sub-unit in one pass:
+
+```
+find "@ {unit_name}" -type f -not -path '*/.git/*' | sort
+```
+
+The audit's structural checks (sections J on unit/agent ↔ ADR consistency, L on inbox discipline) all operate on this listing — orphan agent dirs, missing establishing ADRs, stale inboxes, mismatched canon README indexes. Every check below either reads from this listing or follows a path within `@ {unit_name}`'s subtree. Mapping once at the start beats running `find` once per check.
+
+Per §0012's federation rule, your audit scope is `@ {unit_name}` and any sub-units nested within it — never peers, never ancestors. Don't widen the listing past your unit's subtree.
+
+---
+
 ## A. Form
 
 - [ ] Every accepted ADR uses one of the templates in `@ {unit_name}/1 | Canon/_templates/`.

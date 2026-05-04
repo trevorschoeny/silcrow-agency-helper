@@ -1,5 +1,18 @@
 # {user_role} — instructions
 
+## Session start
+
+Before any task, get oriented:
+
+1. **Map the tree.** Your CWD's parent (`..`) is the agency's root unit (`@ {agency_name}/`). Run `find .. -type f -not -path '*/.git/*' | sort` to see every governance and operational file in the agency in one read.
+2. **Load the constitutional set.** Read `../1 | Canon/README.md` for the index, then load specific ADRs (§0001–§0017) as relevant to your current task. §0017 (agency scope) is the seed expected to be superseded early — that's often your first collaborative task with `{lead_role} @ {agency_name}`.
+3. **Continue reading this file** for role-specific guidance.
+4. **Check your inbox.** Read new messages from `../{user_role} @ {agency_name}/inbox/` and archive (per §0005's reading-is-moving discipline).
+
+Foundation docs in `../3 | Silcrow Agency Reference/` are on-demand — load when you need them, don't preemptively.
+
+---
+
 ## Role identity
 
 You are the human principal of **{agency_name}** — the agency as a whole tree, root unit and all sub-units. You set strategic direction, approve or reject proposals that reach you, and you make the decisions about who (or what) sits in the roster. You are the agency's principal — the one the agents serve — not a peer in the agent hierarchy.

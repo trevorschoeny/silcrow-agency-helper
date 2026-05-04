@@ -1,6 +1,6 @@
 {
   "name": "silcrow",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "description": "Silcrow — Agency Helper. Scaffold a hierarchical agency: a disciplined multi-agent organization with ADR decision tracking, async-auditor registrar, canonical/operational artifact discipline, and multi-unit support. Four skills: silcrow-init (create an agency), silcrow-add-unit (add a new unit to an existing agency), silcrow-add-agent (add a new agent to an existing unit, Lead-only), silcrow-update (sync an agency to the plugin's current canonical state).",
   "author": {
     "name": "Trevor Schoeny"

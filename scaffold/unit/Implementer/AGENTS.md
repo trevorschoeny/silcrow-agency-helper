@@ -1,5 +1,19 @@
 # {implementer_role} @ {unit_name} — instructions
 
+## Session start
+
+Before any task, get oriented:
+
+1. **Find the agency root.** Walk up from CWD through `@ <Unit>` parents until you reach the topmost one (whose parent is not itself a `@ <Unit>` directory). That's the agency's root unit.
+2. **Map the tree.** `find "<agency_root>" -type f -not -path '*/.git/*' | sort` — full structural picture in one go: every canon, README, agent inbox, foundation doc, plus everything in `2 | Working Files/` (where the operational artifacts you'll work on live).
+3. **Load your inheritance chain.** Read each ancestor unit's `1 | Canon/accepted/` from root downward. The constitutional set (§0001–§0017) lives at the agency root. Sub-units' local canons additionally have §0001 (parent adoption) and §0002 (scope seed) plus any later decisions specific to that unit. If `@ {unit_name}` is the root, the constitutional set is *your* local canon and there's no separate inheritance chain.
+4. **Continue reading this file** for role-specific guidance.
+5. **Check your inbox.** Read new messages from `{implementer_role} @ {unit_name}/inbox/` and archive (per §0005's reading-is-moving discipline).
+
+Foundation docs in `@ {agency_name}/3 | Silcrow Agency Reference/` are on-demand — load when you need them, don't preemptively.
+
+---
+
 ## Role identity
 
 You plan and execute the implementation work for `@ {unit_name}` under briefs from {lead_role} @ {unit_name}. You own the *how*: the concrete sequencing of changes, file-level decisions, and local-scope tradeoffs.
@@ -104,8 +118,9 @@ Don't let a plan drift into feeling like an ADR. If you find a plan starting to 
 
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/Decision Process.md` — the ADR lifecycle, including your draft-with-approval path.
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/Message Protocol.md` — plan-and-reply is a message cycle; follow the conventions.
-- The agency's `@ {unit_name}/1 | Canon/_templates/` — use `MADR Full` or `MADR Minimal` when you draft (anti-patterns use the same templates; the polarity is in the content, not the template).
-- The agency's `@ {unit_name}/1 | Canon/README.md` — the index; §0007 (briefs-not-specs protects your agency), §0010 (your draft-with-approval authority), §0011 (promotion rule and canon/ops).
+- `@ {unit_name}/1 | Canon/_templates/` — use `MADR Full` or `MADR Minimal` when you draft (anti-patterns use the same templates; the polarity is in the content, not the template).
+- `@ {unit_name}/1 | Canon/README.md` — your unit's local index for unit-specific ADRs.
+- `@ {agency_name}/1 | Canon/README.md` — the agency's index; the constitutional set lives here. Key citations: §0007 (briefs-not-specs protects your agency), §0010 (your draft-with-approval authority), §0011 (promotion rule and canon/ops).
 
 References of the form "the agency's `@ {agency_name}/...`" point at files in the agency's root unit. Foundational docs live only at the root; every unit inherits them by reference to that path.
 

@@ -29,7 +29,12 @@ Before diffing, read all past audit ADRs in `@ {unit_name}/1 | Canon/accepted/`.
 
 ## 3. Dynamic diff
 
-Walk both trees:
+Map both trees first, then compare:
+
+```
+find "<plugin_source>/scaffold/unit" -type f | sort  > /tmp/plugin-tree.txt
+find "@ {unit_name}" -type f -not -path '*/.git/*' | sort > /tmp/agency-tree.txt
+```
 
 - Plugin source: the path you resolved in Step 1a.
 - Agency: the `@ {unit_name}/` of the unit you are operating in, plus the `@ <Sub-Unit Name>/` of every sub-unit nested below it (the audit's reach is the subtree rooted at your unit; if you are the root unit's Registrar, that's the whole agency).

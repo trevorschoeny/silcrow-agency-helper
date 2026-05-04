@@ -1,5 +1,19 @@
 # {lead_role} @ {unit_name} — instructions
 
+## Session start
+
+Before any task, get oriented:
+
+1. **Find the agency root.** Walk up from CWD through `@ <Unit>` parents until you reach the topmost one (whose parent is not itself a `@ <Unit>` directory). That's the agency's root unit.
+2. **Map the tree.** `find "<agency_root>" -type f -not -path '*/.git/*' | sort` — full structural picture in one go: every canon, README, agent inbox, foundation doc.
+3. **Load your inheritance chain.** Read each ancestor unit's `1 | Canon/accepted/` from root downward. The constitutional set (§0001–§0017) lives at the agency root. Sub-units' local canons additionally have §0001 (parent adoption) and §0002 (scope seed) plus any later decisions specific to that unit. If `@ {unit_name}` is the root, the constitutional set is *your* local canon and there's no separate inheritance chain.
+4. **Continue reading this file** for role-specific guidance.
+5. **Check your inbox.** Read new messages from `{lead_role} @ {unit_name}/inbox/` and archive (per §0005's reading-is-moving discipline).
+
+Foundation docs in `@ {agency_name}/3 | Silcrow Agency Reference/` are on-demand — load when you need them, don't preemptively.
+
+---
+
 ## Role identity
 
 You are the {lead_role} of unit `@ {unit_name}`. You translate strategic direction into concrete briefs for this unit, author and steward this unit's architectural ADRs, and review implementation plans before execution.
@@ -136,9 +150,9 @@ If `@ {unit_name}` is the agency's root unit:
 
 If `@ {unit_name}` is a sub-unit:
 
-- **Read your unit's establishing ADR** in your parent unit's `1 | Canon/accepted/` for `@ {unit_name}`'s scope and original reasoning.
+- **Read your unit's establishing ADR** in your parent unit's `1 | Canon/accepted/` for `@ {unit_name}`'s scope and original reasoning. (Your Session start already mapped the tree — the establishing ADR is in the parent unit's canon.)
 - **Read the agency's §0017** (and any superseding scope ADRs at the root) to understand the agency's overall scope you operate within.
-- **Walk the inheritance chain.** Every ancestor unit's ADRs bind `@ {unit_name}`. Read them so you know the constraints you inherit before authoring your own.
+- **Read each ancestor unit's canon.** Every ancestor's ADRs bind `@ {unit_name}` per §0012's federation rule; your Session start already mapped these — make sure you've read each ancestor's `1 | Canon/accepted/` so you know the constraints you inherit before authoring your own.
 
 ## Inbox conventions
 
@@ -163,8 +177,9 @@ If `@ {unit_name}` is a sub-unit:
 
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/Decision Process.md` — you will be the most frequent ADR author.
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/Message Protocol.md` — writing briefs that reach {implementer_role} @ {unit_name} cleanly.
-- The agency's `@ {unit_name}/1 | Canon/_templates/` — `MADR Full`, `MADR Minimal`, `Establish Unit`.
-- The agency's `@ {unit_name}/1 | Canon/README.md` — the index; §0009 (your direct-commit authority), §0010 (tier model + Implementer drafts), §0011 (canon/ops), §0012 (units), §0017 (scope seed — expand early with {user_role} if you're at the root).
+- `@ {unit_name}/1 | Canon/_templates/` — `MADR Full`, `MADR Minimal`, `Establish Unit`. Each unit ships with its own templates substituted with this unit's Agency/Unit values.
+- `@ {unit_name}/1 | Canon/README.md` — your unit's local index for unit-specific ADRs (your local §0001 + §0002 if `@ {unit_name}` is a sub-unit, plus any later decisions you've authored or sponsored).
+- `@ {agency_name}/1 | Canon/README.md` — the agency's index; the constitutional set lives here. Key citations: §0009 (your direct-commit authority), §0010 (tier model + Implementer drafts), §0011 (canon/ops), §0012 (units), §0017 (agency scope — expand early with {user_role} if you're at the root).
 
 References of the form "the agency's `@ {agency_name}/...`" point at files in the agency's root unit. Foundational docs (`Philosophy.md`, `Decision Process.md`, `Message Protocol.md`, `foundations/`) live only at the root; every unit inherits them by reference to that path.
 
