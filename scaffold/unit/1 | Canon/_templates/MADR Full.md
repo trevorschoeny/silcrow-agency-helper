@@ -1,3 +1,11 @@
+<!--
+HONEST MINIMALISM (§0017). Every section below appears in every ADR. Section
+headers are non-negotiable. Section *content* is bounded by what was actually
+discussed and decided: substantive content where there is substance; a single
+honest sentence (e.g., "None considered.", "No anti-patterns surfaced.")
+where there isn't. Never fabricate content to populate a section.
+-->
+
 # §NNNN | {short decision title in imperative form}
 
 - **Status:** proposed <!-- proposed | accepted | rejected | superseded-by-§XXXX -->
@@ -26,11 +34,21 @@ because *{the deeper reason — often a principle from `3 | Silcrow Agency Refer
 
 ## Decision drivers
 
+<!-- The forces, constraints, or principles pushing on this decision. If the
+context paragraph already named them clearly, write a single honest sentence
+here referencing back, e.g.: "See Context above; the drivers are the explicit
+constraint stated there." -->
+
 - {driver 1 — e.g., a constraint, an explicit goal, a principle being upheld}
 - {driver 2}
 - {driver 3}
 
 ## Considered options
+
+<!-- List only options that were actually considered. If only one option was
+on the table because the choice followed from a constraint, write a single
+honest sentence (e.g., "No alternatives were seriously considered; the choice
+followed from {the constraint}.") and skip the numbered list. -->
 
 1. **{Option A}** — {one-sentence summary}
 2. **{Option B}** — {one-sentence summary}
@@ -44,12 +62,20 @@ because *{the deeper reason — often a principle from `3 | Silcrow Agency Refer
 
 ### Consequences
 
+<!-- Positive / Negative / Neutral as substance allows. If a category has no
+genuine entries, write a single honest line (e.g., "Negative: none surfaced.").
+Don't invent entries to populate categories. -->
+
 - **Positive:** {what gets better as a result}
 - **Positive:** {what else}
 - **Negative:** {what gets worse or what we give up}
 - **Neutral:** {changes that aren't clearly good or bad but are worth naming}
 
 ## Pros and cons of the options
+
+<!-- If the Decision outcome already covered the comparison adequately, write
+a single honest sentence here (e.g., "Covered in Decision outcome above.").
+Otherwise, expand per option. -->
 
 ### {Option A}
 
@@ -68,11 +94,23 @@ because *{the deeper reason — often a principle from `3 | Silcrow Agency Refer
 
 ## Anti-patterns surfaced
 
-{If this decision surfaced patterns that look reasonable but should be avoided, describe them here. If an anti-pattern is reusable enough to warrant its own record, author it as a separate §-numbered ADR — anti-patterns are regular ADRs whose conclusion is "don't do X."}
+<!-- Most decisions don't surface a genuine anti-pattern. If this one didn't,
+write: "No anti-patterns surfaced." Don't invent generic anti-patterns to
+populate the section. If a real anti-pattern surfaced, describe it here; if
+it's reusable enough to deserve its own record, author it as a separate
+§-numbered ADR — anti-patterns are regular ADRs whose conclusion is "don't
+do X." -->
+
+{If this decision surfaced patterns that look reasonable but should be avoided, describe them here.}
 
 ## Review trigger
 
-{Under what conditions should this decision be reconsidered? Time? A metric crossing a threshold? A dependency changing? Be specific enough that future agents can tell whether the trigger has fired.}
+<!-- Specific and observable: a metric crossing a threshold, a dependency
+changing, a time horizon. If the decision genuinely has no review trigger,
+write: "Review trigger: none; the failure mode this addresses is not
+context-dependent." That's a legitimate answer. -->
+
+{Under what conditions should this decision be reconsidered?}
 
 ## References
 
@@ -87,6 +125,10 @@ a Why-statement header (Zimmermann, SATURN 2012) and scaffold-specific fields fo
 bidirectional citation and review triggers. Use this template when the decision
 merits the full treatment; for quick, low-friction decisions, use
 `MADR Minimal.md` instead.
+
+Honest minimalism (§0017) governs every section: headers always present,
+content faithful to what was actually discussed. Fabricating content to fill
+sections is the failure mode this discipline exists to prevent.
 
 References:
   - Nygard, M. (2011). Documenting Architecture Decisions. Cognitect blog.

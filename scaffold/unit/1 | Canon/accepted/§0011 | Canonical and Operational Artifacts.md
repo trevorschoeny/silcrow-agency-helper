@@ -124,7 +124,6 @@ The canon/operational split has been independently discovered across multiple tr
 - **Binding-by-reference.** ADR says "we will X according to `plans/foo.md`" — the ADR's meaning now depends on `plans/foo.md` staying put and staying consistent. Unsafe. Rewrite with the decision inside the ADR.
 - **Plan-as-ADR.** A 12-phase plan becomes an ADR because it's important. But the plan changes weekly; the ADR is now mutable-by-fiction. Split: canonical principle goes into the ADR; specific sequence stays operational.
 - **Silent promotion.** An operational choice becomes binding by informal convention without being documented as canon. Later, someone violates it and there's no record to cite. Promote it to an ADR when the pattern is clear.
-- **Silent demotion.** An ADR is treated like a plan and edited in place. Covered by §0004; flagged here as the mirror of silent promotion.
 
 ## Review trigger
 

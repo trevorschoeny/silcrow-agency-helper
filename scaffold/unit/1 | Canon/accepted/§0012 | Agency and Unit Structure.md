@@ -169,14 +169,10 @@ Any directory whose own basename starts with `@` is a unit.
 ## Anti-patterns surfaced
 
 - **Operational content at the unit's top level (outside `2 | Working Files/`).** Code, project files, plans should live inside `2 | Working Files/`. The unit's top level is reserved for governance, agents, sub-units, and the README.
-- **Slug-style names instead of Title-case.** `@pebble/`, `lead@pebble/`, `canon@pebble/` are not the convention; they should not appear in an agency.
-- **Bare governance folder names (no numeric prefix).** `Canon/`, `Working Files/`, `Silcrow Agency Reference/` (without the `1 |`, `2 |`, `3 |` prefix) lose the visual ordering and don't match the audit conventions.
-- **Per-unit suffix on governance folders.** `Canon @ Pebble/`, `Working Files @ Pebble/` would re-introduce the slug-era self-identification trick that the new convention deliberately drops; governance folder names are constants.
 - **Sub-units nested inside governance folders.** Sub-units are unit-level peers of governance, not children of it.
-- **Mismatched unit names in agent dirs.** A directory `Lead @ Pebble/` inside `@ Cobble/` is a defect — the suffix should match the enclosing unit's name.
-- **Renaming the `@ ` prefix on units.** The prefix is load-bearing for unit detection. Don't drop or change it per-project.
-- **Duplicating `3 | Silcrow Agency Reference/` in sub-units.** Foundational reference is shared from the root; sub-units inherit by reference. Duplicating the foundations folder creates drift between root and sub-unit copies.
-- **Forgetting to quote a path with a pipe.** `mkdir -p $AGENCY/1 | Canon` (unquoted) pipes the `Canon` portion to a shell command. Always use `mkdir -p "$AGENCY/1 | Canon"`.
+- **Duplicating `3 | Silcrow Agency Reference/` in sub-units.** Foundational reference is shared from the root; sub-units inherit by reference. Duplicating creates drift between root and sub-unit copies.
+
+(Other failure modes — slug-style names, bare governance names, per-unit suffixes, mismatched unit names, dropping the `@` prefix — are direct negations of the structural rules above and are not repeated here. Path-quoting friction is operational, not architectural; the `Negative` consequence above already names it.)
 
 ## Review trigger
 
@@ -197,4 +193,5 @@ Reconsider this ADR if:
 - §0005 — inboxes live at `@ <Unit Name>/<Role> @ <Unit Name>/inbox/` per this structure.
 - §0008 — roster change protocol; adding a unit triggers it.
 - §0011 — canon/operational split; this ADR is its structural expression.
-- §0017 — agency scope.
+- §0017 — honest minimalism.
+- §0018 — agency scope.

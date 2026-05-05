@@ -7,7 +7,7 @@
 - **Authors:** {user_role} (approving authority); skill-generated draft
 - **Supersedes:** —
 - **Superseded by:** —
-- **Influences:** §0002, §0003, §0004, §0005, §0006, §0007, §0008, §0009, §0010, §0011, §0012, §0013, §0014, §0015, §0016, §0017 (founding constitutional decisions inherited through this ADR); all future ADRs in this agency (structural).
+- **Influences:** §0002, §0003, §0004, §0005, §0006, §0007, §0008, §0009, §0010, §0011, §0012, §0013, §0014, §0015, §0016, §0017, §0018 (founding constitutional decisions inherited through this ADR); all future ADRs in this agency (structural).
 - **Influenced by:** — (this is §0001)
 
 ## Why-statement
@@ -102,9 +102,7 @@ Options (1) and (2) fail driver 1 (durability) within months, based on documente
 
 ## Anti-patterns surfaced
 
-- **Editing an accepted ADR in place.** Even "obvious" corrections to an accepted ADR erode immutability. The correct action is supersession (write §XXXX that references §NNNN as Supersedes) or a retrospective note appended below the original body. See `3 | Silcrow Agency Reference/Decision Process.md` Example 3.
-- **The Registrar making substantive calls.** If the Registrar begins adjudicating whether a decision is *right*, the separation of form and substance is gone. Surface and push back if this starts happening.
-- **Tier-skipping.** Senior agents giving direct feedback to junior agents outside the reporting structure collapses the stratification. Route through tiers, even when it feels slower.
+The major anti-patterns of this scaffold (editing an accepted ADR in place; Registrar making substantive calls; tier-skipping outside principal authority) belong to specific ADRs that govern those domains — see §0004 (immutability), §0009 (Registrar's procedural-only authority), and §0006 (tier model). They aren't repeated here.
 
 ## Review trigger
 

@@ -21,7 +21,7 @@ Per §0012's federation rule, your audit scope is `@ {unit_name}` and any sub-un
 ## A. Form
 
 - [ ] Every accepted ADR uses one of the templates in `@ {unit_name}/1 | Canon/_templates/`.
-- [ ] All required sections are present per template.
+- [ ] **All section headers from the template are present in every ADR** (per §0017's honest-minimalism rule). Missing section headers are a form defect — flag and fix directly (procedural correction).
 - [ ] Why-statement is present on full MADR ADRs and contains all six elements (context, problem, chosen option, alternatives rejected, desired outcome, tradeoff, underlying reason).
 - [ ] Status field correctly matches the ADR's folder (`accepted` in `accepted/`, `superseded-by-§NNNN` in `superseded/`, `rejected` in `rejected/`).
 - [ ] **Agency** and **Unit** metadata fields are present and filled in (no literal `{agency_name}` or `{unit_name}` placeholders). The Unit value matches the unit whose canon hosts the ADR (not the unit the ADR is *about* — that's in the title).
@@ -29,6 +29,11 @@ Per §0012's federation rule, your audit scope is `@ {unit_name}` and any sub-un
 - [ ] Filename §-number matches the `# §NNNN | Title` heading line.
 - [ ] **Root unit only:** `@ {agency_name}/3 | Silcrow Agency Reference/Plugin Version.md` exists and contains a parseable `**Currently synced with:** silcrow X.Y.Z` line. Missing or unparseable — flag to {user_role}; the file is informational but its absence suggests the agency hasn't been synced since 0.26.0 shipped.
 - [ ] **Root unit only:** `@ {agency_name}/3 | Silcrow Agency Reference/changelog/` exists with at least one entry. Missing — flag; the agency may need `:silcrow-update` to backfill.
+
+### A2. Honest minimalism (§0017)
+
+- [ ] Sections that look fabricated. A "Considered options" list of 3-4 items where the alternatives feel generic and don't trace back to actual deliberation; an "Anti-patterns surfaced" section listing items that don't connect to the Why-statement; a "Pros and cons" section that re-derives content already present in Decision outcome — these are candidates for honest-minimalism violation. **Flag substantively** to the ADR's author for trimming or replacement with single-sentence honest content. Don't fix directly — content trim is substantive, not procedural.
+- [ ] Sections collapsed to single honest sentences are valid (e.g., *"None considered."*, *"No anti-patterns surfaced."*, *"Review trigger: none; the failure mode this addresses is not context-dependent."*). Don't flag them as missing content.
 
 ## B. §-numbering
 
@@ -58,9 +63,9 @@ Per §0012's federation rule, your audit scope is `@ {unit_name}` and any sub-un
 
 - [ ] Flag ADRs with empty `Influences` AND empty `Influenced by` fields. Not necessarily wrong, but worth noting.
 
-## G. Scope (§0017)
+## G. Scope (§0018)
 
-- [ ] Every accepted ADR falls within this unit's scope as stated in §0017 (or the current scope ADR). Scope violations — surface to {user_role}.
+- [ ] Every accepted ADR falls within this unit's scope as stated in §0018 (or the current scope ADR — supersession may have moved scope to a higher §-number). Scope violations — surface to {user_role}.
 - [ ] In agencies with multiple units: a unit's ADRs don't exceed that unit's scope or any ancestor unit's scope. (Each unit's ADRs are bound by every ancestor unit's ADRs, up to and including the root's.)
 
 ## H. Federation (§0012)
@@ -129,7 +134,7 @@ SUBSTANTIVE ISSUES FOR {lead_role}
 
 SUBSTANTIVE ISSUES FOR {user_role}
   [U1] §0101 establishes a practice ("we only take enterprise clients")
-       that appears to exceed current agency scope (§0017). Scope clarification needed.
+       that appears to exceed current agency scope (§0018). Scope clarification needed.
 
 INFORMATIONAL
   [I1] 2 uncommitted governance files; 1 unpushed governance commit.

@@ -153,15 +153,11 @@ On failure, relay the error message and stop.
 
 ## Phase 4 — Report and hand off
 
-Echo the script's summary block, then output this scripted next-steps:
+Echo the script's summary block, then output a tight next-steps block. Per Message Protocol §4a–§4d, keep it short and free of §-citations:
 
-> *The new unit is ready. Open a session inside `<parent_unit_path>/@ <Unit Name>/<Lead Role> @ <Unit Name>/` to brief your unit lead. The unit's Registrar is already set up to audit its decision record.*
+> *Unit `@ <Unit Name>` is ready. The new unit's Lead can fill in the establishing ADR's placeholders (Why-statement reasoning, scope specifics) when convenient — placeholders aren't violations of immutability; finishing authorship is part of the addition. The sub-unit's local canon ships with §0001 (parent adoption) and §0002 (scope seed); the §0002 supersession is the natural first ADR exercise inside the new unit, when ready.*
 >
-> *To verify the addition landed clean, ask the agency's Registrar to run an audit: they'll check that the ADR and directory agree, and flag any inconsistencies (§0009, §0012).*
->
-> *The establishing ADR has placeholders for deeper context (Why-statement reasoning, scope details, etc.). You or the new unit's Lead can edit it to fill them in — ADRs are immutable only after they're substantively complete; editing an auto-generated placeholder is part of finishing authorship.*
->
-> *The new sub-unit also ships with §0001 (parent adoption) and §0002 (scope seed) in its own canon. The new unit's first authoring exercise is typically to supersede §0002 with a richer scope statement — the supersession discipline that governs every binding decision in this agency.*
+> *Next: open a session inside `<parent_unit_path>/@ <Unit Name>/<Lead Role> @ <Unit Name>/` to brief the new unit's Lead.*
 
 Substitute the angle-bracketed tokens with actual values.
 

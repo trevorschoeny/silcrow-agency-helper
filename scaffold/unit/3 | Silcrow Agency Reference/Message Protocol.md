@@ -40,7 +40,7 @@ In a classic actor system, a runtime decides which actor runs next based on inbo
 - **No "let me check with the {lead_role}" mid-response.** You can't actually consult another agent in real time. You can deposit a message in their inbox; the conversation resumes when the user later opens a session with them.
 - **No simulating dialogue with another agent.** Whatever you imagine another agent would say is fiction — you don't have access to their reasoning. Send the message, stop, wait for the user to facilitate the next exchange.
 - **Every inter-agent message is a one-way send + asynchronous handoff.** Your job in this session ends at "deposit message + tell the user who to activate next" (see §2a).
-- **Language matters.** "I'll talk to the {implementer_role}" implies real-time; it's wrong-shaped. "I'm depositing a brief in the {implementer_role}'s inbox; the user will need to open a session there next" matches reality. Use the latter.
+- **Language matters.** "I'll talk to the {implementer_role}" implies real-time; it's wrong-shaped — there is no real-time conversation. Drop the fictional dialogue. Don't replace it with narration of the deposit either ("I'm depositing a brief in their inbox; the user will need to open a session there next") — that's just verbose chat in disguise. Just deposit, then end with the §2a pointer line.
 
 ---
 
@@ -110,7 +110,11 @@ When a message is archived, the filename does not change. The move from `inbox/`
 
 ---
 
-## 4. Message body
+## 4. Operating discipline
+
+This section governs how messages are formed (the body skeleton below) and how the agent operates around them in a session (the four discipline rules in §4a–§4d). Together they cover what a message *looks like* and how the agent *behaves* around the message-passing system.
+
+### Message body skeleton
 
 A message body is Markdown. Use this skeleton:
 
@@ -136,7 +140,7 @@ The `References` field is the mechanism by which messages tie into the shared re
 
 You communicate in two modes during a session, with different registers:
 
-- **Agent-to-agent (filesystem deposits)** — verbose, technical, complete-context. The recipient agent has no shared memory; everything they need to act has to be in the file. Brief + reasoning + scope + cross-references — all written out. Erring verbose is cheap; erring terse compounds (more inbox round-trips, more user-facilitated handoffs to clarify).
+- **Agent-to-agent (filesystem deposits)** — verbose **and substantive** (per §4d). The recipient agent has no shared memory; everything they need to act has to be in the file. Brief + reasoning + scope + cross-references — all written out, *but only the parts that are actually true and useful*. Verbose-and-fabricated (padding to look complete) is not the goal; verbose-and-substantive is.
 - **Agent-to-user (chat in your active session)** — concise, simple, action-oriented. The user is making decisions, navigating, deciding who to activate next (per §1a). Long messages in chat slow them down, hide the next-action pointer, and make sessions harder to skim afterward.
 
 It's the same agent doing both, in the same session — they just write different things to different places, in different registers.
@@ -145,13 +149,66 @@ It's the same agent doing both, in the same session — they just write differen
 
 When you've just written a verbose artifact (brief, ADR, plan, audit report, redistribution edits), the chat response about it should be a **concise summary plus the end-of-turn pointer (§2a)**. Don't paste the full artifact into chat. The artifact is on disk; chat just announces it.
 
-Example:
+### Examples — bad vs good
 
-> Drafted §0042 (data-retention policy) and committed to `accepted/`. Why-statement: shifts retention from 30 to 90 days for compliance. Three options considered.
+Good chat (after drafting an ADR):
+
+> Drafted §0042 (data-retention 30→90 days for compliance) and committed.
 >
-> *Next: notice broadcast deposited in `{lead_role} @ {unit_name}`, `{implementer_role} @ {unit_name}`, `{user_role} @ {unit_name}`. Open whichever you want first.*
+> *Next: notice broadcast deposited in `{lead_role} @ {unit_name}`, `{implementer_role} @ {unit_name}`, `{user_role} @ {unit_name}`.*
 
-Five lines. Substance is in the ADR. Chat tells you it landed and what to do next.
+Bad chat (same situation):
+
+> I have drafted §0042 per the data-retention discussion. Per §0005's reading-is-moving discipline, I have already archived your earlier message. Per §0009, I committed directly to `accepted/` rather than going through `proposed/` since I'm authorized for direct commit. Per §0016 and the broadcast walk in Message Protocol §6a, I am now depositing notification messages in three inboxes...
+
+The bad version narrates routine work, cites §-numbers in chat, and makes the user wade through paragraphs to find the next action. Per §4b–§4d below, all three are anti-patterns.
+
+---
+
+## 4b. Routine procedures are silent reflexes
+
+**Routine procedures are not decisions. The user does not need to be told they happened.**
+
+The following actions are silent reflexes — performed without asking permission, without narrating, without citing the governing rule in chat:
+
+- **Inbox hygiene** — archiving messages on read (§5); listing inbox at session start; filing pasted/dropped attachments to your `inbox/archive/` with a dated subject-tagged name.
+- **Message mechanics** — drafting in your own directory before depositing; following the filename convention (§3); depositing in recipient inboxes (§2).
+- **ADR mechanics** — moving files between `accepted/`, `proposed/`, `superseded/`, and `rejected/`; updating bidirectional citations (`Influences`/`Influenced by`); updating the canon README index after a new ADR lands.
+- **Reading discipline** — loading the constitutional set at session start; loading foundations or reference docs on-demand; re-reading files before editing.
+- **Workflow conventions** — tier-skipping when authorized (§0010); citing §-numbers in *governance commit messages* (§0015) — that's still in an artifact, not in user chat.
+
+The user only sees what came *after* the routine — the brief, the ADR, the audit report. Not the routine itself.
+
+The exception is when something out of the ordinary happens with a routine: a malformed message you can't archive, a citation that won't resolve, a permission denied, an attachment whose subject isn't clear from context. Surface those briefly. The routines themselves are not surfaceable.
+
+---
+
+## 4c. Citations live in artifacts, not chat
+
+**§-numbers, MADR-section anchors, and protocol-doc cross-references appear in the messages, ADRs, and commits you write. They do not appear in your chat with the user.**
+
+In chat, name the rule plainly:
+
+| Don't say | Do say |
+|---|---|
+| *"Per §0005, archived your message."* | (silent — see §4b) |
+| *"Per §1a, I'm depositing a brief in their inbox."* | *"Brief deposited."* + §2a pointer |
+| *"I'll handle this per §0009's async-auditor pattern."* | *"I'll audit and report back."* |
+| *"Per Message Protocol §4a, my chat reply will be concise."* | (just be concise) |
+
+The user navigates the system; they don't quote chapter and verse from it. Citations are for future readers of the artifact — including the agent themselves, when they pick up the artifact again. They are not for the operator console.
+
+---
+
+## 4d. Faithfulness over completeness in messages (§0017)
+
+**Inter-agent messages follow the same honest-minimalism rule §0017 establishes for ADRs: every section the message kind defines (Goal/Why/Constraints/Out of scope for a brief; Brief referenced/Approach/Sequencing/Verification/Assumptions/Open questions for a plan; etc.) appears in the message; each section's content is either substantive or a single honest sentence.**
+
+A plan with no genuine assumptions writes *"Assumptions: none."* and moves on. A brief with no meaningful out-of-scope items writes *"Out of scope: nothing not already implied by the constraints above."* A report with no surprises writes *"Surprises: none."*
+
+The "verbose for agents" rule (§4a) means *substantively verbose*, not *padded verbose*. Verbose because the recipient needs the context, not verbose because the section structure invites filling. If you're writing content because the section header asks for it rather than because the recipient needs it, stop — write the honest sentence and continue.
+
+This applies to every message kind in §6 (brief, plan, report, proposal-notice, acknowledgment, audit-report, update-request, ADR-acceptance-notice, and any local conventions you develop). The discipline is uniform across artifact kinds.
 
 ---
 

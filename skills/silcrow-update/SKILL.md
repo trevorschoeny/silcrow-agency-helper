@@ -48,9 +48,9 @@ Three steps:
 2. Drop a single message into CWD's own `inbox/` — your inbox, since you're the Registrar (Phase 2).
 3. Acknowledge the user; tell them you're starting the audit workflow (Phase 3).
 
-The workflow runs in your same session: read the message you just deposited, archive it per §0005's reading-is-moving discipline, then load `@ <Agency Name>/3 | Silcrow Agency Reference/Registrar Update Workflow.md` and execute the 10-step procedure.
+The workflow runs in your same session: archive the deposited request, load `@ <Agency Name>/3 | Silcrow Agency Reference/Registrar Update Workflow.md`, and execute the 10-step procedure. Routine inbox mechanics (the deposit, the archive) are silent reflexes — Message Protocol §4b — and not narrated to the user.
 
-The drop-and-archive cycle isn't busywork — it preserves the record. The archived request shows future readers (and future audits) what triggered the session, in the same form as any other inbox-driven workflow.
+The deposit-and-archive pattern preserves the record: the archived request shows future readers what triggered the session, in the same form as any other inbox-driven workflow.
 
 ---
 
@@ -141,19 +141,11 @@ Substitute `YYYY-MM-DD` with today's date and `<Agency Name>` with the agency na
 
 ## Phase 3 — Acknowledge the user
 
-Output a short message to the user:
+Output a short message to the user. Per Message Protocol §4b, do **not** narrate the inbox-deposit-and-archive cycle (that's a silent reflex) and do **not** cite §-numbers in chat. Two lines is enough:
 
-> *Update audit initiated. I've dropped a request in my own inbox at `<cwd>/inbox/YYYY-MM-DD-update-skill-request.md`. I'll archive it per §0005 and start the audit workflow in this session.*
->
-> *The workflow:*
-> - *Diff the agency (root + every sub-unit) against the plugin's current canonical state.*
-> - *Scan past audit ADRs to skip previously-rejected items.*
-> - *Write a report to your inbox and the Lead's inbox with every proposed change — one-sentence descriptor, approve/reject/defer per item.*
-> - *Execute what you approve, author an audit ADR summarizing the session (§0013), commit per §0015, and update `Plugin Version.md` to the version just synced to.*
->
-> *I'll surface progress as I go and wait for your approval at the report stage.*
+> *Starting the update audit. I'll diff the agency against the plugin's current canonical state, then surface every proposed change for your approval before executing.*
 
-Then immediately proceed to load the Update Workflow doc and begin the work — the request is in your inbox; that's your trigger.
+Then immediately proceed to load the Update Workflow doc and begin the work.
 
 ---
 

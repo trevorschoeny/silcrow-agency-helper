@@ -5,7 +5,7 @@
 Before any task, get oriented:
 
 1. **Map the tree.** Your CWD's parent (`..`) is the agency's root unit (`@ {agency_name}/`). Run `find .. -type f -not -path '*/.git/*' | sort` to see every governance and operational file in the agency in one read.
-2. **Load the constitutional set.** Read `../1 | Canon/README.md` for the index, then load specific ADRs (§0001–§0017) as relevant to your current task. §0017 (agency scope) is the seed expected to be superseded early — that's often your first collaborative task with `{lead_role} @ {agency_name}`.
+2. **Load the constitutional set.** Read `../1 | Canon/README.md` for the index, then load specific ADRs (§0001–§0018) as relevant to your current task. §0018 (agency scope) is a thin seed available for supersession when you and `{lead_role} @ {agency_name}` have aligned on richer scope.
 3. **Continue reading this file** for role-specific guidance.
 4. **Check your inbox.** Read new messages from `../{user_role} @ {agency_name}/inbox/` and archive (per §0005's reading-is-moving discipline).
 
@@ -65,23 +65,25 @@ None. You are the principal.
 
 ## First tasks
 
-- **Supersede §0017 (agency scope) — don't edit it.** The scaffold seeded `@ {agency_name}/1 | Canon/accepted/§0017 | Agency Scope.md` with a minimal scope statement. One of your earliest collaborative tasks with {lead_role} @ {agency_name} is to *supersede* §0017 (per §0004) with a richer version: what the agency is for, who it serves, what's in scope, what's out, what "done" looks like. The seed lives at the end of the founding set deliberately — it's positioned to be the next ADR you author against, your first lesson in the supersession discipline that governs every binding decision in this agency. Author a new ADR with `Supersedes: §0017` in its header; the Lead or Registrar handles the file move from `accepted/` to `superseded/`. The new ADR becomes the north star every downstream decision cites.
+- **When ready, supersede §0018 (agency scope) — don't edit it.** The scaffold seeded `@ {agency_name}/1 | Canon/accepted/§0018 | Agency Scope.md` with a minimal scope statement. The natural first ADR-authoring exercise — though not urgent — is to *supersede* §0018 (per §0004) with a richer version: what the agency is for, who it serves, what's in scope, what's out, what "done" looks like. Author a new ADR with `Supersedes: §0018` in its header; the Lead or Registrar handles the file move from `accepted/` to `superseded/`. The new ADR becomes the north star every downstream decision cites.
+
+  Timing is your call. Sometimes the supersession is the agency's first real ADR action; sometimes it happens later, after other foundational decisions have settled. The pattern (seed → supersession) is the same one every binding decision in this agency follows.
 
 ## Inbox conventions
 
 **Mailbox paths.** Messages arrive in `@ {agency_name}/{user_role} @ {agency_name}/inbox/`; once read, they live in `@ {agency_name}/{user_role} @ {agency_name}/inbox/archive/` (never deleted — §0005).
 
-**Always check at turn start.** Before processing your own next action — every turn, every session — list `inbox/` and read whatever's new. ADR-acceptance notices from your Leads, audit reports from Registrars, drafts and briefs in flight, broadcasts from sub-unit Leads — anything addressed to you arrives here, and the principal benefits from staying current with what the agents are sending. Read and archive new messages per "Reading is moving" below before pushing forward on your own work.
+**Always check at turn start (silently).** Before pushing forward on your own work, list `inbox/` and read whatever's new. ADR-acceptance notices from your Leads, audit reports from Registrars, drafts and briefs in flight, broadcasts from sub-unit Leads — anything addressed to you arrives here. Archive on read; this is a silent reflex (Message Protocol §4b), not something the agents need to narrate to you.
 
-**Reading is moving (§0005).** When you open a message, your *first* action — before responding or acting on it — is to move it from `inbox/` to `inbox/archive/`. The inbox represents only unread or in-flight items; archives hold the complete received history. If you've read but aren't ready to act, archive the message and draft a "received, will respond by {date}" reply per the deferred-response pattern in `@ {agency_name}/3 | Silcrow Agency Reference/Message Protocol.md` §5.
+**Reading is moving.** When you open a message, move it to `inbox/archive/` before responding. If you're not ready to act, archive and draft a "received, will respond by {date}" reply.
 
-**Substantial inputs you receive outside the inbox.** When you paste a report, drop in an image, attach a document, or otherwise hand substantial input directly to one of your agents (whether to a Lead, Implementer, or any other role) — instruct that agent to save it to their `inbox/archive/` with a dated, subject-tagged filename. The agents already carry this rule, but the principal noticing whether the practice is followed is part of how the discipline holds. The archive is the durable record of what shaped this agency's work; don't let pasted artifacts orphan it.
+**Substantial inputs you receive outside the inbox.** When you paste a report, drop in an image, attach a document, or otherwise hand substantial input to one of your agents — they automatically save it to their `inbox/archive/`. You shouldn't have to instruct them; if they ask permission or narrate the archiving, push back (it's drift).
 
 **Drafting outgoing messages.** Draft in `@ {agency_name}/{user_role} @ {agency_name}/` before depositing in a recipient's inbox. See `@ {agency_name}/3 | Silcrow Agency Reference/Message Protocol.md` for the filename convention.
 
-**You're the scheduler (Message Protocol §1a).** As principal, you're not just an agent in this system — you're the runtime. Agents only run when you open a session in their directory. Inter-agent coordination doesn't happen automatically: when one agent deposits a message in another's inbox, that recipient never reads it until you activate them. Pay attention to the **end-of-turn handoff pointers (§2a)** that agents output — those tell you who needs to be activated next to keep the work moving. If you don't see one and an agent just deposited a message, that's a discipline gap; you may need to nudge them.
+**You're the scheduler.** As principal, you're not just an agent in this system — you're the runtime. Agents only run when you open a session in their directory. Inter-agent coordination doesn't happen automatically: when one agent deposits a message in another's inbox, that recipient never reads it until you activate them. Pay attention to the **end-of-turn handoff pointers** that agents output — those tell you who needs to be activated next to keep the work moving. If you don't see one and an agent just deposited a message, that's a discipline gap worth a nudge.
 
-**Tone (§4a).** When you talk to an agent in chat, you can be terse — they're listening to you specifically. The reverse expectation also applies: agents should give you concise chat responses, with substance saved for the artifacts they write to disk. If an agent's chat with you is bloated, push back.
+**Tone.** When you talk to an agent in chat, you can be terse — they're listening to you specifically. The reverse expectation also applies: agents should give you concise chat responses, with substance saved for the artifacts they write to disk. Bad: *"Per §0005, I have archived your message. Per §0009, I will commit directly to `accepted/`..."* Good: *"Brief deposited."* + the §2a pointer line. If an agent's chat with you is bloated or larded with §-citations, push back (Message Protocol §4a–§4d covers this).
 
 ## Git notes
 
@@ -92,7 +94,7 @@ None. You are the principal.
 ## Key references
 
 - `@ {agency_name}/3 | Silcrow Agency Reference/Decision Process.md` — how ADRs flow through the system.
-- `@ {agency_name}/1 | Canon/README.md` — index of all decisions (starting points: §0017 scope seed, §0010 principal framing, §0008 roster changes).
+- `@ {agency_name}/1 | Canon/README.md` — index of all decisions (starting points: §0017 honest minimalism, §0018 scope seed, §0010 principal framing, §0008 roster changes).
 - `@ {agency_name}/` — the root unit's roster. Sub-unit agents live at `@ <Sub-Unit>/<Role> @ <Sub-Unit>/`, recursively at any depth (sub-units nest as siblings of the parent unit's agents).
 
 ## Principles to reason from (load when needed)

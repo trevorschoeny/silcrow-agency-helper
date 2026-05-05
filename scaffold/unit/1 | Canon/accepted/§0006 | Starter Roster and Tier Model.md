@@ -92,9 +92,8 @@ The Registrar is placed **outside** the decision hierarchy because their authori
 
 ## Anti-patterns surfaced
 
-- **Tier-skipping.** Two-stratum gaps (e.g., {user_role} giving direct feedback to {implementer_role} without going through {lead_role}) collapse the stratification. When tempted, route through tiers even when it feels slower.
+- **Tier-skipping.** Two-stratum gaps (e.g., {user_role} giving direct feedback to {implementer_role} without going through {lead_role}) collapse the stratification. When tempted, route through tiers even when it feels slower. (Note: §0010 makes the {user_role} an exception — they are principal of every unit and may act as superior of any tier at any time.)
 - **Premature tier expansion.** Adding a fourth tier because "we're growing" rather than because the work has actually bifurcated. Produces ceremonial roles. The trigger is *work span*, not *headcount*.
-- **Bundling {lead_role} and Registrar.** Combining form authority with substance authority collapses the separation §0009 depends on. Even in small projects, keep the roles distinct — one person can hold both hats, but the hats themselves should remain separate.
 
 ## Review trigger
 

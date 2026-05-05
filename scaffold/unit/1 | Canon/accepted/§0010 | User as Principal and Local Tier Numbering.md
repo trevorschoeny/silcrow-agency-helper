@@ -114,9 +114,8 @@ Authorship authority by role (the same rule applies in every unit; the User is u
 
 ## Anti-patterns surfaced
 
-- **Treating the User as tier-0 only of the root unit.** In a tree of units this blocks direct User communication with agents in sub-units, which contradicts the principal framing — the User is principal of every unit.
-- **Assigning global tier numbers across units.** If you find yourself saying "a sub-unit's Lead is tier-2", the frame has slipped. Every unit's Lead is tier-1-of-their-unit, regardless of where their unit sits in the tree.
-- **Implementer commits-to-accepted without approval.** The draft-with-approval path is the authorized channel. Implementers committing directly to `accepted/` without Lead or User approval collapses the authority split.
+The negations of the three refinements are the anti-patterns this ADR addresses, and they're stated directly in the refinements themselves rather than restated here. One genuinely new failure mode worth naming:
+
 - **Lead bottleneck on Implementer drafts.** Lead should respond to Implementer drafts promptly. If Implementer drafts pile up unreviewed, the Lead is creating the very latency §0009 was built to remove.
 
 ## Review trigger

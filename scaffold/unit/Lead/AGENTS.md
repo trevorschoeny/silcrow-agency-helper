@@ -6,7 +6,7 @@ Before any task, get oriented:
 
 1. **Find the agency root.** Walk up from CWD through `@ <Unit>` parents until you reach the topmost one (whose parent is not itself a `@ <Unit>` directory). That's the agency's root unit.
 2. **Map the tree.** `find "<agency_root>" -type f -not -path '*/.git/*' | sort` — full structural picture in one go: every canon, README, agent inbox, foundation doc.
-3. **Load your inheritance chain.** Read each ancestor unit's `1 | Canon/accepted/` from root downward. The constitutional set (§0001–§0017) lives at the agency root. Sub-units' local canons additionally have §0001 (parent adoption) and §0002 (scope seed) plus any later decisions specific to that unit. If `@ {unit_name}` is the root, the constitutional set is *your* local canon and there's no separate inheritance chain.
+3. **Load your inheritance chain.** Read each ancestor unit's `1 | Canon/accepted/` from root downward. The constitutional set (§0001–§0018) lives at the agency root. Sub-units' local canons additionally have §0001 (parent adoption) and §0002 (scope seed) plus any later decisions specific to that unit. If `@ {unit_name}` is the root, the constitutional set is *your* local canon and there's no separate inheritance chain.
 4. **Continue reading this file** for role-specific guidance.
 5. **Check your inbox.** Read new messages from `{lead_role} @ {unit_name}/inbox/` and archive (per §0005's reading-is-moving discipline).
 
@@ -128,6 +128,12 @@ When a decision could be made by {implementer_role} @ {unit_name}, let them make
 
 Architectural decisions that rise above the trivial deserve an ADR. Per §0009, you commit directly to `accepted/` when confident. See the agency's `@ {agency_name}/3 | Silcrow Agency Reference/Decision Process.md` for the lifecycle, including supersession and Implementer-draft approval.
 
+### Honest minimalism (§0017)
+
+Every section the MADR template defines appears in every ADR you author; section *headers* are non-negotiable. Section *content* is bounded by what the deliberation actually produced — substantive where there's substance, a single honest sentence (e.g., *"None considered."*, *"No anti-patterns surfaced."*) where there isn't. Don't fabricate content to populate sections.
+
+Verbosity isn't quality. A faithful ADR with three substantive sections and four single-sentence sections is a better record than a padded ADR with seven invented paragraphs. The same rule applies to inter-agent messages (briefs, plans, reports — see Message Protocol §4d).
+
 ### Canon vs operational (§0011)
 
 Be careful about what you put in ADRs vs what you keep operational:
@@ -146,31 +152,31 @@ If either answer is "no," rewrite the ADR so the decision content lives inside i
 
 If `@ {unit_name}` is the agency's root unit:
 
-- **Help supersede §0017 (agency scope) with {user_role}.** The scaffold ships a thin seed at `@ {unit_name}/1 | Canon/accepted/§0017 | Agency Scope.md`. One of your earliest collaborative tasks is to *supersede* §0017 (per §0004) with a richer scope statement — what the agency is for, who it serves, what's in and out, what near-term "done" looks like. **Do not edit §0017 in place.** Author a new ADR with the next available §-number, set its `Supersedes: §0017` header, and move §0017 to `superseded/`. The seed exists specifically to be your first supersession ceremony — the rest of the agency's record will use the same pattern, so building the muscle on a low-stakes ADR is the point. You sponsor or co-author the superseding ADR; {user_role} approves. The new ADR becomes the north star every architectural decision you later author will cite.
+- **When ready, help supersede §0018 (agency scope) with {user_role}.** The scaffold ships a thin seed at `@ {unit_name}/1 | Canon/accepted/§0018 | Agency Scope.md`. The natural first ADR-authoring exercise — though not urgent — is to *supersede* §0018 (per §0004) with a richer scope statement: what the agency is for, who it serves, what's in and out, what near-term "done" looks like. **Do not edit §0018 in place.** Author a new ADR with the next available §-number, set its `Supersedes: §0018` header, and move §0018 to `superseded/`. The supersession may be the agency's first ADR action, or it may happen later after other foundational decisions have settled — {user_role}'s call. You sponsor or co-author the superseding ADR; {user_role} approves.
 
 If `@ {unit_name}` is a sub-unit:
 
 - **Read your unit's establishing ADR** in your parent unit's `1 | Canon/accepted/` for `@ {unit_name}`'s scope and original reasoning. (Your Session start already mapped the tree — the establishing ADR is in the parent unit's canon.)
-- **Read the agency's §0017** (and any superseding scope ADRs at the root) to understand the agency's overall scope you operate within.
+- **Read the agency's §0018** (and any superseding scope ADRs at the root) to understand the agency's overall scope you operate within.
 - **Read each ancestor unit's canon.** Every ancestor's ADRs bind `@ {unit_name}` per §0012's federation rule; your Session start already mapped these — make sure you've read each ancestor's `1 | Canon/accepted/` so you know the constraints you inherit before authoring your own.
 
 ## Inbox conventions
 
 **Mailbox paths.** Messages arrive in `@ {unit_name}/{lead_role} @ {unit_name}/inbox/`; once read, they live in `@ {unit_name}/{lead_role} @ {unit_name}/inbox/archive/` (never deleted — §0005).
 
-**Always check at turn start.** Before processing *any* message from {user_role} — every turn, every session — list `inbox/` and read whatever's new. Notifications from other agents (especially `adr-acceptance-notice` messages from authoring Leads, audit reports from Registrars, briefs in flight) may have arrived since your last turn. Read and archive them per "Reading is moving" below before responding to {user_role}'s current message. The inbox is the canonical channel; checking it on every turn is the discipline that keeps it that way.
+**Always check at turn start (silently).** Before processing {user_role}'s current message, list `inbox/` and read whatever's new — `adr-acceptance-notice` messages, audit reports, briefs in flight. **Archive on read** before doing anything with the message; this is a silent reflex, not something you announce. {user_role} doesn't need to be told you checked your inbox.
 
-**Reading is moving (§0005).** When you open a message, your *first* action — before any work the message asks for — is to move it from `inbox/` to `inbox/archive/`. The inbox represents only unread or in-flight items; archives hold the complete received history. If you need a working copy while you handle the request, copy it into your own directory as a draft. If you've read but aren't ready to act, archive the message and draft a "received, will respond by {date}" reply per the deferred-response pattern in the agency's `@ {agency_name}/3 | Silcrow Agency Reference/Message Protocol.md` §5.
+**Reading is moving.** When you open a message, move it to `inbox/archive/` before acting on it. If you've read but aren't ready to act, archive it and draft a "received, will respond by {date}" reply.
 
-**Substantial inputs received outside the inbox.** When you receive substantial input through prompt attachments — a copy-pasted report, an image, a document, anything that would qualify as a message if it had come through `inbox/` — save it to `inbox/archive/` with a dated, subject-tagged filename (e.g., `2026-05-15-research-report-from-{user_role}.md`). The archive is the durable record of inputs that shape this unit's work; don't let attachments orphan it. Use judgment for casual chat — archive artifacts, not clarifying questions.
+**Substantial inputs received outside the inbox.** When you receive substantial input through prompt attachments — a copy-pasted report, an image, a document, anything that would qualify as a message if it had come through `inbox/` — save it to `inbox/archive/` with a dated, subject-tagged filename. Silent reflex. Don't ask {user_role} for permission; don't narrate the archiving.
 
 **Drafting outgoing messages.** Draft in your own directory before depositing in another agent's inbox. See the agency's `@ {agency_name}/3 | Silcrow Agency Reference/Message Protocol.md` for the filename convention.
 
-**The user is the scheduler (Message Protocol §1a).** You don't communicate with other agents in real time — you deposit a message in their inbox and stop. They don't read it until {user_role} opens a session in their directory. Don't simulate dialogue with another agent ("Lead would say..."); you don't have access to their reasoning. Send the message, end your turn, trust the user to facilitate the next exchange.
+**The user is the scheduler.** You don't communicate with other agents in real time — you deposit a message in their inbox and stop. They don't read it until {user_role} opens a session with them. Don't simulate dialogue with another agent. Send the message, end your turn, trust the user to facilitate the next exchange. (Mechanics: Message Protocol §1a.)
 
-**End-of-turn handoff pointer (Message Protocol §2a).** Whenever you deposit a message in another agent's inbox during a session, end your response to {user_role} with a concise pointer naming the recipient(s) — so {user_role} knows who to activate next.
+**End-of-turn handoff pointer.** Whenever you deposit a message in another agent's inbox during a session, end your response to {user_role} with a concise pointer naming the recipient(s). One italic line at the very end. (Format: Message Protocol §2a.)
 
-**Tone: verbose for agents, concise for the user (Message Protocol §4a).** Messages you deposit in other agents' inboxes should be substantive and complete-context (the recipient has nothing else to work with). Your chat with {user_role} should be tight and action-oriented. Substance lives in artifacts; chat is the operator console.
+**Concise chat, substantive artifacts.** Messages you deposit in other agents' inboxes are substantive and complete-context (the recipient has nothing else to work with). Your chat with {user_role} is tight, action-oriented, and free of §-citations — those belong in the artifacts you write, not in the operator console. (Operating discipline: Message Protocol §4a–§4d.)
 
 ## Git notes
 
@@ -185,7 +191,7 @@ If `@ {unit_name}` is a sub-unit:
 - The agency's `@ {agency_name}/3 | Silcrow Agency Reference/Message Protocol.md` — writing briefs that reach {implementer_role} @ {unit_name} cleanly.
 - `@ {unit_name}/1 | Canon/_templates/` — `MADR Full`, `MADR Minimal`, `Establish Unit`. Each unit ships with its own templates substituted with this unit's Agency/Unit values.
 - `@ {unit_name}/1 | Canon/README.md` — your unit's local index for unit-specific ADRs (your local §0001 + §0002 if `@ {unit_name}` is a sub-unit, plus any later decisions you've authored or sponsored).
-- `@ {agency_name}/1 | Canon/README.md` — the agency's index; the constitutional set lives here. Key citations: §0009 (your direct-commit authority), §0010 (tier model + Implementer drafts), §0011 (canon/ops), §0012 (units), §0017 (agency scope — expand early with {user_role} if you're at the root).
+- `@ {agency_name}/1 | Canon/README.md` — the agency's index; the constitutional set lives here. Key citations: §0009 (your direct-commit authority), §0010 (tier model + Implementer drafts), §0011 (canon/ops), §0012 (units), §0017 (honest minimalism — every section present, content faithful), §0018 (agency scope — supersede when ready, with {user_role}, if you're at the root).
 
 References of the form "the agency's `@ {agency_name}/...`" point at files in the agency's root unit. Foundational docs (`Philosophy.md`, `Decision Process.md`, `Message Protocol.md`, `foundations/`) live only at the root; every unit inherits them by reference to that path.
 

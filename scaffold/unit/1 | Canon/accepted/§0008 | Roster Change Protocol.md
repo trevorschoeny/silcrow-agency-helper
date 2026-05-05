@@ -8,13 +8,29 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every future roster change.
-- **Influenced by:** §0001, §0004, §0006
+- **Influenced by:** §0001, §0004, §0006, §0017
+
+## Why-statement
+
+In the context of *an agency whose roster will change over time (additions, retirements, renames)*,
+facing *the question of how to govern those changes without re-debating §0006's tier model on every change or letting the roster drift via mutable catalog edits*,
+we decided for *each individual change being its own ADR following a defined procedure (draft → submit → validate → approve → execute)*,
+and neglected *prose in a mutable README catalog, ad hoc no-formalization, and superseding §0006 on every change*,
+to achieve *every roster change recorded as a dated, reasoned, citable decision — with the roster itself derivable from accepted ADRs plus the directory tree*,
+accepting *that small uncontentious changes (renaming one role, adding one peer Implementer) take an extra minute to write as an ADR*,
+because *§0004's immutability discipline applies to roster decisions the same way it applies to architectural ones — load-bearing changes must be observable in the record itself, not in an editable catalog*.
 
 ## Context and problem statement
 
 **Inherited decision.** This is a founding constitutional decision inherited from the Silcrow plugin via §0001 at project initialization. The reasoning and alternatives are preserved here so it can be evaluated or superseded on its own merits through the normal ADR lifecycle.
 
 §0006 establishes the initial tier model and roster. Subsequent changes to that roster — adding a new agent, retiring an existing one, renaming a role — are significant architectural decisions that require governance. This ADR records the procedure that governs them, and the rule that each individual change is itself an ADR.
+
+## Decision drivers
+
+- **§0004's immutability discipline.** The roster is part of the load-bearing record; changes must be observable in the record, not in an editable catalog.
+- **Bounded Day-1 overhead.** The initial roster doesn't need per-agent ADRs (covered by §0006); only changes after Day 1 are first-class ADRs.
+- **The procedure itself should be supersedable.** If governance evolves (e.g., {user_role} delegates implementer-level additions to {lead_role}), that's a clean supersession of this ADR.
 
 ## Considered options
 
@@ -53,6 +69,21 @@ Individual roster changes — add an agent, retire an agent, rename a role — e
 - **Positive:** Retirement is never destructive. `@ {unit_name}/.archive/<YYYY-MM-DD>/` preserves the retired agent's directory and inbox history verbatim.
 - **Neutral:** Small, uncontentious changes (rename one role, add one peer {implementer_role}) take an extra minute to write as an ADR. This is what the discipline is for; the cost is bounded.
 - **Negative:** Agents used to casually editing a roster table may experience friction. This is the discipline working as intended.
+
+## Pros and cons of the options
+
+Covered in Decision outcome above; the four options are sufficiently distinct that the chosen-option reasoning carries the comparison.
+
+## Anti-patterns surfaced
+
+- **Editing the roster as a mutable catalog.** Tempting under time pressure; a one-line addition to a README looks fast. But the change loses its dated reasoning and breaks `git blame` as a substitute for ADR citation. Use the protocol every time, even for small changes.
+
+## Review trigger
+
+Reconsider this ADR if:
+
+- The protocol's overhead consistently outweighs its benefit at small per-change scale (suggests a lighter path for trivial changes).
+- A new pattern of roster change emerges that doesn't fit the four steps cleanly (suggests amending the procedure).
 
 ## References
 

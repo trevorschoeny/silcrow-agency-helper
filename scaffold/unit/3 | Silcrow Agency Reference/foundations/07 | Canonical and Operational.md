@@ -39,7 +39,7 @@ The canon/operational split is a direct expression. Canon is the stable frame �
 
 Elinor Ostrom's *Governing the Commons* (1990) and later work on polycentric governance identified the design principles that successful long-lived institutions share. Her Design Principle #7 — *Recognition of rights to organize* — assumes that a local self-governing group operates **under an external legal framework**. The canon is outside the operational group; ops live inside it.
 
-This is important because the canon doesn't have to come from within the operational group. For the scaffold, the plugin's shipped ADRs (§0001–§0017) are "external canon" — decisions inherited from outside the agency at scaffold time. The agency then makes its own ADRs (internal canon) that layer on top. Both kinds are canonical; both bind operational work; both operate under the same discipline.
+This is important because the canon doesn't have to come from within the operational group. For the scaffold, the plugin's shipped ADRs (§0001–§0018) are "external canon" — decisions inherited from outside the agency at scaffold time. The agency then makes its own ADRs (internal canon) that layer on top. Both kinds are canonical; both bind operational work; both operate under the same discipline.
 
 Ostrom's broader point is that well-designed institutions have multiple centers of authority at different scales. The agency/unit structure in the scaffold (§0012) directly expresses this: the agency has canon; each unit has its own canon that further narrows within agency canon (but cannot contradict it). Polycentric, canon-leading-canon, with operational work at every level.
 

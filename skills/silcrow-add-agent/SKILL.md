@@ -214,11 +214,11 @@ Echo a summary block:
   Redistribution: N transfers from existing agents
 ```
 
-Then output this scripted next-steps text:
+Then output a tight next-steps block. Per Message Protocol §4a–§4d, keep it short and free of §-citations:
 
-> *The new agent is ready. Open a session inside `<unit_path>/<Role> @ <Unit Name>/` to brief them — their `AGENTS.md` describes what they own, who they report to, and how messages route. The unit's Registrar will audit the addition next time you run them; they'll verify the ADR-and-directory pair and the AGENTS.md edits.*
+> *`<Role> @ <Unit Name>` is ready. The establishing ADR has substantive placeholders the Lead can finish later (placeholders aren't immutability violations; finishing authorship is part of the addition).*
 >
-> *The establishing ADR (`§NNNN | Establish <Role> @ <Unit Name>.md`) has substantive placeholders for deeper context (Context and problem statement, Considered options' specific rejections, etc.). You or `<Lead Role> @ <Unit Name>` can edit it to fill them in — ADRs are immutable only after they're substantively complete; finishing the placeholders is part of authorship.*
+> *Next: open a session inside `<unit_path>/<Role> @ <Unit Name>/` to brief the new agent.*
 
 If the unit is the agency's root, also append:
 

@@ -87,6 +87,8 @@ The six slots are:
 
 The genius of the format is that if you can write a coherent Why-statement, you have understood the decision. If you cannot, you do not yet understand it clearly enough to record. The scaffold places a Why-statement at the top of every full ADR for this reason.
 
+The same logic generalizes. The scaffold codifies it as **honest minimalism** (see *Operational discipline* below, and the agency-level `§0017 | Honest Minimalism`): if you can write a coherent section's worth of content, that section earns full treatment; if you cannot — because the conversation that produced the decision didn't surface that material — write a single honest sentence and move on. Don't fabricate to fill. The Why-statement standard, applied uniformly to every section.
+
 ### Research literature
 
 A systematic mapping study of architectural knowledge management found that **decision rationale loss** is a documented, measurable phenomenon across hundreds of projects:
@@ -108,7 +110,7 @@ The research foundation for ADR practice is solid. It is not "opinion in favor o
 
 ## Operational discipline
 
-Four disciplines govern ADRs in this scaffold:
+Five disciplines govern ADRs in this scaffold:
 
 ### Immutability
 
@@ -146,6 +148,21 @@ Every substantive ADR names a *review trigger* — the specific condition under 
 Review triggers matter because conditions change even when logic doesn't. A decision that was right at 10 engineers may not be right at 100. Without an explicit trigger, ADRs ossify — they remain technically in force long after their premises have stopped holding.
 
 Review triggers do not automate anything. They are a prompt for human judgment: "when you observe condition X, come back and see whether this still makes sense."
+
+If a decision genuinely has no review trigger, the section still appears (per *Honest minimalism* below) with the honest single-sentence answer: *"Review trigger: none; the failure mode this addresses is not context-dependent."*
+
+### Honest minimalism
+
+ADR templates define a fixed set of sections — Why-statement, Context, Considered options, Decision outcome, Consequences, Pros/cons, Anti-patterns surfaced, Review trigger, References. Every section header appears in every rendered ADR; every section's content is faithful to what the deliberation actually produced.
+
+The two valid forms for any section's content:
+
+- **Substantive content** — real material from the actual decision.
+- **A single honest sentence** — *"None considered."*, *"No anti-patterns surfaced."*, *"Review trigger: none; the failure mode this addresses is not context-dependent."*
+
+Banned: fabricating content to populate a section. A list of "considered alternatives" invented to fill a slot is dishonest in the same way a fabricated Why-statement would be — it pollutes the record with content the deliberation didn't produce. The same logic that gates the Why-statement (above, *Why-statements (Zimmermann, 2012)*) generalizes to every section.
+
+This discipline is codified in the agency's `§0017 | Honest Minimalism`. It applies to every artifact rendered from a template — ADRs, unit-establishing ADRs, agent-establishing ADRs, scope seeds, and inter-agent message bodies (per `Message Protocol.md` §4d).
 
 ## Why this matters for the scaffold
 

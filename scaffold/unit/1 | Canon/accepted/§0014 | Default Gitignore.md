@@ -12,7 +12,7 @@
 
 ## Why-statement
 
-In the context of **agencies that use git for version control and audit history** (§0015, §0017 continue this integration),
+In the context of **agencies that use git for version control and audit history** (§0015, §0018 continue this integration),
 facing the question of what the scaffold's default `.gitignore` should exclude,
 we decided for **a minimal default covering only OS noise, editor artifacts, and common secret-file patterns** — nothing operational is ignored by default —
 and neglected a large preset of language-specific patterns (`node_modules/`, `target/`, `__pycache__/`, `.venv/`), gitignoring working folders by default, and shipping no `.gitignore` at all,

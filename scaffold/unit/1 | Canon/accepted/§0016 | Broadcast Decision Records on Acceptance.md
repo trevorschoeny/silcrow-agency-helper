@@ -85,7 +85,7 @@ When the Lead broadcasts an ADR drafted by the Implementer, the broadcast names 
 
 ### Self-bootstrapping
 
-This ADR establishes the rule that ADRs broadcast on acceptance. Agent template instructions executed at scaffold init carry the rule from Day 1; the rule isn't dependent on §0016's own acceptance to take effect. §0016 is the canonical record of the rule; the AGENTS.md instructions are the operational expression. The first ADR an agency authors after init (typically the §0017 supersession that replaces the agency-scope seed) is the first concrete demonstration of the broadcast.
+This ADR establishes the rule that ADRs broadcast on acceptance. Agent template instructions executed at scaffold init carry the rule from Day 1; the rule isn't dependent on §0016's own acceptance to take effect. §0016 is the canonical record of the rule; the AGENTS.md instructions are the operational expression. The first ADR an agency authors after init (often the §0018 supersession that replaces the agency-scope seed, when that supersession happens) is a typical first concrete demonstration of the broadcast.
 
 ### Consequences
 
@@ -93,7 +93,7 @@ This ADR establishes the rule that ADRs broadcast on acceptance. Agent template 
 - **Positive:** Update audits (`:silcrow-update`) require no special notification machinery — their audit ADRs broadcast like any other.
 - **Positive:** Registrar's role stays async. Authors carry their own broadcast load.
 - **Positive:** Inheritance scope (§0012) and broadcast scope are the same — the rule is intuitive: "decisions go where they bind."
-- **Positive:** The §0017 supersession ceremony — the agency's first ADR action — broadcasts naturally, reinforcing the discipline by demonstration.
+- **Positive:** The §0018 supersession ceremony, whenever it happens, broadcasts naturally — reinforcing the discipline by demonstration.
 - **Negative:** Inboxes accumulate notification volume over time. In active agencies, this could be many messages per agent per year. Mitigation: notifications are short pointers, fast to read+archive; the audit checklist's section L flags stale inboxes.
 - **Negative:** Authors carry a small additional procedural step on every acceptance.
 - **Neutral:** Existing message kinds (brief, plan, report, proposal-notice, acknowledgment, audit-report, update-request) are joined by `adr-acceptance-notice`. The protocol gracefully extends.
@@ -120,5 +120,5 @@ Reconsider this ADR if:
 - `§0010` — User as principal; local tier numbering; Implementer drafts-with-approval; defines the authoring split that determines who broadcasts.
 - `§0012` — agency and unit structure; defines the inheritance edges along which broadcasts propagate.
 - `§0013` — update audits produce per-session audit ADRs; audit ADRs broadcast like any other ADR per this rule.
-- `§0017` — agency scope (seed); the supersession that replaces it is the first concrete broadcast.
+- `§0018` — agency scope (seed); the supersession that replaces it is a typical first concrete broadcast.
 - `../../3 | Silcrow Agency Reference/Message Protocol.md` — the operational details: filename convention, body skeleton, recipient-walk algorithm.

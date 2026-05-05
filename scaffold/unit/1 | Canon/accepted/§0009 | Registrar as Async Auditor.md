@@ -77,7 +77,7 @@ The audit model is not new; it mirrors real-world practice. University registrar
 
 ## What the Registrar audits and how corrections work
 
-On-demand audits cover form, contradictions, staleness, citation integrity, orphans, scope violations (§0017), federation-rule violations, unsafe references (§0011), unit↔ADR consistency (§0012), and git hygiene (§0015, informational). The full checklist lives in `../../Registrar @ {unit_name}/AGENTS.md`.
+On-demand audits cover form, contradictions, staleness, citation integrity, orphans, scope violations (§0018), federation-rule violations, unsafe references (§0011), unit↔ADR consistency (§0012), and git hygiene (§0015, informational). The full checklist lives in `../../Registrar @ {unit_name}/AGENTS.md`.
 
 Correction authority is **hybrid**:
 - **Procedural issues** (filename typos, malformed §-numbering, broken citation paths, bidirectional-link repair) — Registrar fixes directly.
@@ -90,8 +90,6 @@ The `proposed/` directory is retained as a **voluntary pre-review channel**: Lea
 - **Registrar as sync gatekeeper.** Reverting to per-proposal validation defeats the purpose. If a workflow starts requiring Registrar sign-off before commit, push back.
 - **Registrar as silent fixer.** Correcting substantive content — even subtly — under the guise of procedural repair. The distinction must be held carefully.
 - **Registrar with substantive authority.** A Registrar who can block on merits, not just form, becomes a chokepoint and conflates the two kinds of authority. Their authority is bounded to form.
-- **Audit queue growing without audit.** If the on-demand audit never happens, the record decays silently. The User or Lead should invoke audits periodically (and the `:silcrow-update` skill invokes one implicitly).
-- **Pre-review-by-default.** Dropping everything into `proposed/` out of habit recreates the latency this ADR was built to remove. Lead's default should be direct commit.
 
 ## Review trigger
 

@@ -1,3 +1,10 @@
+<!--
+HONEST MINIMALISM (§0017 in @ {agency_name}'s canon). Every section below
+appears in every ADR rendered from this template. Section headers are
+non-negotiable. Content is substantive where there is substance, a single
+honest sentence where there isn't.
+-->
+
 # §0001 | Adopt @ {parent_unit_name} as parent unit
 
 - **Status:** accepted
@@ -8,7 +15,7 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** §0002 (this unit's scope seed); every subsequent decision authored in `@ {unit_name}/1 | Canon/`; the local-canon-readability of `@ {unit_name}` (downstream decisions cite this for the inheritance anchor).
-- **Influenced by:** `@ {agency_name}/1 | Canon/accepted/§0001` (the agency's own founding ADR, which this mirrors); §0012 (federation rule); the unit-establishing ADR in `@ {parent_unit_name}/1 | Canon/accepted/`.
+- **Influenced by:** `@ {agency_name}/1 | Canon/accepted/§0001` (the agency's own founding ADR, which this mirrors); §0012 (federation rule); §0017 (honest minimalism); the unit-establishing ADR in `@ {parent_unit_name}/1 | Canon/accepted/`.
 
 ## Why-statement
 

@@ -4,6 +4,10 @@ This document governs how decisions become records in this agency. It is referen
 
 The underlying philosophy — *why* we do it this way — is in `Philosophy.md`. This doc is the operational how.
 
+> **Citations in this doc are for the artifact register.** §-numbers, MADR section anchors, and protocol references appear in the documents you write — ADR bodies, deposited messages, governance commits — not in your chat with the user. In chat, name the rule plainly. See `Message Protocol.md` §4c.
+
+> **Honest minimalism (§0017) governs every artifact.** Every section a template defines appears in every rendered ADR; section headers are non-negotiable; content is substantive where there is substance and a single honest sentence (e.g., *"None considered."*) where there isn't. Fabricating content to populate a section is the failure mode this rule prevents.
+
 ---
 
 ## 1. What counts as a decision worth recording
@@ -189,9 +193,11 @@ The Registrar audits for unsafe references (§0009) and surfaces them to the Lea
 
 ## 6. Anti-patterns
 
-An anti-pattern is just a decision whose conclusion is "don't do X." It surfaces in two natural places:
+An anti-pattern is a decision whose conclusion is "don't do X." Most ADRs surface no anti-pattern at all — and that's the most common case. When the `Anti-patterns surfaced` section has nothing in it, write a single honest sentence per §0017 (e.g., *"No anti-patterns surfaced."*) and move on. **Don't invent generic anti-patterns to populate the slot.**
 
-**Embedded** — in an ADR's `Anti-patterns surfaced` section. The ADR's primary decision is positive ("we do X"), and the section names the negative-form lessons surfaced along the way ("a tempting alternative would be Y, here's why we don't"). Appropriate when the anti-pattern is specific to that decision's context.
+When an ADR genuinely does surface one, it appears in two natural places:
+
+**Embedded** — in the ADR's `Anti-patterns surfaced` section. The ADR's primary decision is positive ("we do X"), and the section names the negative-form lessons surfaced along the way ("a tempting alternative would be Y, here's why we don't"). Appropriate when the anti-pattern is specific to that decision's context.
 
 **Standalone** — as its own §-numbered ADR in `@ {unit_name}/1 | Canon/accepted/`. Appropriate when the anti-pattern is reusable across decisions, big enough to warrant its own record, or surfaces without a positive-decision parent. The ADR's title can lean negative-form — `§NNNN | Avoid <pattern>` or `§NNNN | <Pattern> Is an Anti-Pattern`.
 
@@ -213,6 +219,15 @@ Use **`MADR Minimal.md`** when:
 - The reasoning is straightforward.
 - Writing the full template would cost more than the decision warrants.
 
+### Honest minimalism within either template (§0017)
+
+Both templates list a fixed set of sections. Per §0017, **every section's header always appears in the rendered ADR** — that's how the corpus stays scannable. Each section's *content* is bounded by what was actually decided:
+
+- **Substantive content** when there's substance.
+- **A single honest sentence** when there isn't (e.g., *"None considered."*, *"No anti-patterns surfaced."*, *"Review trigger: none; the failure mode this addresses is not context-dependent."*).
+
+The template is not a checklist demanding fabrication. If a section has nothing real to say, name that plainly and move on. The discipline is faithfulness over completeness.
+
 ---
 
 ## 8. Review triggers
@@ -225,7 +240,7 @@ Every ADR names a `Review trigger` — the condition under which it should be re
 
 Poor triggers are vague: *"in the future"* is not a trigger.
 
-If a decision genuinely has no review trigger, say so: *"Review trigger: none; the failure mode this addresses is not context-dependent."* That's a legitimate answer.
+If a decision genuinely has no review trigger, say so: *"Review trigger: none; the failure mode this addresses is not context-dependent."* That's a legitimate answer — the same logic from §0017 applies to every section, not just this one.
 
 ---
 
@@ -260,9 +275,29 @@ Skills don't create a different kind of ADR — they produce the same MADR-with-
 
 ## Worked examples
 
+> All filesystem mechanics in these examples — the move from draft to `accepted/`, the §-number assignment, the status-field flip, the index update — are silent reflexes per Message Protocol §4b. The user reads the ADR, not a narration of where it landed.
+
 ### Greenfield decision (Lead direct-commit, §0009)
 
 The {lead_role} drafts in `@ {unit_name}/{lead_role} @ {unit_name}/draft-logging-adr.md`, assigns the next §-number by checking `accepted/` (e.g. §0042), moves the file to `@ {unit_name}/1 | Canon/accepted/§0042 | Use Structured Logging.md`, sets `Status: accepted`, and commits `§0042: use structured logging`. Either Lead or Registrar updates the index — the Registrar will fix it at next audit if the Lead doesn't.
+
+### Honestly minimal ADR (§0017 in practice)
+
+The {lead_role} decides to standardize timestamp formatting on ISO-8601 UTC. The decision is real (binding on every codebase touchpoint going forward) but uncomplicated — there were no seriously-considered alternatives, no anti-patterns surfaced, no review trigger that isn't context-independent.
+
+Drafted as MADR Full because the decision is cross-cutting; rendered honestly:
+
+- **Why-statement** — one paragraph: avoiding the perennial timezone-inference ambiguity.
+- **Context** — two sentences naming where timestamps appear.
+- **Decision drivers** — one bullet (consistency across the codebase).
+- **Considered options** — *"No alternatives were seriously considered; ISO-8601 UTC is the unambiguous default."*
+- **Decision outcome** — *"Use ISO-8601 UTC for every machine-written and machine-read timestamp."* + Consequences (one Positive, no Negative or Neutral, the latter two get *"None surfaced."*).
+- **Pros and cons of the options** — *"Covered in Decision outcome above."*
+- **Anti-patterns surfaced** — *"No anti-patterns surfaced."*
+- **Review trigger** — *"Review trigger: none; the failure mode this addresses is not context-dependent."*
+- **References** — three relative paths.
+
+Total: roughly half the length of a heavily-deliberated ADR. Every section is present (predictable structure); every section is faithful (no fabrication).
 
 ### Implementer draft with approval (§0010)
 
@@ -299,3 +334,4 @@ The discipline — preserve the original, don't edit — is about learning, not 
 - `../1 | Canon/accepted/§0010 | User as Principal and Local Tier Numbering.md` — the Implementer-draft-with-approval path.
 - `../1 | Canon/accepted/§0011 | Canonical and Operational Artifacts.md` — the promotion rule and reference rule.
 - `../1 | Canon/accepted/§0013 | Update Audits Produce Audit ADRs.md` — the `:silcrow-update` audit-ADR pattern.
+- `../1 | Canon/accepted/§0017 | Honest Minimalism.md` — section-headers always present, content faithful to substance, fabrication banned.

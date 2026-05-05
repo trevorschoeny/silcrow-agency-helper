@@ -1,3 +1,12 @@
+<!--
+HONEST MINIMALISM (§0017). Every section below appears in every ADR rendered
+from this template. Section headers are non-negotiable. Content is substantive
+where there is substance, a single honest sentence where there isn't. Never
+fabricate content to populate a section — especially Considered options
+(below), which the {lead_role} or {user_role} should fill from the actual
+conversation that produced the decision.
+-->
+
 # §NNNN | Establish Unit @ {unit_name}
 
 - **Status:** accepted <!-- populated by :silcrow-add-unit -->
@@ -8,7 +17,7 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every subsequent operational artifact scoped to `@ {unit_name}`; every ADR authored inside `@ {unit_name}/1 | Canon/`.
-- **Influenced by:** §0008 (roster change protocol), §0017 (agency scope), §0012 (agency and unit structure).
+- **Influenced by:** §0008 (roster change protocol), §0012 (agency and unit structure), §0017 (honest minimalism), §0018 (agency scope).
 
 ## Why-statement
 
@@ -69,14 +78,23 @@ When this ADR is accepted, the following directory is created nested inside `@ {
 └── Registrar @ {unit_name}/                   ← Registrar agent (with inbox/archive/)
 ```
 
-Sub-units have no `3 | Silcrow Agency Reference/` of their own (§0012); foundational reference lives at the agency's root and every unit inherits it by reference to that path. `@ {unit_name}` inherits every ancestor unit's ADRs by reference — its own `1 | Canon/accepted/` ships with two seeded ADRs (§0001 adopting `@ {parent_unit_name}` as parent, paralleling the agency's own §0001; and §0002 a scope seed paralleling the agency's §0017) and fills with subsequent decisions specific to `@ {unit_name}`. The Lead's first authoring exercise is typically to supersede §0002 with a richer scope statement.
+Sub-units have no `3 | Silcrow Agency Reference/` of their own (§0012); foundational reference lives at the agency's root and every unit inherits it by reference to that path. `@ {unit_name}` inherits every ancestor unit's ADRs by reference — its own `1 | Canon/accepted/` ships with two seeded ADRs (§0001 adopting `@ {parent_unit_name}` as parent, paralleling the agency's own §0001; and §0002 a scope seed paralleling the agency's §0018) and fills with subsequent decisions specific to `@ {unit_name}`. The Lead's first authoring exercise is typically to supersede §0002 with a richer scope statement (no urgency — when the scope conversation has actually happened).
 
 ## Considered options
 
+<!--
+Per §0017 (honest minimalism): list only options that were *actually*
+considered in the conversation that led to establishing this unit. Don't
+inherit the suggested rejection reasons below as boilerplate — fill them
+from the real conversation, or write a single honest sentence (e.g., "No
+alternatives were seriously considered; the need for a dedicated unit was
+self-evident from the conversation.") and skip the numbered list.
+-->
+
 1. **Establish `@ {unit_name}` as a new sub-unit (chosen).** Dedicated governance and agent team nested under `@ {parent_unit_name}`.
-2. **Keep the work within `@ {parent_unit_name}`.** Rejected: the work has matured enough that its own Lead and record are warranted.
-3. **Spread responsibility across `@ {parent_unit_name}`'s existing roles without its own unit.** Rejected: those roles are already stretched; dedicated focus produces better outcomes.
-4. **Defer.** Rejected: the area of concern is already producing decisions that need a home.
+2. **Keep the work within `@ {parent_unit_name}`.** {Rejected because — fill from the actual conversation, or omit if not genuinely considered.}
+3. **Spread responsibility across `@ {parent_unit_name}`'s existing roles without its own unit.** {Rejected because — fill from the actual conversation, or omit if not genuinely considered.}
+4. **Defer.** {Rejected because — fill from the actual conversation, or omit if not genuinely considered.}
 
 ## Decision outcome
 
@@ -103,7 +121,8 @@ Reconsider `@ {unit_name}`'s establishment if:
 - `§0001` — the founding scaffold decision.
 - `§0008` — roster change protocol (adding a unit creates new agents and roles).
 - `§0012` — agency and unit structure; this ADR implements the unit-addition pattern.
-- `§0017` — agency scope; `@ {unit_name}` operates within agency scope.
+- `§0017` — honest minimalism; this ADR follows that discipline.
+- `§0018` — agency scope; `@ {unit_name}` operates within agency scope.
 - `@ {parent_unit_name}`'s `README.md` — governance overview of the parent unit.
 - `silcrow:silcrow-add-unit` — the skill that orchestrated this establishment.
 

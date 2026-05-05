@@ -98,7 +98,7 @@ Sub-units, when present, live as siblings of agents and governance folders insid
 
 ## The founding constitution
 
-The scaffold ships with **seventeen seeded ADRs** (§0001–§0017). §0001 records the decision to adopt the scaffold itself. §0002 through §0016 are **constitutional decisions inherited through §0001** — they make the load-bearing choices of the pattern explicit and supersedable rather than leaving them as unrecorded convention. §0017 is a thin scope seed expected to be superseded early.
+The scaffold ships with **eighteen seeded ADRs** (§0001–§0018). §0001 records the decision to adopt the scaffold itself. §0002 through §0017 are **constitutional decisions inherited through §0001** — they make the load-bearing choices of the pattern explicit and supersedable rather than leaving them as unrecorded convention. §0018 is a thin scope seed available for supersession when the agency is ready.
 
 | § | Constitutional decision |
 |---|---|
@@ -118,7 +118,8 @@ The scaffold ships with **seventeen seeded ADRs** (§0001–§0017). §0001 reco
 | §0014 | Agency default `.gitignore` — OS, editor, and secrets patterns only |
 | §0015 | Governance commits cite the governing §NNNN; operational commits are free-form |
 | §0016 | Decision-record acceptance is broadcast to every bound agent |
-| §0017 | Agency scope (seed — supersede early) |
+| §0017 | Honest minimalism — every section header always present; content faithful |
+| §0018 | Agency scope (seed — supersede when ready) |
 
 Each cites its foundation doc (`3 | Silcrow Agency Reference/foundations/0N-*.md`) for the full reasoning, and each lists real alternatives so it can be evaluated or superseded like any other ADR. The seed set serves as **both the working base of the agency's decision graph and a demonstration set** — showing new agents what proper ADRs look like.
 

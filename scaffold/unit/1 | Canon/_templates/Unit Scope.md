@@ -1,3 +1,10 @@
+<!--
+HONEST MINIMALISM (§0017 in @ {agency_name}'s canon). Every section below
+appears in the rendered ADR. Section headers are non-negotiable. Content is
+substantive where there is substance, a single honest sentence where there
+isn't.
+-->
+
 # §0002 | @ {unit_name} Scope
 
 - **Status:** accepted
@@ -8,33 +15,25 @@
 - **Supersedes:** —
 - **Superseded by:** —
 - **Influences:** every decision authored inside `@ {unit_name}/1 | Canon/`; every ADR that references this unit's scope or boundaries; sub-sub-unit-establishing ADRs nested inside `@ {unit_name}` (scope violations caught during Registrar audit).
-- **Influenced by:** §0001 (this unit's local founding ADR); §0017 in `@ {agency_name}/1 | Canon/accepted/` (agency scope — `@ {unit_name}`'s scope must fit within agency scope per §0012's federation rule); §0004 (immutability and supersession); the unit-establishing ADR in `@ {parent_unit_name}/1 | Canon/accepted/`.
+- **Influenced by:** §0001 (this unit's local founding ADR); §0018 in `@ {agency_name}/1 | Canon/accepted/` (agency scope — `@ {unit_name}`'s scope must fit within agency scope per §0012's federation rule); §0004 (immutability and supersession); §0017 (honest minimalism); the unit-establishing ADR in `@ {parent_unit_name}/1 | Canon/accepted/`.
 
-## Seed notice — DO NOT EDIT THIS ADR; SUPERSEDE IT
+## Seed notice — supersede; don't edit
 
-**This ADR is a seed.** Like the root unit's §0017 (Agency Scope), the body below is intentionally thin — it is `@ {unit_name}`'s first lesson in the supersession discipline that governs every binding decision in this scaffold.
+**This ADR is a seed.** Like the root unit's §0018 (Agency Scope), the body below is intentionally thin. When `@ {unit_name}` is ready to articulate scope more richly — what the unit is for, what it owns, what it doesn't, what "done" looks like in the near and medium term — supersede §0002 via the standard ceremony (§0004): author a new ADR with `Supersedes: §0002` in its header, move §0002 from `accepted/` to `superseded/`, append a retrospective note. The Registrar handles steps 3–4 mechanically if the Lead asks; or the Lead can do them directly.
 
-To replace this with a richer scope statement, *supersede* it via §0004:
+**There is no urgency.** The seed can sit in `accepted/` indefinitely. Sometimes the supersession is among the unit's first ADR actions; sometimes it happens later, after other foundational decisions have settled. The pattern (seed → supersession) is the same one used for every binding decision `@ {unit_name}` will ever make.
 
-1. Author a new ADR with the next available §-number in `@ {unit_name}`'s canon — typically §0003 if no other ADRs have been authored in `@ {unit_name}` yet.
-2. In the new ADR's header, set `Supersedes: §0002`.
-3. Move §0002 from `accepted/` to `superseded/` (filename unchanged) and update its `Superseded by:` to point to the new ADR.
-4. Append a one-paragraph retrospective note at the bottom of §0002 explaining the supersession (this is the only permitted post-acceptance body change per §0004).
-5. The Registrar handles steps 3–4 mechanically if `{lead_role} @ {unit_name}` asks; or the Lead can do them directly.
+**Editing this ADR in place violates §0004's immutability discipline.** Same rule as the agency-level §0018: supersede, don't edit. The supersession chain is the readable narrative of how scope sharpened over time; breaking it once breaks it permanently.
 
-**Editing this ADR in place violates §0004's immutability discipline.** Same rule as the agency-level §0017: supersede, don't edit.
-
-This pattern (seed → supersession) is the same one used for every binding decision `@ {unit_name}` will ever make. §0002 is positioned right after the founding §0001 deliberately — it is the next ADR `{lead_role} @ {unit_name}` authors against. By superseding it as your first collaborative act with `{parent_lead_role} @ {parent_unit_name}` (or `{user_role}` for agency-relevant scope decisions), you teach `@ {unit_name}`'s record how decisions evolve here.
-
-The body below captures what was said at unit establishment. One of the first collaborative tasks for `{lead_role} @ {unit_name}` (with `{parent_lead_role} @ {parent_unit_name}` or `{user_role}` as appropriate) is to supersede §0002 with a richer scope statement: what `@ {unit_name}` is for, what it owns, what it doesn't, what "done" looks like in the near and medium term — within the bounds of agency scope (§0017) and any intermediate ancestor unit's scope.
+The body below captures what was said at unit establishment. The supersession, when it happens, is typically a collaborative act between `{lead_role} @ {unit_name}` and `{parent_lead_role} @ {parent_unit_name}` (or `{user_role}` for agency-relevant scope decisions), within the bounds of agency scope (§0018 in `@ {agency_name}/1 | Canon/`) and any intermediate ancestor unit's scope.
 
 ## Context and problem statement
 
-**Inherited at unit establishment.** This is `@ {unit_name}`'s scope seat, paralleling §0017 at the agency level.
+**Inherited at unit establishment.** This is `@ {unit_name}`'s scope seat, paralleling §0018 at the agency level.
 
 Every decision authored in `@ {unit_name}`'s canon cites back — directly or transitively — to this unit's scope. Without a citable scope statement, later decisions in `@ {unit_name}` lack a resolvable north star, and the question "was this in scope?" has no authoritative local answer.
 
-`@ {unit_name}`'s scope must fit within agency scope (the root unit's §0017 chain) and `@ {parent_unit_name}`'s scope per §0012's federation rule. A unit-scope ADR that exceeded an ancestor's scope would be flagged by `@ {unit_name}`'s Registrar during audit (§0009).
+`@ {unit_name}`'s scope must fit within agency scope (the root unit's §0018 chain) and `@ {parent_unit_name}`'s scope per §0012's federation rule. A unit-scope ADR that exceeded an ancestor's scope would be flagged by `@ {unit_name}`'s Registrar during audit (§0009).
 
 ## Initial scope
 
@@ -50,7 +49,7 @@ Every decision authored in `@ {unit_name}`'s canon cites back — directly or tr
 
 **Chosen option: (1) Unit scope as an ADR.**
 
-Same rationale as agency scope (§0017): scope constrains everything below it; mutable READMEs drift silently and lose the historical arc; the ADR discipline (§0004) forces changes to be visible, dated, reasoned, and citable. Supersession is the natural update path.
+Same rationale as agency scope (§0018): scope constrains everything below it; mutable READMEs drift silently and lose the historical arc; the ADR discipline (§0004) forces changes to be visible, dated, reasoned, and citable. Supersession is the natural update path.
 
 ### Consequences
 
@@ -63,7 +62,7 @@ Same rationale as agency scope (§0017): scope constrains everything below it; m
 
 ## Review trigger
 
-**First review: supersede this seed (do not edit it).** As soon as `{lead_role} @ {unit_name}` (with `{parent_lead_role} @ {parent_unit_name}` or `{user_role}` as appropriate) have aligned on what `@ {unit_name}` is for, author a superseding ADR with a richer scope statement following the supersession ceremony in the seed notice above.
+Supersede when `{lead_role} @ {unit_name}` (with `{parent_lead_role} @ {parent_unit_name}` or `{user_role}` as appropriate) has aligned on a richer scope statement. No urgency on timing — see the seed notice above. Author the superseding ADR via the standard ceremony.
 
 Subsequent reviews when:
 
@@ -79,6 +78,7 @@ Subsequent reviews when:
 - `@ {agency_name}/1 | Canon/accepted/§0004 | Immutability and Supersession.md` — the immutability discipline that makes supersession the update mechanism.
 - `@ {agency_name}/1 | Canon/accepted/§0009 | Registrar as Async Auditor.md` — Registrar's audit checklist includes scope-violation detection.
 - `@ {agency_name}/1 | Canon/accepted/§0012 | Agency and Unit Structure.md` — agency and unit structure; agency scope binds every unit in the tree.
-- `@ {agency_name}/1 | Canon/accepted/§0017 | Agency Scope.md` — agency scope (the root unit's scope chain), which constrains `@ {unit_name}`'s scope.
+- `@ {agency_name}/1 | Canon/accepted/§0017 | Honest Minimalism.md` — the discipline this ADR follows.
+- `@ {agency_name}/1 | Canon/accepted/§0018 | Agency Scope.md` — agency scope (the root unit's scope chain), which constrains `@ {unit_name}`'s scope.
 - The unit-establishing ADR in `@ {parent_unit_name}/1 | Canon/accepted/` — the parent's canonical record that `@ {unit_name}` was established.
 - `@ {agency_name}/3 | Silcrow Agency Reference/Decision Process.md` — operational supersession rules.
